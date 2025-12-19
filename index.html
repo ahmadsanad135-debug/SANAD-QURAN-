@@ -1,7 +1,8 @@
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>القرآن الكريم - استماع</title>
+<title>القرآن الكريم  </title>
 <style>
 body { font-family: 'Amiri', serif; background-color: #f5f5f5; margin:0; padding:20px; color:#222; }
 .container { max-width: 800px; margin:auto; background:white; padding:20px; border-radius:8px; }
@@ -15,7 +16,8 @@ footer { margin-top:30px; font-size:14px; text-align:center; color:#555; }
 </head>
 <body>
 <div class="container">
-<h1>القرآن الكريم - استماع</h1>
+<h1>القرآن الكريم  </h1>
+
 <label for="reciter">اختر القارئ:</label>
 <select id="reciter" onchange="changeReciter()">
   <option value="yasir">ياسر الدوسري</option>
@@ -24,15 +26,24 @@ footer { margin-top:30px; font-size:14px; text-align:center; color:#555; }
   <option value="eslam">اسلام صبحي</option>
   <option value="afasy">مشاري العفاسي</option>
 </select>
+
 <audio id="audio" controls>
-  <source src="" type="audio/mpeg">
-  متصفحك لا يدعم تشغيل الصوت
+  <source src="" type="audio/mp3">
+  
 </audio>
+
 <h2>اختر السورة:</h2>
 <ul id="surahList"></ul>
 
+<footer>اللهم اجعل هذا العمل خالصًا لوجهك وصدقة جارية</footer>
+</div>
+
+<script src="surahLinks.js"></script>
 <script>
-// قائمة السور
+const audio = document.getElementById('audio');
+const reciterSelect = document.getElementById('reciter');
+const surahList = document.getElementById('surahList');
+
 const surahs = [
 "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
 "هود","يوسف","الرعد","ابراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",
@@ -48,17 +59,32 @@ const surahs = [
 "الفلق","الناس"
 ];
 
-// عرض الفهرس
-const surahList = document.getElementById('surahList');
-surahs.forEach((name, index) => {
-  const li = document.createElement('li');
-  li.textContent = `${index+1}. ${name}`;
-  
-  // عند الضغط على السورة
-  li.onclick = () => {
-    playSurah(index+1); // function playSurah يجب أن تكون معرفة لتشغيل الصوت
-  };
-  
-  surahList.appendChild(li);
-});
+function populateSurahs() {
+  surahList.innerHTML = '';
+  surahs.forEach((name, index) => {
+    const li = document.createElement('li');
+    li.textContent = `${index+1}. ${name}`;
+    li.onclick = () => { playSurah(index); };
+    surahList.appendChild(li);
+  });
+}
+
+function playSurah(number) {
+  const reciter = reciterSelect.value;
+  audio.src = surahLinks[reciter][number];
+  audio.play();
+}
+
+function changeReciter() {
+  if(audio.src) { 
+    const index = Array.from(surahList.children).findIndex(li => li.textContent.startsWith(audio.src.split('/').pop().split('.')[0]));
+    const number = index >= 0 ? index : 0;
+    audio.src = surahLinks[reciterSelect.value][number];
+    audio.play();
+  }
+}
+
+populateSurahs();
 </script>
+</body>
+</html>
