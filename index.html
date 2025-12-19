@@ -1,13 +1,13 @@
 <!DOCTYPE html><html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>القرآن الكريم - استماع</title>
+<title>القرآن الكريم </title>
 <style>
   body { font-family: 'Amiri', serif; background-color: #f5f5f5; margin:0; padding:20px; color:#222; }
   .container { max-width: 800px; margin:auto; background:white; padding:20px; border-radius:8px; }
   h1 { text-align:center; }
   select, audio { width:100%; margin:10px 0; }
-  ul { list-style:none; padding:0; }
+  ul { list-style:none; padding:0; max-height:400px; overflow-y:auto; }
   li { padding:5px 0; cursor:pointer; border-bottom:1px solid #ddd; }
   li:hover { background:#eee; }
   footer { margin-top:30px; font-size:14px; text-align:center; color:#555; }
@@ -15,32 +15,32 @@
 </head>
 <body>
 <div class="container">
-<h1>القرآن الكريم - استماع</h1>
+<h1>القرآن الكريم </h1>
 <label for="reciter">اختر القارئ:</label>
 <select id="reciter" onchange="changeReciter()">
-  <option value="muaiqly">ماهر المعيقلي</option>
-  <option value="sudais">عبد الرحمن السديس</option>
-  <option value="abdulbasit">عبد الباسط عبد الصمد</option>
-  <option value="yasser">ياسر الدوسري</option>
-  <option value="islam">إسلام صبحي</option>
+  <option value="mishaari_raashid_al_3afaasee">مشاري راشد العفاسي</option>
+  <option value="abdullaah_3awwaad_al-juhaynee">عبدالله عواد الجهني</option>
+  <option value="mahmood_khaleel_al-husaree">محمود خليل الحصري</option>
+  <option value="abdullaah_basfar">عبد الله بصفر</option>
+  <option value="saeed_bin_ali_bin_wahahf_alqahtanee">سعيد القحطاني</option>
 </select><audio id="audio" controls>
   <source src="" type="audio/mpeg">
-  متصفحك لا يدعم تشغيل الصوت
+  
 </audio><h2>اختر السورة:</h2>
 <ul id="surahList"></ul><footer>اللهم اجعل هذا العمل خالصًا لوجهك وصدقة جارية</footer>
 </div>
 <script>
 const audio = document.getElementById('audio');
 const reciterSelect = document.getElementById('reciter');
-const surahList = document.getElementById('surahList');const reciters = { muaiqly: 'https://server8.mp3quran.net/maher/', sudais: 'https://server11.mp3quran.net/sds/', abdulbasit: 'https://server7.mp3quran.net/basit_murattal/', yasser: 'https://server11.mp3quran.net/yasser/', islam: 'https://server16.mp3quran.net/islam/' };
+const surahList = document.getElementById('surahList');const baseURL = 'https://download.quranicaudio.com/quran/';
 
 const surahs = [ "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس", "هود","يوسف","الرعد","ابراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه", "الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم", "لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر", "فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق", "الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحشر","الممتحنة","الصف","الجمعة", "المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن", "المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الإنفطار", "المطففين","الإنشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل", "الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر", "العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص", "الفلق","الناس" ];
 
 function populateSurahs() { surahList.innerHTML = ''; surahs.forEach((name, index) => { const li = document.createElement('li'); li.textContent = ${index+1}. ${name}; li.onclick = () => { playSurah(index+1); }; surahList.appendChild(li); }); }
 
-function playSurah(number) { const reciter = reciterSelect.value; let surahNum = number.toString().padStart(3,'0'); audio.src = ${reciters[reciter]}${surahNum}.mp3; audio.play(); }
+function playSurah(number) { const reciter = reciterSelect.value; let surahNum = number.toString().padStart(3,'0'); audio.src = ${baseURL}${reciter}/${surahNum}.mp3; audio.play(); }
 
-function changeReciter() { if(audio.src) { const currentSrc = audio.src; const parts = currentSrc.split('/'); const file = parts[parts.length-1]; const surahNumber = file.split('.')[0]; audio.src = ${reciters[reciterSelect.value]}${surahNumber}.mp3; audio.play(); } }
+function changeReciter() { if(audio.src) { const currentSrc = audio.src; const file = currentSrc.split('/').pop(); audio.src = ${baseURL}${reciterSelect.value}/${file}; audio.play(); } }
 
 populateSurahs(); </script>
 
