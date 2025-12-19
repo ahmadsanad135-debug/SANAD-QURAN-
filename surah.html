@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>سورة الفاتحة | القرآن الكريم</title>
+  <style>
+    body {
+      font-family: "Amiri", serif;
+      background-color: #f5f5f5;
+      color: #222;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    h1 {
+      text-align: center;
+    }
+    select, audio {
+      width: 100%;
+      margin: 10px 0;
+    }
+    .ayah {
+      font-size: 22px;
+      line-height: 2;
+      margin: 10px 0;
+      text-align: center;
+    }
+    footer {
+      margin-top: 30px;
+      font-size: 14px;
+      text-align: center;
+      color: #555;
+    }
+  </style>
+</head>
+<body><div class="container">
+  <h1>سورة الفاتحة</h1><label for="reciter">اختر القارئ:</label> <select id="reciter" onchange="changeReciter()"> <option value="muaiqly">ماهر المعيقلي</option> <option value="sudais">عبد الرحمن السديس</option> <option value="abdulbasit">عبد الباسط عبد الصمد</option> <option value="yasser">ياسر الدوسري</option> <option value="islam">إسلام صبحي</option> </select>
+
+  <audio id="audio" controls>
+    <source src="" type="audio/mpeg">
+    متصفحك لا يدعم تشغيل الصوت
+  </audio>  <div class="ayah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+  <div class="ayah">الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ</div>
+  <div class="ayah">الرَّحْمَٰنِ الرَّحِيمِ</div>
+  <div class="ayah">مَالِكِ يَوْمِ الدِّينِ</div>
+  <div class="ayah">إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ</div>
+  <div class="ayah">اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ</div>
+  <div class="ayah">صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ</div>  <footer>
+    اللهم اجعل هذا العمل خالصًا لوجهك وصدقة جارية
+  </footer>
+</div><script>
+  const audio = document.getElementById('audio');
+
+  const reciters = {
+    muaiqly: 'https://server8.mp3quran.net/maher/001.mp3',
+    sudais: 'https://server11.mp3quran.net/sds/001.mp3',
+    abdulbasit: 'https://server7.mp3quran.net/basit_murattal/001.mp3',
+    yasser: 'https://server11.mp3quran.net/yasser/001.mp3',
+    islam: 'https://server14.mp3quran.net/islam/001.mp3'
+  };
+
+  function changeReciter() {
+    const value = document.getElementById('reciter').value;
+    audio.src = reciters[value];
+    audio.play();
+  }
+
+  // تشغيل القارئ الافتراضي
+  changeReciter();
+</script></body>
+</html>
