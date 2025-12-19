@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <title>القرآن الكريم - استماع</title>
@@ -18,11 +19,11 @@ footer { margin-top:30px; font-size:14px; text-align:center; color:#555; }
 <h1>القرآن الكريم - استماع</h1>
 <label for="reciter">اختر القارئ:</label>
 <select id="reciter" onchange="changeReciter()">
-  <option value="afasy">مشاري راشد العفاسي</option>
-  <option value="juhani">عبدالله عواد الجهني</option>
-  <option value="husary">محمود خليل الحصري</option>
-  <option value="basfar">عبد الله بصفر</option>
-  <option value="qahtani">سعيد القحطاني</option>
+  <option value="yasir">ياسر الدوسري</option>
+  <option value="maher">ماهر المعيقلي</option>
+  <option value="sudais">السديس</option>
+  <option value="eslam">اسلام صبحي</option>
+  <option value="afasy">مشاري العفاسي</option>
 </select>
 <audio id="audio" controls>
   <source src="" type="audio/mpeg">
@@ -32,18 +33,3 @@ footer { margin-top:30px; font-size:14px; text-align:center; color:#555; }
 <ul id="surahList"></ul>
 <footer>اللهم اجعل هذا العمل خالصًا لوجهك وصدقة جارية</footer>
 </div>
-<script>
-const audio = document.getElementById('audio');
-const reciterSelect = document.getElementById('reciter');
-const surahList = document.getElementById('surahList');const surahs = [ "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس", "هود","يوسف","الرعد","ابراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه", "الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم", "لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر", "فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق", "الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحشر","الممتحنة","الصف","الجمعة", "المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن", "المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الإنفطار", "المطففين","الإنشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل", "الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر", "العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص", "الفلق","الناس" ];
-
-function populateSurahs() { surahList.innerHTML = ''; surahs.forEach((name, index) => { const li = document.createElement('li'); li.textContent = ${index+1}. ${name}; li.onclick = () => { playSurah(index+1); }; surahList.appendChild(li); }); }
-
-function playSurah(number) { const reciter = reciterSelect.value; let surahNum = number.toString().padStart(3,'0'); audio.src = audio/${reciter}/${surahNum}.mp3; audio.play(); }
-
-function changeReciter() { if(audio.src) { const currentSrc = audio.src; const file = currentSrc.split('/').pop(); audio.src = audio/${reciterSelect.value}/${file}; audio.play(); } }
-
-populateSurahs(); </script>
-
-</body>
-</html>
