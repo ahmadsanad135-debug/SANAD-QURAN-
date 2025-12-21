@@ -1,6 +1,6 @@
 const surahLinks = {
   afasy: [],
-  maher: []
+  maher: [], 
 };
 
 for (let i = 1; i <= 114; i++) {
