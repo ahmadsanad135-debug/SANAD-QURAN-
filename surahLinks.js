@@ -9,6 +9,6 @@ for (let i = 1; i <= 114; i++) {
   );
 
   surahLinks.maher.push(
-    `https://cdn.islamic.network/quran/audio-surah/128/ar.mahermuaiqly/${i}.mp3`
+    `https://surahquran.com/mp3/maher/ `
   );
 }
