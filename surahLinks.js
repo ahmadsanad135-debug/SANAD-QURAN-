@@ -1,5 +1,5 @@
 const reciters = [
-  "Mishary Alafasy",
+  "afasy",
   "Islam Sobhi"
 ];
 
