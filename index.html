@@ -1,90 +1,113 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>القرآن الكريم  </title>
-<style>
-body { font-family: 'Amiri', serif; background-color: #f5f5f5; margin:0; padding:20px; color:#222; }
-.container { max-width: 800px; margin:auto; background:white; padding:20px; border-radius:8px; }
-h1 { text-align:center; }
-select, audio { width:100%; margin:10px 0; }
-ul { list-style:none; padding:0; max-height:400px; overflow-y:auto; }
-li { padding:5px 0; cursor:pointer; border-bottom:1px solid #ddd; }
-li:hover { background:#eee; }
-footer { margin-top:30px; font-size:14px; text-align:center; color:#555; }
-</style>
+  <meta charset="UTF-8">
+  <title>القرآن الكريم  </title>
+
+  <style>
+    body {
+      font-family: Tahoma, Arial;
+      background: #f5f5f5;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #1a7f37;
+    }
+
+    select {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px;
+      width: 250px;
+    }
+
+    audio {
+      margin-top: 20px;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    footer {
+      margin-top: 30px;
+      color: #555;
+      font-size: 14px;
+    }
+  </style>
 </head>
+
 <body>
-<div class="container">
-<h1>القرآن الكريم  </h1>
 
-<label for="reciter">اختر القارئ:</label>
-<select id="reciter" onchange="changeReciter()">
-  <option value="yasir">ياسر الدوسري</option>
-  <option value="maher">ماهر المعيقلي</option>
-  <option value="sudais">السديس</option>
-  <option value="eslam">اسلام صبحي</option>
-  <option value="afasy">مشاري العفاسي</option>
-</select>
+  <h1> القرآن الكريم</h1>
 
-<audio id="audio" controls>
-  <source src="" type="audio/mp3">
-  
-</audio>
+  <!-- اختيار القارئ -->
+  <div>
+    <select id="reciterSelect">
+      <option value="afasy">مشاري راشد العفاسي</option>
+      <option value="maher">ماهر المعيقلي</option>
+    </select>
+  </div>
 
-<h2>اختر السورة:</h2>
-<ul id="audio"></ul>
+  <!-- اختيار السورة -->
+  <div>
+    <select id="surahSelect"></select>
+  </div>
 
-<footer>اللهم اجعل هذا العمل خالصًا لوجهك وصدقة جارية</footer>
-</div>
+  <!-- مشغل الصوت -->
+  <audio id="audioPlayer" controls></audio>
 
-<script src="surahLinks.js"></script>
-<script>
-const audio = document.getElementById('audio');
-const reciterSelect = document.getElementById('reciter');
-const surahList = document.getElementById('surahList');
+  <footer>
+    جعلنا الله وإياكم من أهل القرآن 🤍
+  </footer>
 
-const surahs = [
-"الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
-"هود","يوسف","الرعد","ابراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",
-"الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم",
-"لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر",
-"فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق",
-"الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحشر","الممتحنة","الصف","الجمعة",
-"المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن",
-"المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الإنفطار",
-"المطففين","الإنشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل",
-"الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر",
-"العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص",
-"الفلق","الناس"
-];
+  <!-- روابط السور -->
+  <script src="surahLinks.js"></script>
 
-function populateSurahs() {
-  surahList.innerHTML = '';
-  surahs.forEach((name, index) => {
-    const li = document.createElement('li');
-    li.textContent = `${index+1}. ${name}`;
-    li.onclick = () => { playSurah(index); };
-    surahList.appendChild(li);
-  });
-}
+  <script>
+    const surahNames = [
+      "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
+      "هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",
+      "الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم",
+      "لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر",
+      "فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق",
+      "الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة",
+      "الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج",
+      "نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس",
+      "التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد",
+      "الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات",
+      "القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر",
+      "المسد","الإخلاص","الفلق","الناس"
+    ];
 
-function playSurah(number) {
-  const reciter = reciterSelect.value;
-  audio.src = surahLinks[reciter][number];
-  audio.play();
-}
+    const surahSelect = document.getElementById("surahSelect");
+    const reciterSelect = document.getElementById("reciterSelect");
+    const audioPlayer = document.getElementById("audioPlayer");
 
-function changeReciter() {
-  if(audio.src) { 
-    const index = Array.from(surahList.children).findIndex(li => li.textContent.startsWith(audio.src.split('/').pop().split('.')[0]));
-    const number = index >= 0 ? index : 0;
-    audio.src = surahLinks[reciterSelect.value][number];
-    audio.play();
-  }
-}
+    // إنشاء الفهرس
+    surahNames.forEach((name, index) => {
+      const option = document.createElement("option");
+      option.value = index;
+      option.textContent = (index + 1) + " - " + name;
+      surahSelect.appendChild(option);
+    });
 
-populateSurahs();
-</script>
+    function playSurah() {
+      const reciter = reciterSelect.value;
+      const surahIndex = surahSelect.value;
+
+      if (!surahLinks[reciter] || !surahLinks[reciter][surahIndex]) {
+        alert("الصوت غير متوفر لهذه السورة");
+        return;
+      }
+
+      audioPlayer.src = surahLinks[reciter][surahIndex];
+      audioPlayer.play();
+    }
+
+    surahSelect.addEventListener("change", playSurah);
+    reciterSelect.addEventListener("change", playSurah);
+  </script>
+
 </body>
-</html>
+</html> 
