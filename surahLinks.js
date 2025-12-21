@@ -1,6 +1,6 @@
 const reciters = [
   "afasy",
-  "Islam Sobhi"
+  "islam", 
 ];
 
 for (let i = 1; i <= 114; i++) {
@@ -8,7 +8,7 @@ for (let i = 1; i <= 114; i++) {
     `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${i}.mp3`
   );
 
-  surahLinks.maher.push(
+  surahLinks.islam.push(
     `https://surahquran.com/mp3/maher/ `
   );
 }
