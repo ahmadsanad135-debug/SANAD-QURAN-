@@ -1,130 +1,79 @@
-const reciters = [
-  "afasy",
-  "islam", 
-];
+// surahLinks.js
 
-for (let i = 1; i <= 114; i++) {
-  surahLinks.afasy.push(
-    `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${i}.mp3`
-  );
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('surah-container');
+    const searchInput = document.getElementById('search-input');
+    let allSurahs = []; // مخزن لبيانات السور للبحث لاحقاً
 
-  surahLinks.islam.push(
-    `https://surahquran.com/mp3/maher/ `
-  );
-}
-const surahs = [
-  { id: 1, name: "الفاتحة", audio: "https://server14.mp3quran.net/islam/001.mp3" },
-  { id: 2, name: "البقرة", audio: "https://server14.mp3quran.net/islam/002.mp3" },
-  { id: 3, name: "آل عمران", audio: "https://server14.mp3quran.net/islam/003.mp3" },
-  { id: 4, name: "النساء", audio: "https://server14.mp3quran.net/islam/004.mp3" },
-  { id: 5, name: "المائدة", audio: "https://server14.mp3quran.net/islam/005.mp3" },
-  { id: 6, name: "الأنعام", audio: "https://server14.mp3quran.net/islam/006.mp3" },
-  { id: 7, name: "الأعراف", audio: "https://server14.mp3quran.net/islam/007.mp3" },
-  { id: 8, name: "الأنفال", audio: "https://server14.mp3quran.net/islam/008.mp3" },
-  { id: 9, name: "التوبة", audio: "https://server14.mp3quran.net/islam/009.mp3" },
-  { id: 10, name: "يونس", audio: "https://server14.mp3quran.net/islam/010.mp3" },
-  { id: 11, name: "هود", audio: "https://server14.mp3quran.net/islam/011.mp3" },
-  { id: 12, name: "يوسف", audio: "https://server14.mp3quran.net/islam/012.mp3" },
-  { id: 13, name: "الرعد", audio: "https://server14.mp3quran.net/islam/013.mp3" },
-  { id: 14, name: "إبراهيم", audio: "https://server14.mp3quran.net/islam/014.mp3" },
-  { id: 15, name: "الحجر", audio: "https://server14.mp3quran.net/islam/015.mp3" },
-  { id: 16, name: "النحل", audio: "https://server14.mp3quran.net/islam/016.mp3" },
-  { id: 17, name: "الإسراء", audio: "https://server14.mp3quran.net/islam/017.mp3" },
-  { id: 18, name: "الكهف", audio: "https://server14.mp3quran.net/islam/018.mp3" },
-  { id: 19, name: "مريم", audio: "https://server14.mp3quran.net/islam/019.mp3" },
-  { id: 20, name: "طه", audio: "https://server14.mp3quran.net/islam/020.mp3" },
-  { id: 21, name: "الأنبياء", audio: "https://server14.mp3quran.net/islam/021.mp3" },
-  { id: 22, name: "الحج", audio: "https://server14.mp3quran.net/islam/022.mp3" },
-  { id: 23, name: "المؤمنون", audio: "https://server14.mp3quran.net/islam/023.mp3" },
-  { id: 24, name: "النور", audio: "https://server14.mp3quran.net/islam/024.mp3" },
-  { id: 25, name: "الفرقان", audio: "https://server14.mp3quran.net/islam/025.mp3" },
-  { id: 26, name: "الشعراء", audio: "https://server14.mp3quran.net/islam/026.mp3" },
-  { id: 27, name: "النمل", audio: "https://server14.mp3quran.net/islam/027.mp3" },
-  { id: 28, name: "القصص", audio: "https://server14.mp3quran.net/islam/028.mp3" },
-  { id: 29, name: "العنكبوت", audio: "https://server14.mp3quran.net/islam/029.mp3" },
-  { id: 30, name: "الروم", audio: "https://server14.mp3quran.net/islam/030.mp3" },
-  { id: 31, name: "لقمان", audio: "https://server14.mp3quran.net/islam/031.mp3" },
-  { id: 32, name: "السجدة", audio: "https://server14.mp3quran.net/islam/032.mp3" },
-  { id: 33, name: "الأحزاب", audio: "https://server14.mp3quran.net/islam/033.mp3" },
-  { id: 34, name: "سبأ", audio: "https://server14.mp3quran.net/islam/034.mp3" },
-  { id: 35, name: "فاطر", audio: "https://server14.mp3quran.net/islam/035.mp3" },
-  { id: 36, name: "يس", audio: "https://server14.mp3quran.net/islam/036.mp3" },
-  { id: 37, name: "الصافات", audio: "https://server14.mp3quran.net/islam/037.mp3" },
-  { id: 38, name: "ص", audio: "https://server14.mp3quran.net/islam/038.mp3" },
-  { id: 39, name: "الزمر", audio: "https://server14.mp3quran.net/islam/039.mp3" },
-  { id: 40, name: "غافر", audio: "https://server14.mp3quran.net/islam/040.mp3" },
-  { id: 41, name: "فصلت", audio: "https://server14.mp3quran.net/islam/041.mp3" },
-  { id: 42, name: "الشورى", audio: "https://server14.mp3quran.net/islam/042.mp3" },
-  { id: 43, name: "الزخرف", audio: "https://server14.mp3quran.net/islam/043.mp3" },
-  { id: 44, name: "الدخان", audio: "https://server14.mp3quran.net/islam/044.mp3" },
-  { id: 45, name: "الجاثية", audio: "https://server14.mp3quran.net/islam/045.mp3" },
-  { id: 46, name: "الأحقاف", audio: "https://server14.mp3quran.net/islam/046.mp3" },
-  { id: 47, name: "محمد", audio: "https://server14.mp3quran.net/islam/047.mp3" },
-  { id: 48, name: "الفتح", audio: "https://server14.mp3quran.net/islam/048.mp3" },
-  { id: 49, name: "الحجرات", audio: "https://server14.mp3quran.net/islam/049.mp3" },
-  { id: 50, name: "ق", audio: "https://server14.mp3quran.net/islam/050.mp3" },
-  { id: 51, name: "الذاريات", audio: "https://server14.mp3quran.net/islam/051.mp3" },
-  { id: 52, name: "الطور", audio: "https://server14.mp3quran.net/islam/052.mp3" },
-  { id: 53, name: "النجم", audio: "https://server14.mp3quran.net/islam/053.mp3" },
-  { id: 54, name: "القمر", audio: "https://server14.mp3quran.net/islam/054.mp3" },
-  { id: 55, name: "الرحمن", audio: "https://server14.mp3quran.net/islam/055.mp3" },
-  { id: 56, name: "الواقعة", audio: "https://server14.mp3quran.net/islam/056.mp3" },
-  { id: 57, name: "الحديد", audio: "https://server14.mp3quran.net/islam/057.mp3" },
-  { id: 58, name: "المجادلة", audio: "https://server14.mp3quran.net/islam/058.mp3" },
-  { id: 59, name: "الحشر", audio: "https://server14.mp3quran.net/islam/059.mp3" },
-  { id: 60, name: "الممتحنة", audio: "https://server14.mp3quran.net/islam/060.mp3" },
-  { id: 61, name: "الصف", audio: "https://server14.mp3quran.net/islam/061.mp3" },
-  { id: 62, name: "الجمعة", audio: "https://server14.mp3quran.net/islam/062.mp3" },
-  { id: 63, name: "المنافقون", audio: "https://server14.mp3quran.net/islam/063.mp3" },
-  { id: 64, name: "التغابن", audio: "https://server14.mp3quran.net/islam/064.mp3" },
-  { id: 65, name: "الطلاق", audio: "https://server14.mp3quran.net/islam/065.mp3" },
-  { id: 66, name: "التحريم", audio: "https://server14.mp3quran.net/islam/066.mp3" },
-  { id: 67, name: "الملك", audio: "https://server14.mp3quran.net/islam/067.mp3" },
-  { id: 68, name: "القلم", audio: "https://server14.mp3quran.net/islam/068.mp3" },
-  { id: 69, name: "الحاقة", audio: "https://server14.mp3quran.net/islam/069.mp3" },
-  { id: 70, name: "المعارج", audio: "https://server14.mp3quran.net/islam/070.mp3" },
-  { id: 71, name: "نوح", audio: "https://server14.mp3quran.net/islam/071.mp3" },
-  { id: 72, name: "الجن", audio: "https://server14.mp3quran.net/islam/072.mp3" },
-  { id: 73, name: "المزمل", audio: "https://server14.mp3quran.net/islam/073.mp3" },
-  { id: 74, name: "المدثر", audio: "https://server14.mp3quran.net/islam/074.mp3" },
-  { id: 75, name: "القيامة", audio: "https://server14.mp3quran.net/islam/075.mp3" },
-  { id: 76, name: "الإنسان", audio: "https://server14.mp3quran.net/islam/076.mp3" },
-  { id: 77, name: "المرسلات", audio: "https://server14.mp3quran.net/islam/077.mp3" },
-  { id: 78, name: "النبأ", audio: "https://server14.mp3quran.net/islam/078.mp3" },
-  { id: 79, name: "النازعات", audio: "https://server14.mp3quran.net/islam/079.mp3" },
-  { id: 80, name: "عبس", audio: "https://server14.mp3quran.net/islam/080.mp3" },
-  { id: 81, name: "التكوير", audio: "https://server14.mp3quran.net/islam/081.mp3" },
-  { id: 82, name: "الانفطار", audio: "https://server14.mp3quran.net/islam/082.mp3" },
-  { id: 83, name: "المطففين", audio: "https://server14.mp3quran.net/islam/083.mp3" },
-  { id: 84, name: "الانشقاق", audio: "https://server14.mp3quran.net/islam/084.mp3" },
-  { id: 85, name: "البروج", audio: "https://server14.mp3quran.net/islam/085.mp3" },
-  { id: 86, name: "الطارق", audio: "https://server14.mp3quran.net/islam/086.mp3" },
-  { id: 87, name: "الأعلى", audio: "https://server14.mp3quran.net/islam/087.mp3" },
-  { id: 88, name: "الغاشية", audio: "https://server14.mp3quran.net/islam/088.mp3" },
-  { id: 89, name: "الفجر", audio: "https://server14.mp3quran.net/islam/089.mp3" },
-  { id: 90, name: "البلد", audio: "https://server14.mp3quran.net/islam/090.mp3" },
-  { id: 91, name: "الشمس", audio: "https://server14.mp3quran.net/islam/091.mp3" },
-  { id: 92, name: "الليل", audio: "https://server14.mp3quran.net/islam/092.mp3" },
-  { id: 93, name: "الضحى", audio: "https://server14.mp3quran.net/islam/093.mp3" },
-  { id: 94, name: "الشرح", audio: "https://server14.mp3quran.net/islam/094.mp3" },
-  { id: 95, name: "التين", audio: "https://server14.mp3quran.net/islam/095.mp3" },
-  { id: 96, name: "العلق", audio: "https://server14.mp3quran.net/islam/096.mp3" },
-  { id: 97, name: "القدر", audio: "https://server14.mp3quran.net/islam/097.mp3" },
-  { id: 98, name: "البينة", audio: "https://server14.mp3quran.net/islam/098.mp3" },
-  { id: 99, name: "الزلزلة", audio: "https://server14.mp3quran.net/islam/099.mp3" },
-  { id: 100, name: "العاديات", audio: "https://server14.mp3quran.net/islam/100.mp3" },
-  { id: 101, name: "القارعة", audio: "https://server14.mp3quran.net/islam/101.mp3" },
-  { id: 102, name: "التكاثر", audio: "https://server14.mp3quran.net/islam/102.mp3" },
-  { id: 103, name: "العصر", audio: "https://server14.mp3quran.net/islam/103.mp3" },
-  { id: 104, name: "الهمزة", audio: "https://server14.mp3quran.net/islam/104.mp3" },
-  { id: 105, name: "الفيل", audio: "https://server14.mp3quran.net/islam/105.mp3" },
-  { id: 106, name: "قريش", audio: "https://server14.mp3quran.net/islam/106.mp3" },
-  { id: 107, name: "الماعون", audio: "https://server14.mp3quran.net/islam/107.mp3" },
-  { id: 108, name: "الكوثر", audio: "https://server14.mp3quran.net/islam/108.mp3" },
-  { id: 109, name: "الكافرون", audio: "https://server14.mp3quran.net/islam/109.mp3" },
-  { id: 110, name: "النصر", audio: "https://server14.mp3quran.net/islam/110.mp3" },
-  { id: 111, name: "المسد", audio: "https://server14.mp3quran.net/islam/111.mp3" },
-  { id: 112, name: "الإخلاص", audio: "https://server14.mp3quran.net/islam/112.mp3" },
-  { id: 113, name: "الفلق", audio: "https://server14.mp3quran.net/islam/113.mp3" },
-  { id: 114, name: "الناس", audio: "https://server14.mp3quran.net/islam/114.mp3" }, 
-];
+    // 1. دالة لجلب قائمة السور من الـ API
+    async function fetchSurahs() {
+        try {
+            // جلب البيانات من مصدر موثوق (Al Quran Cloud)
+            const response = await fetch('https://api.alquran.cloud/v1/surah');
+            const data = await response.json();
+
+            if (data.code === 200) {
+                allSurahs = data.data; // حفظ البيانات في المصفوفة
+                displaySurahs(allSurahs); // عرض السور في الصفحة
+            } else {
+                container.innerHTML = '<p style="text-align:center; color:red;">عذراً، تعذر تحميل قائمة السور حالياً.</p>';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            container.innerHTML = '<p style="text-align:center; color:red;">يرجى التأكد من اتصالك بالإنترنت.</p>';
+        }
+    }
+
+    // 2. دالة بناء مربعات السور (Cards) وعرضها
+    function displaySurahs(surahs) {
+        container.innerHTML = ''; // مسح المحتوى القديم (مثل كلمة "جاري التحميل")
+
+        if (surahs.length === 0) {
+            container.innerHTML = '<p style="text-align:center;">لا توجد سورة بهذا الاسم.</p>';
+            return;
+        }
+
+        surahs.forEach(surah => {
+            // إنشاء عنصر الرابط لكل سورة
+            const card = document.createElement('a');
+            card.className = 'surah-card';
+            
+            // الربط مع صفحة القراءة والاستماع مع تمرير رقم السورة
+            card.href = `quran.html?surah=${surah.number}`; 
+
+            // تحديد نوع السورة بالعربي
+            const typeAr = surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية';
+
+            card.innerHTML = `
+                <div class="surah-number">${surah.number}</div>
+                <span class="surah-name">${surah.name}</span>
+                <div class="surah-info">
+                    ${surah.englishName} <br>
+                    <span style="font-size: 0.85em; color: #777;">${typeAr} - آياتها ${surah.numberOfAyahs}</span>
+                </div>
+            `;
+
+            container.appendChild(card);
+        });
+    }
+
+    // 3. تفعيل خاصية البحث الذكي
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.trim().toLowerCase();
+            
+            // تصفية السور حسب الاسم العربي أو الإنجليزي أو الرقم
+            const filtered = allSurahs.filter(surah => 
+                surah.name.includes(searchTerm) || 
+                surah.englishName.toLowerCase().includes(searchTerm) ||
+                surah.number.toString() === searchTerm
+            );
+
+            displaySurahs(filtered);
+        });
+    }
+
+    // تشغيل الدالة عند فتح الصفحة
+    fetchSurahs();
+});
+ 
