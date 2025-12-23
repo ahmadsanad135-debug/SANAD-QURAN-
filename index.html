@@ -1,113 +1,158 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>القرآن الكريم  </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>القرآن الكريم - الفهرس</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #0f5132; /* لون أخضر إسلامي */
+            --secondary-color: #d1e7dd;
+            --accent-color: #bfa15f; /* لون ذهبي */
+            --text-color: #333;
+        }
 
-  <style>
-    body {
-      font-family: Tahoma, Arial;
-      background: #f5f5f5;
-      text-align: center;
-      padding: 20px;
-    }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+        }
 
-    h1 {
-      color: #1a7f37;
-    }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
-    select {
-      padding: 10px;
-      font-size: 16px;
-      margin: 10px;
-      width: 250px;
-    }
+        h1 {
+            font-family: 'Amiri', serif;
+            margin: 0;
+            font-size: 2.5rem;
+        }
 
-    audio {
-      margin-top: 20px;
-      width: 90%;
-      max-width: 500px;
-    }
+        .search-container {
+            margin-top: 1.5rem;
+        }
 
-    footer {
-      margin-top: 30px;
-      color: #555;
-      font-size: 14px;
-    }
-  </style>
+        #search-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            border-radius: 25px;
+            border: none;
+            outline: none;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* شبكة السور */
+        .surah-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .surah-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .surah-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            border-color: var(--accent-color);
+        }
+
+        .surah-number {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .surah-name {
+            font-family: 'Amiri', serif;
+            font-size: 1.6rem;
+            color: var(--primary-color);
+            margin: 0.5rem 0;
+            display: block;
+        }
+
+        .surah-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            padding: 2rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
-
 <body>
 
-  <h1> القرآن الكريم</h1>
+    <header>
+        <h1>القرآن الكريم</h1>
+        <p>فهرس سور القرآن الكريم</p>
+        
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="ابحث عن اسم السورة...">
+        </div>
+    </header>
 
-  <!-- اختيار القارئ -->
-  <div>
-    <select id="reciterSelect">
-      <option value="afasy">مشاري راشد العفاسي</option>
-      <option value="islam">إسلام صبحي </option>
-    </select>
-  </div>
+    <div class="container">
+        <div id="surah-container" class="surah-grid">
+            <div class="loading">جاري تحميل السور...</div>
+        </div>
+    </div>
 
-  <!-- اختيار السورة -->
-  <div>
-    <select id="surahSelect"></select>
-  </div>
+    <footer>
+        <p>صدقة جارية - نسألكم الدعاء</p>
+    </footer>
 
-  <!-- مشغل الصوت -->
-  <audio id="audioPlayer" controls></audio>
-
-  <footer>
-    جعلنا الله وإياكم من أهل القرآن 🤍
-  </footer>
-
-  <!-- روابط السور -->
-  <script src="surahLinks.js"></script>
-
-  <script>
-    const surahNames = [
-      "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
-      "هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",
-      "الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم",
-      "لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر",
-      "فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق",
-      "الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة",
-      "الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج",
-      "نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس",
-      "التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد",
-      "الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات",
-      "القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر",
-      "المسد","الإخلاص","الفلق","الناس"
-    ];
-
-    const surahSelect = document.getElementById("surahSelect");
-    const reciterSelect = document.getElementById("reciterSelect");
-    const audioPlayer = document.getElementById("audioPlayer");
-
-    // إنشاء الفهرس
-    surahNames.forEach((name, index) => {
-      const option = document.createElement("option");
-      option.value = index;
-      option.textContent = (index + 1) + " - " + name;
-      surahSelect.appendChild(option);
-    });
-
-    function playSurah() {
-      const reciter = reciterSelect.value;
-      const surahIndex = surahSelect.value;
-
-      if (!surahLinks[reciter] || !surahLinks[reciter][surahIndex]) {
-        alert("الصوت غير متوفر لهذه السورة");
-        return;
-      }
-
-      audioPlayer.src = surahLinks[reciter][surahIndex];
-      audioPlayer.play();
-    }
-
-    surahSelect.addEventListener("change", playSurah);
-    reciterSelect.addEventListener("change", playSurah);
-  </script>
-
+    <script src="surahLinks.js"></script>
 </body>
-</html> 
+</html>
