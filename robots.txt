@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ahmadsanad135-debug.github.io/SANAD-QURAN/sitemap.xml
