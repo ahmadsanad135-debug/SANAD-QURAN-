@@ -7,37 +7,45 @@ const reciters = [
     { name: "ياسر الدوسري", server: "https://server11.mp3quran.net/yasser/" }
 ];
 
-const urlParams = new URLSearchParams(window.location.search);
-const surahId = urlParams.get('id');
-
+// الحصول على العناصر من الصفحة
 const reciterSelect = document.getElementById('reciterSelect');
 const audioPlayer = document.getElementById('audioPlayer');
 const surahTitle = document.getElementById('surahTitle');
 
-// تعبئة قائمة القراء
-reciters.forEach((reciter, index) => {
-    const option = document.createElement('option');
-    option.value = index;
-    option.textContent = reciter.name;
-    reciterSelect.appendChild(option);
-});
+// الحصول على رقم السورة من الرابط
+const urlParams = new URLSearchParams(window.location.search);
+const surahId = urlParams.get('id');
 
-// وظيفة تشغيل السورة
-function playSurah() {
-    const selectedReciter = reciters[reciterSelect.value];
-    // تحويل رقم السورة إلى صيغة 3 أرقام (مثلاً 1 يصبح 001)
-    const formattedId = surahId.padStart(3, '0');
-    const audioUrl = `${selectedReciter.server}${formattedId}.mp3`;
-    
-    audioPlayer.src = audioUrl;
-    audioPlayer.play();
-}
+// التأكد من وجود العناصر قبل البدء لتجنب التعليق
+if (reciterSelect && audioPlayer) {
+    // تعبئة قائمة القراء
+    reciters.forEach((reciter, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = reciter.name;
+        reciterSelect.appendChild(option);
+    });
 
-// تغيير القارئ عند الاختيار من القائمة
-reciterSelect.addEventListener('change', playSurah);
+    // وظيفة تشغيل السورة
+    function playSurah() {
+        if (!surahId) return;
+        
+        const selectedReciter = reciters[reciterSelect.value];
+        // تحويل الرقم لصيغة 001
+        const formattedId = surahId.padStart(3, '0');
+        const audioUrl = `${selectedReciter.server}${formattedId}.mp3`;
+        
+        audioPlayer.src = audioUrl;
+        audioPlayer.load(); // تحميل الملف الصوتي الجديد
+        audioPlayer.play().catch(e => console.log("الرجاء الضغط على تشغيل"));
+    }
 
-// تشغيل السورة تلقائياً عند تحميل الصفحة
-if (surahId) {
-    playSurah();
+    // تغيير القارئ
+    reciterSelect.addEventListener('change', playSurah);
+
+    // التشغيل عند فتح الصفحة
+    if (surahId) {
+        playSurah();
+    }
 }
  
