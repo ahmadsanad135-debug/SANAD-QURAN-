@@ -69,7 +69,6 @@ reciterSelect.addEventListener('change', (e) => {
 
 if (surahId) {
     loadSurahText(surahId);
-    playSurah(reciters[0].server);
 } else {
     window.location.href = 'index.html';
 }
