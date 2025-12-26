@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>القرآن الكريم - الفهرس</title>
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon.png">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary-color: #0f5132; --secondary-color: #d1e7dd; --accent-color: #bfa15f; --text-color: #333; }
@@ -26,7 +27,7 @@
     <header>
         <h1>القرآن الكريم</h1>
         <div id="continue-reading">
-            <a id="last-surah-link" href="#" style="color: #856404; text-decoration: none;">📖 استكمال القراءة: <span id="last-surah-name"></span></a>
+            <a id="last-surah-link" href="#" style="color: #856404; text-decoration: none;">📖 استكمال القراءة: سورة <span id="last-surah-name"></span></a>
         </div>
         <div class="search-container">
             <input type="text" id="search-input" placeholder="ابحث برقم السورة ...">
@@ -37,7 +38,10 @@
     </div>
     <script src="surahLinks.js"></script>
     <script>
+        // تسجيل الـ Service Worker ليعمل التطبيق بدون إنترنت
         if('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+        
+        // التحقق من وجود سورة محفوظة لاستكمالها
         const lastId = localStorage.getItem('lastReadId');
         const lastName = localStorage.getItem('lastReadName');
         if(lastId && lastName) {
@@ -48,4 +52,3 @@
     </script>
 </body>
 </html>
- 
