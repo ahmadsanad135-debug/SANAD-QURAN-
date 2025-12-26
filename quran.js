@@ -1,4 +1,4 @@
-// قائمة القراء - يمكنك إضافة أي قارئ جديد هنا بنفس الصيغة
+// قائمة القراء الكاملة
 const reciters = [
     { name: "مشاري العفاسي", server: "https://server8.mp3quran.net/afs/" },
     { name: "ماهر المعيقلي", server: "https://server12.mp3quran.net/maher/" },
@@ -36,48 +36,45 @@ async function loadSurah() {
         document.getElementById('surah-name').textContent = surah.name;
         document.getElementById('header-title').textContent = surah.name;
         
-        // حفظ آخر سورة (الاسم والرقم) للاستكمال لاحقاً
+        // حفظ آخر سورة لاستكمال القراءة لاحقاً
         localStorage.setItem('lastReadId', surahId);
         localStorage.setItem('lastReadName', surah.name);
 
         let content = '';
-        // إضافة البسملة لجميع السور عدا الفاتحة والتوبة
         if (surahId != 1 && surahId != 9) {
             content += '<div style="text-align:center; font-family:Amiri; font-size:2rem; margin-bottom:20px;">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</div>';
         }
         
         surah.ayahs.forEach(ayah => {
             let text = ayah.text;
-            // إزالة البسملة المدمجة في الآية الأولى إذا لم تكن الفاتحة أو التوبة
             if (surahId != 1 && surahId != 9 && ayah.numberInSurah === 1) {
                 text = text.replace('بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ ', '');
             }
+            // استدعاء دالة التفسير عند الضغط على رقم الآية
             content += `${text} <span class="ayah-num" onclick="getTafsir(${surahId}, ${ayah.numberInSurah})">${ayah.numberInSurah}</span> `;
         });
         
         quranTextElement.innerHTML = content;
         playAudio(reciterSelect.value);
     } catch (e) { 
-        quranTextElement.innerHTML = "خطأ في تحميل نص السورة. تأكد من اتصالك بالإنترنت."; 
+        quranTextElement.innerHTML = "خطأ في تحميل النص.";
     }
 }
 
+// دالة جلب التفسير الميسر
 async function getTafsir(s, a) {
     const box = document.getElementById('tafsir-box');
     const txt = document.getElementById('tafsir-text');
     box.style.display = 'block';
-    txt.textContent = "جاري جلب التفسير الميسر...";
+    txt.textContent = "جاري جلب التفسير...";
     try {
         const res = await fetch(`https://api.alquran.cloud/v1/ayah/${s}:${a}/ar.jalalayn`);
         const data = await res.json();
         txt.textContent = data.data.text;
-    } catch (e) { 
-        txt.textContent = "عذراً، فشل تحميل التفسير."; 
-    }
+    } catch (e) { txt.textContent = "فشل التحميل."; }
 }
 
 function playAudio(server) {
-    // تنسيق رقم السورة ليكون من 3 خانات (مثلاً 001)
     const fileId = String(surahId).padStart(3, '0');
     audioPlayer.src = `${server}${fileId}.mp3`;
 }
@@ -87,8 +84,4 @@ reciterSelect.onchange = (e) => {
     audioPlayer.play();
 };
 
-if(surahId) {
-    loadSurah();
-} else {
-    window.location.href = 'index.html';
-}
+if(surahId) loadSurah();
