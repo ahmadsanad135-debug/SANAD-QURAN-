@@ -1,7 +1,7 @@
 {
   "name": "مصحف سند",
   "short_name": "مصحف سند",
-  "start_url": "index.html",
+  "start_url": "./quran.html", 
   "display": "standalone",
   "background_color": "#0f5132",
   "theme_color": "#0f5132",
@@ -13,3 +13,4 @@
     }
   ]
 }
+ 
