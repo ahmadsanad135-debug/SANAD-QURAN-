@@ -7,7 +7,6 @@ const ASSETS_TO_CACHE = [
   './',
   './quran.html',
   './quran.js',
-  './style.css',      // إذا كان لديك ملف CSS
   './manifest.json',  // سنقوم بإنشائه في الخطوة التالية
   // أضف هنا أي صور أو أيقونات تستخدمها، مثل:
   // './icon.png',
