@@ -5,8 +5,8 @@ const CACHE_NAME = 'sanad-quran-cache-v3';
 // تأكد أن أسماء الملفات هنا تطابق أسماء ملفاتك تماماً (الحروف الكبيرة والصغيرة مهمة)
 const ASSETS_TO_CACHE = [
   './',
-  './Quran.html',
-  './Quran.js',
+  './quran.html',
+  './quran.js',
   './style.css',      // إذا كان لديك ملف CSS
   './manifest.json',  // سنقوم بإنشائه في الخطوة التالية
   // أضف هنا أي صور أو أيقونات تستخدمها، مثل:
