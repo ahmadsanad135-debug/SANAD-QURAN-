@@ -38,5 +38,17 @@
         <audio id="audio-player" controls style="width:100%"></audio>
     </div>
     <script src="quran.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('./sw.js')
+        .then(function(registration) {
+          console.log('تم تفعيل وضع الأوفلاين بنجاح. النطاق:', registration.scope);
+        }, function(err) {
+          console.log('فشل تفعيل وضع الأوفلاين:', err);
+        });
+    });
+  }
+</script>
 </body>
 </html>
