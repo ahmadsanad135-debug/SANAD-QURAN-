@@ -5,6 +5,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     let allSurahs = []; // مخزن لبيانات السور للبحث لاحقاً
 
+    // --- دالة مساعدة لتنظيف النص العربي (إزالة التشكيل وتوحيد الأحرف) ---
+    function normalizeArabic(text) {
+        if (!text) return "";
+        text = text.toString();
+        
+        // 1. إزالة التشكيل (الفتحة، الضمة، الكسرة، الشدة...الخ)
+        text = text.replace(/[\u064B-\u065F\u0670]/g, "");
+        
+        // 2. توحيد أشكال الألف (أ، إ، آ -> ا)
+        text = text.replace(/[أإآ]/g, "ا");
+        
+        // 3. توحيد التاء المربوطة والهاء (ة -> هـ)
+        text = text.replace(/ة/g, "ه");
+        
+        // 4. توحيد الياء (ى -> ي)
+        text = text.replace(/ى/g, "ي");
+
+        return text;
+    }
+    // -----------------------------------------------------------
+
     // 1. دالة لجلب قائمة السور من الـ API
     async function fetchSurahs() {
         try {
@@ -57,17 +78,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. تفعيل خاصية البحث الذكي
+    // 3. تفعيل خاصية البحث الذكي (تم التعديل هنا)
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.trim().toLowerCase();
+            // النص الذي يكتبه المستخدم (يتم تنظيفه)
+            const rawSearchTerm = e.target.value.toLowerCase();
+            const normalizedSearchTerm = normalizeArabic(rawSearchTerm);
             
-            // تصفية السور حسب الاسم العربي أو الإنجليزي أو الرقم
-            const filtered = allSurahs.filter(surah => 
-                surah.name.includes(searchTerm) || 
-                surah.englishName.toLowerCase().includes(searchTerm) ||
-                surah.number.toString() === searchTerm
-            );
+            // تصفية السور
+            const filtered = allSurahs.filter(surah => {
+                // تنظيف اسم السورة القادم من قاعدة البيانات قبل المقارنة
+                const normalizedSurahName = normalizeArabic(surah.name);
+
+                return (
+                    normalizedSurahName.includes(normalizedSearchTerm) || // بحث بالاسم العربي النظيف
+                    surah.englishName.toLowerCase().includes(rawSearchTerm) || // بحث بالاسم الإنجليزي
+                    surah.number.toString() === rawSearchTerm // بحث برقم السورة
+                );
+            });
 
             displaySurahs(filtered);
         });
@@ -76,4 +104,3 @@ document.addEventListener('DOMContentLoaded', () => {
     // تشغيل الدالة عند فتح الصفحة
     fetchSurahs();
 });
- 
