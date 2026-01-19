@@ -8,29 +8,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary-color: #0f5132; --accent-color: #bfa15f; }
-        body { font-family: 'Cairo', sans-serif; background-color: #f8f9fa; text-align: center; margin: 0; }
+        body { font-family: 'Cairo', sans-serif; background-color: #f8f9fa; text-align: center; margin: 0; padding-bottom: 50px; }
         header { background: var(--primary-color); color: white; padding: 1.5rem; }
-        .player-container { max-width: 500px; margin: 2rem auto; background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { font-family: 'Amiri', serif; font-size: 2.5rem; color: var(--primary-color); margin: 10px 0; }
+        .player-container { max-width: 500px; margin: 2rem auto; background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        h2 { font-family: 'Amiri', serif; font-size: 2.8rem; color: var(--primary-color); margin: 10px 0; }
         
-        /* تنسيق قائمة القراء */
+        .reciter-box { margin: 20px 0; text-align: right; }
+        label { font-weight: bold; color: var(--primary-color); display: block; margin-bottom: 8px; }
         .reciter-select {
-            width: 100%;
-            padding: 10px;
-            margin: 15px 0;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            font-family: 'Cairo', sans-serif;
-            font-size: 1rem;
-            outline: none;
+            width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #eee;
+            font-family: 'Cairo', sans-serif; font-size: 1rem; cursor: pointer;
         }
 
-        audio { width: 100%; margin: 20px 0; }
+        audio { width: 100%; margin: 25px 0; }
         
-        .controls-row { display: flex; justify-content: center; gap: 30px; margin-top: 10px; }
-        .btn { background: none; border: none; font-size: 1.6rem; color: #ccc; cursor: pointer; transition: 0.3s; }
+        .controls-row { display: flex; justify-content: center; gap: 40px; margin-top: 15px; }
+        .btn { background: none; border: none; font-size: 2rem; color: #ddd; cursor: pointer; transition: 0.3s; }
         .btn.active { color: var(--accent-color); transform: scale(1.2); }
-        .back-link { display: block; margin-top: 2rem; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        
+        .back-link { display: inline-block; margin-top: 2rem; color: var(--primary-color); text-decoration: none; font-weight: bold; border: 1px solid; padding: 8px 25px; border-radius: 25px; }
     </style>
 </head>
 <body>
@@ -40,17 +36,20 @@
         <h2 id="s-name">جاري التحميل...</h2>
         <p id="s-detail" style="color: #666;"></p>
 
-        <label for="reciter-list">اختر القارئ:</label>
-        <select id="reciter-list" class="reciter-select">
-            <option value="https://server8.mp3quran.net/afs/">مشاري العفاسي</option>
-            <option value="https://server7.mp3quran.net/basit/">عبد الباسط عبد الصمد (مرتل)</option>
-            <option value="https://server12.mp3quran.net/maher/">ماهر المعيقلي</option>
-            <option value="https://server7.mp3quran.net/shur/">سعود الشريم</option>
-            <option value="https://server10.mp3quran.net/ajm/">أحمد العجمي</option>
-            <option value="https://server6.mp3quran.net/akdr/">إبراهيم الأخضر</option>
-        </select>
+        <div class="reciter-box">
+            <label>اختر القارئ:</label>
+            <select id="reciter-list" class="reciter-select">
+                <option value="https://server14.mp3quran.net/islam/">إسلام صبحي</option>
+                <option value="https://server12.mp3quran.net/maher/">ماهر المعيقلي</option>
+                <option value="https://server7.mp3quran.net/sds/">عبد الرحمن السديس</option>
+                <option value="https://server8.mp3quran.net/afs/">مشاري العفاسي</option>
+                <option value="https://server11.mp3quran.net/yasser/">ياسر الدوسري</option>
+                <option value="https://server10.mp3quran.net/ajm/">أحمد العجمي</option>
+                <option value="https://server7.mp3quran.net/basit/">عبد الباسط عبد الصمد</option>
+            </select>
+        </div>
         
-        <audio id="main-player" controls>
+        <audio id="main-player" controls autoplay>
             <source id="audio-src" src="" type="audio/mpeg">
         </audio>
 
@@ -64,14 +63,13 @@
 
     <script>
         const params = new URLSearchParams(window.location.search);
-        const surahNum = params.get('surah');
+        const surahNum = params.get('surah') || '1';
         const audio = document.getElementById('main-player');
         const reciterSelect = document.getElementById('reciter-list');
         
         let isLoop = false;
         let isNext = false;
 
-        // 1. تحميل بيانات السورة (الاسم والتفاصيل)
         async function loadSurahData() {
             try {
                 const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`);
@@ -81,36 +79,29 @@
                 document.getElementById('s-name').textContent = s.name;
                 document.getElementById('s-detail').textContent = `${s.englishName} - ${s.revelationType === 'Meccan' ? 'مكية' : 'مدنية'} - آياتها ${s.numberOfAyahs}`;
                 
-                updateAudioSource(); // تشغيل الصوت بناءً على القارئ المختار
+                updateAudioSource();
                 
                 localStorage.setItem('lastReadId', surahNum);
                 localStorage.setItem('lastReadName', s.name);
-            } catch (e) { console.error("خطأ في التحميل"); }
+            } catch (e) { console.error("خطأ"); }
         }
 
-        // 2. تحديث رابط الصوت عند تغيير القارئ أو تحميل الصفحة
         function updateAudioSource() {
             const serverUrl = reciterSelect.value;
             const audioId = surahNum.padStart(3, '0');
-            const audioSrc = document.getElementById('audio-src');
-            
-            audioSrc.src = `${serverUrl}${audioId}.mp3`;
+            document.getElementById('audio-src').src = `${serverUrl}${audioId}.mp3`;
             audio.load();
-            // إذا كان المستخدم قد بدأ الاستماع، يستمر التشغيل تلقائياً عند تغيير القارئ
-            audio.play(); 
+            audio.play().catch(() => {}); // تجنب خطأ التشغيل التلقائي في بعض المتصفحات
         }
 
-        // تغيير الصوت عند تغيير القارئ من القائمة
         reciterSelect.onchange = updateAudioSource;
-
         loadSurahData();
 
-        // 3. منطق أزرار التكرار والتالي
         const loopBtn = document.getElementById('loop-btn');
         const nextBtn = document.getElementById('next-btn');
 
-        loopBtn.onclick = () => { isLoop = !isLoop; isNext = false; updateUI(); };
-        nextBtn.onclick = () => { isNext = !isNext; isLoop = false; updateUI(); };
+        loopBtn.onclick = () => { isLoop = !isLoop; if(isLoop) isNext = false; updateUI(); };
+        nextBtn.onclick = () => { isNext = !isNext; if(isNext) isLoop = false; updateUI(); };
 
         function updateUI() {
             loopBtn.classList.toggle('active', isLoop);
@@ -121,10 +112,11 @@
             if (isLoop) {
                 audio.currentTime = 0; audio.play();
             } else if (isNext) {
-                const n = parseInt(surahNum) + 1;
-                if (n <= 114) window.location.href = `quran.html?surah=${n}`;
+                const nextS = parseInt(surahNum) + 1;
+                if (nextS <= 114) window.location.href = `quran.html?surah=${nextS}`;
             }
         };
     </script>
 </body>
 </html>
+ 
