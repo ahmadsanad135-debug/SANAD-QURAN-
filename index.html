@@ -7,121 +7,185 @@
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { 
-            --primary-color: #0f5132; 
-            --secondary-color: #d1e7dd; 
-            --accent-color: #bfa15f; 
-            --text-color: #333; 
+        /* نفس متغيرات الألوان المستخدمة في صفحة القراءة لتوحيد التصميم */
+        :root {
+            --primary-dark: #093028;
+            --primary-light: #237a57;
+            --gold-accent: #d4af37;
+            --bg-body: #f4f4f1;
+            --bg-card: #ffffff;
+            --text-main: #1a1a1a;
+            --text-secondary: #555;
         }
         
+        * { box-sizing: border-box; }
+
         body { 
-            font-family: 'Cairo', sans-serif; 
-            background-color: #f8f9fa; 
+            font-family: 'Tajawal', sans-serif; 
+            background-color: var(--bg-body); 
             margin: 0; 
             padding: 0; 
-            color: var(--text-color); 
+            color: var(--text-main); 
         }
 
+        /* --- الهيدر --- */
         header { 
-            background-color: var(--primary-color); 
+            background: linear-gradient(135deg, var(--primary-dark), #0f4d3a);
             color: white; 
             text-align: center; 
-            padding: 2rem 1rem; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        h1 { font-family: 'Amiri', serif; margin: 0; font-size: 2.5rem; }
-
-        /* زر تثبيت التطبيق */
-        #install-btn {
-            display: none;
-            margin: 15px auto;
-            padding: 12px 25px;
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
+            padding: 1.5rem 1rem 2rem 1rem; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border-bottom: 3px solid var(--gold-accent);
+            border-radius: 0 0 25px 25px;
+            position: relative;
         }
 
+        h1 { 
+            font-family: 'Amiri', serif; 
+            margin: 0 0 15px 0; 
+            font-size: 2.2rem; 
+            font-weight: 700;
+            color: var(--gold-accent);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* زر التثبيت */
+        #install-btn {
+            display: none; /* يظهر فقط إذا كان التطبيق قابلاً للتثبيت */
+            margin: 0 auto 15px auto;
+            padding: 8px 20px;
+            background-color: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        #install-btn:hover { background-color: var(--gold-accent); color: var(--primary-dark); }
+
+        /* بانر استكمال القراءة */
         #continue-reading { 
             display: none; 
-            background: #fff3cd; 
-            padding: 12px; 
-            border-radius: 10px; 
-            margin: 15px auto; 
-            max-width: 400px;
-            text-align: center; 
-            border: 1px solid #ffeeba; 
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 20px; 
+            border-radius: 12px; 
+            margin: -25px auto 20px auto; /* تداخل مع الهيدر */
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            border: 1px solid var(--gold-accent);
         }
 
-        .search-container { margin-top: 1.5rem; }
+        .continue-link {
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            font-size: 1.1rem;
+        }
+
+        /* شريط البحث */
+        .search-container { 
+            position: relative; 
+            max-width: 500px; 
+            margin: 0 auto; 
+        }
         
         #search-input { 
-            width: 90%; 
-            max-width: 400px; 
-            padding: 12px; 
-            border-radius: 25px; 
+            width: 100%; 
+            padding: 15px 45px 15px 15px; 
+            border-radius: 30px; 
             border: none; 
-            text-align: center; 
+            font-family: 'Tajawal', sans-serif;
             font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            outline: none;
         }
 
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-light);
+        }
+
+        /* --- شبكة السور --- */
+        .container { max-width: 1100px; margin: 2rem auto; padding: 0 15px; }
 
         .surah-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
-            gap: 1.5rem; 
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+            gap: 15px; 
         }
 
         .surah-card { 
             background: white; 
-            border-radius: 12px; 
-            padding: 1.5rem; 
+            border-radius: 15px; 
+            padding: 1.2rem; 
             text-align: center; 
             text-decoration: none; 
-            color: var(--text-color); 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
-            transition: 0.3s; 
-            border: 1px solid #eee; 
+            color: var(--text-main); 
+            box-shadow: 0 3px 6px rgba(0,0,0,0.04); 
+            transition: all 0.3s ease; 
+            border: 1px solid transparent; 
             position: relative; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .surah-card:hover { 
             transform: translateY(-5px); 
-            border-color: var(--accent-color); 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: var(--gold-accent); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        .surah-number { 
-            position: absolute; 
-            top: 10px; 
-            left: 10px; 
-            background-color: var(--secondary-color); 
-            color: var(--primary-color); 
-            width: 30px; 
-            height: 30px; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-weight: bold; 
+        /* رقم السورة */
+        .surah-num-badge {
+            background-color: #f0fdf4;
+            color: var(--primary-light);
             font-size: 0.8rem;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #d1e7dd;
         }
 
         .surah-name { 
             font-family: 'Amiri', serif; 
-            font-size: 1.8rem; 
-            color: var(--primary-color); 
-            display: block; 
+            font-size: 1.6rem; 
+            color: var(--primary-dark); 
+            font-weight: bold;
             margin-bottom: 5px;
+        }
+
+        .surah-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .loading-text {
+            grid-column: 1/-1;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 30px;
         }
     </style>
 </head>
@@ -130,68 +194,123 @@
     <header>
         <h1>مصحف سند</h1>
         
-        <button id="install-btn">📲 تثبيت التطبيق على الهاتف</button>
-
-        <div id="continue-reading">
-            <a id="last-surah-link" href="#" style="color: #856404; text-decoration: none; font-weight: bold;">
-                 استكمال القراءة:  <span id="last-surah-name"></span>
-            </a>
-        </div>
+        <button id="install-btn"><i class="fas fa-download"></i> تثبيت التطبيق</button>
 
         <div class="search-container">
-            <input type="text" id="search-input" placeholder="ابحث باسم السورة او رقمها    ...">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="search-input" placeholder="ابحث باسم السورة أو رقمها (مثلاً: الكهف أو 18)">
         </div>
     </header>
 
+    <div id="continue-reading">
+        <a id="last-surah-link" href="#" class="continue-link">
+            <i class="fas fa-bookmark" style="color: var(--gold-accent);"></i> 
+            استكمال: <span id="last-surah-name"></span>
+        </a>
+    </div>
+
     <div class="container">
         <div id="surah-container" class="surah-grid">
-            <p style="text-align: center; grid-column: 1/-1;">جاري تحميل الفهرس...</p>
+            <div class="loading-text"><i class="fas fa-circle-notch fa-spin"></i> جاري تحميل فهرس السور...</div>
         </div>
     </div>
 
-    <script src="surahLinks.js"></script>
-    
     <script>
-        // 1. تسجيل الـ Service Worker ليدعم التشغيل بدون إنترنت والتثبيت
+        // 1. تسجيل Service Worker (للدعم المستقبلي للتثبيت والعمل بدون نت)
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-            .then(() => console.log("Service Worker Registered"));
+            navigator.serviceWorker.register('sw.js').catch(console.error);
         }
 
-        // 2. منطق زر استكمال القراءة
-        const lastId = localStorage.getItem('lastReadId');
+        // متغير لتخزين السور للبحث
+        let allSurahs = [];
+
+        // 2. دالة جلب السور من API
+        async function fetchSurahs() {
+            try {
+                const response = await fetch('https://api.alquran.cloud/v1/surah');
+                const data = await response.json();
+                
+                if (data.code === 200) {
+                    allSurahs = data.data;
+                    renderSurahs(allSurahs);
+                }
+            } catch (error) {
+                document.getElementById('surah-container').innerHTML = 
+                    '<p style="text-align:center; color:red;">فشل في تحميل الفهرس. تأكد من اتصال الإنترنت.</p>';
+            }
+        }
+
+        // 3. دالة رسم السور في الصفحة
+        function renderSurahs(surahs) {
+            const container = document.getElementById('surah-container');
+            container.innerHTML = ''; // مسح المحتوى القديم
+
+            surahs.forEach(surah => {
+                const card = document.createElement('a');
+                card.href = `quran.html?surah=${surah.number}`;
+                card.className = 'surah-card';
+                
+                const typeText = surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية';
+                
+                card.innerHTML = `
+                    <div class="surah-num-badge">${surah.number}</div>
+                    <span class="surah-name">${surah.name.replace('سورة ', '')}</span>
+                    <div class="surah-meta">
+                        <span>${typeText}</span> | 
+                        <span>${surah.numberOfAyahs} آية</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 4. منطق البحث (بالاسم أو الرقم)
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allSurahs.filter(s => 
+                s.name.includes(term) || 
+                s.number.toString().includes(term) ||
+                s.englishName.toLowerCase().includes(term)
+            );
+            renderSurahs(filtered);
+        });
+
+        // 5. استكمال القراءة (متوافق مع صفحة quran.html)
+        const lastSurah = localStorage.getItem('lastReadSurah');
         const lastName = localStorage.getItem('lastReadName');
-        if (lastId && lastName) {
-            document.getElementById('continue-reading').style.display = 'block';
-            document.getElementById('last-surah-link').href = `quran.html?surah=${lastId}`;
-            document.getElementById('last-surah-name').textContent = lastName;
+        
+        if (lastSurah && lastName) {
+            const banner = document.getElementById('continue-reading');
+            const link = document.getElementById('last-surah-link');
+            const nameSpan = document.getElementById('last-surah-name');
+            
+            banner.style.display = 'block';
+            link.href = `quran.html?surah=${lastSurah}`;
+            nameSpan.textContent = `سورة ${lastName}`;
         }
 
-        // 3. منطق زر تثبيت التطبيق (PWA)
+        // 6. زر التثبيت (PWA Install)
         let deferredPrompt;
         const installBtn = document.getElementById('install-btn');
 
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            installBtn.style.display = 'block'; // إظهار الزر عند توفر إمكانية التثبيت
+            installBtn.style.display = 'inline-block';
         });
 
         installBtn.addEventListener('click', () => {
             installBtn.style.display = 'none';
             deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
-                }
+            deferredPrompt.userChoice.then((result) => {
                 deferredPrompt = null;
             });
         });
 
-        window.addEventListener('appinstalled', () => {
-            installBtn.style.display = 'none';
-            console.log('App installed successfully');
-        });
+        // تشغيل الجلب عند التحميل
+        fetchSurahs();
     </script>
 </body>
 </html>
+ 
