@@ -8,72 +8,66 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary-color: #0f5132; --accent-color: #bfa15f; }
-        body { font-family: 'Cairo', sans-serif; background-color: #f8f9fa; text-align: center; margin: 0; padding-bottom: 50px; }
-        header { background: var(--primary-color); color: white; padding: 1.5rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .container { max-width: 800px; margin: 2rem auto; padding: 0 15px; }
+        body { font-family: 'Cairo', sans-serif; background-color: #f8f9fa; margin: 0; padding-bottom: 20px; }
         
-        /* قسم المشغل والقراء */
-        .player-card { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
-        h2 { font-family: 'Amiri', serif; font-size: 2.5rem; color: var(--primary-color); margin: 0 0 10px 0; }
-        .surah-info-text { color: #666; margin-bottom: 15px; font-size: 1rem; }
+        header { background: var(--primary-color); color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .header-title { font-family: 'Amiri', serif; font-size: 1.5rem; margin: 0 auto; }
+        .back-btn { background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 5px 15px; border-radius: 5px; font-size: 0.9rem; }
 
-        .reciter-box { text-align: right; margin-bottom: 15px; }
-        label { font-weight: bold; color: var(--primary-color); display: block; margin-bottom: 5px; }
-        .reciter-select { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #eee; font-family: 'Cairo', sans-serif; font-size: 1rem; outline: none; cursor: pointer; }
-        
-        audio { width: 100%; margin: 15px 0; }
-        
-        .controls-row { display: flex; justify-content: center; gap: 30px; margin-bottom: 10px; }
-        .btn { background: none; border: none; font-size: 1.8rem; color: #ddd; cursor: pointer; transition: 0.3s; }
-        .btn.active { color: var(--accent-color); transform: scale(1.2); }
-        
-        /* قسم نص الآيات */
-        .quran-text-container { background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); text-align: center; line-height: 2.8; direction: rtl; }
-        .ayah { font-family: 'Amiri', serif; font-size: 2rem; color: #222; word-spacing: 4px; }
-        .ayah-num { color: var(--primary-color); font-weight: bold; margin: 0 8px; font-size: 1.3rem; font-family: 'Cairo', sans-serif; }
+        .container { max-width: 800px; margin: 0 auto; padding: 15px; }
 
-        .back-link { display: inline-block; margin-top: 2rem; color: var(--primary-color); text-decoration: none; font-weight: bold; border: 1px solid; padding: 8px 30px; border-radius: 25px; transition: 0.3s; }
-        .back-link:hover { background: var(--primary-color); color: white; }
+        .quran-display { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; min-height: 400px; text-align: center; line-height: 2.8; }
+        .ayah { font-family: 'Amiri', serif; font-size: 2rem; color: #222; word-wrap: break-word; }
+        .ayah-num { color: var(--primary-color); font-size: 1.3rem; margin: 0 8px; font-family: 'Cairo', sans-serif; border: 1px solid #ddd; border-radius: 50%; padding: 0 8px; }
+
+        .player-section { background: white; padding: 1.5rem; border-radius: 15px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); position: sticky; bottom: 10px; z-index: 999; }
+        .reciter-select { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; font-family: 'Cairo', sans-serif; margin-bottom: 15px; text-align: right; font-size: 1rem; cursor: pointer; }
+        
+        audio { width: 100%; height: 45px; margin-bottom: 15px; }
+
+        .controls-container { display: flex; justify-content: center; gap: 50px; align-items: center; padding-top: 10px; border-top: 1px solid #eee; }
+        .control-btn { background: none; border: none; font-size: 2rem; color: #ccc; cursor: pointer; transition: 0.3s; }
+        .control-btn.active { color: var(--accent-color); transform: scale(1.1); }
+        .control-btn:hover { color: var(--primary-color); }
     </style>
 </head>
 <body>
-    <header><h1>مصحف سند</h1></header>
+
+    <header>
+        <div style="width: 60px;"></div>
+        <div id="top-surah-name" class="header-title">سورة...</div>
+        <a href="index.html" class="back-btn">العودة</a>
+    </header>
 
     <div class="container">
-        <div class="player-card">
-            <h2 id="s-name">جاري التحميل...</h2>
-            <p id="s-detail" class="surah-info-text"></p>
+        <div id="quran-text" class="quran-display">
+            <p>جاري تحميل نص السورة...</p>
+        </div>
 
-            <div class="reciter-box">
-                <label>اختر القارئ:</label>
-                <select id="reciter-list" class="reciter-select">
-                    <option value="https://server14.mp3quran.net/islam/">إسلام صبحي</option>
-                    <option value="https://server12.mp3quran.net/maher/">ماهر المعيقلي</option>
-                    <option value="https://server7.mp3quran.net/sds/">عبد الرحمن السديس</option>
-                    <option value="https://server8.mp3quran.net/afs/">مشاري العفاسي</option>
-                    <option value="https://server7.mp3quran.net/basit/">عبد الباسط عبد الصمد (مرتل)</option>
-                    <option value="https://server11.mp3quran.net/yasser/">ياسر الدوسري</option>
-                    <option value="https://server10.mp3quran.net/ajm/">أحمد العجمي</option>
-                    <option value="https://server8.mp3quran.net/frs_a/">فارس عباد</option>
-                    <option value="https://server13.mp3quran.net/husr/">محمود خليل الحصري</option>
-                </select>
-            </div>
-            
+        <div class="player-section">
+            <select id="reciter-list" class="reciter-select">
+                <option value="https://server8.mp3quran.net/afs/">مشاري العفاسي</option>
+                <option value="https://server12.mp3quran.net/maher/">ماهر المعيقلي</option>
+                <option value="https://server14.mp3quran.net/islam/">إسلام صبحي</option>
+                <option value="https://server7.mp3quran.net/sds/">عبد الرحمن السديس</option>
+                <option value="https://server7.mp3quran.net/shur/">سعود الشريم</option>
+                <option value="https://server13.mp3quran.net/basit_mojawad/">عبد الباسط عبد الصمد (مجود)</option>
+                <option value="https://server13.mp3quran.net/husr/">محمود خليل الحصري</option>
+                <option value="https://server10.mp3quran.net/minsh/">محمد صديق المنشاوي</option>
+                <option value="https://server11.mp3quran.net/yasser/">ياسر الدوسري</option>
+                <option value="https://server10.mp3quran.net/ajm/">أحمد العجمي</option>
+                <option value="https://server8.mp3quran.net/frs_a/">فارس عباد</option>
+            </select>
+
             <audio id="main-player" controls>
                 <source id="audio-src" src="" type="audio/mpeg">
             </audio>
 
-            <div class="controls-row">
-                <button id="loop-btn" class="btn" title="تكرار السورة الحالية"><i class="fas fa-sync-alt"></i></button>
-                <button id="next-btn" class="btn" title="تشغيل السورة التالية تلقائياً"><i class="fas fa-step-forward"></i></button>
+            <div class="controls-container">
+                <button id="next-btn" class="control-btn" title="السورة التالية"><i class="fas fa-step-forward"></i></button>
+                <button id="loop-btn" class="control-btn" title="تكرار السورة الحالية"><i class="fas fa-sync-alt"></i></button>
             </div>
         </div>
-
-        <div id="quran-content" class="quran-text-container">
-            <p>جاري تحميل الآيات الكريمة...</p>
-        </div>
-
-        <a href="index.html" class="back-link">← العودة للفهرس</a>
     </div>
 
     <script>
@@ -81,66 +75,65 @@
         const surahNum = params.get('surah') || '1';
         const audio = document.getElementById('main-player');
         const reciterSelect = document.getElementById('reciter-list');
-        let isLoop = false, isNext = false;
+        let isLoop = false;
 
-        async function initPage() {
+        async function loadContent() {
             try {
-                // جلب بيانات السورة والنص من API القرآن الكريم
                 const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`);
                 const data = await res.json();
-                const s = data.data;
+                const surah = data.data;
 
-                document.getElementById('s-name').textContent = s.name;
-                document.getElementById('s-detail').textContent = `${s.englishName} - ${s.revelationType === 'Meccan' ? 'مكية' : 'مدنية'} - آياتها ${s.numberOfAyahs}`;
-
-                // عرض الآيات بشكل جميل
-                const contentDiv = document.getElementById('quran-content');
-                contentDiv.innerHTML = s.ayahs.map(a => `
-                    <span class="ayah">${a.text}</span>
-                    <span class="ayah-num">(${a.numberInSurah})</span>
+                document.getElementById('top-surah-name').textContent = `سورة ${surah.name}`;
+                
+                const textDiv = document.getElementById('quran-text');
+                textDiv.innerHTML = surah.ayahs.map(a => `
+                    <span class="ayah">${a.text} <span class="ayah-num">${a.numberInSurah}</span></span>
                 `).join(' ');
 
                 updateAudio();
-            } catch (e) { 
-                document.getElementById('quran-content').innerHTML = "تعذر تحميل النص. يرجى التأكد من اتصال الإنترنت."; 
+            } catch (e) {
+                document.getElementById('quran-text').textContent = "خطأ في تحميل نص السورة.";
             }
         }
 
         function updateAudio() {
-            const serverUrl = reciterSelect.value;
+            const server = reciterSelect.value;
             const audioId = surahNum.padStart(3, '0');
-            const source = document.getElementById('audio-src');
-            
-            source.src = `${serverUrl}${audioId}.mp3`;
+            document.getElementById('audio-src').src = `${server}${audioId}.mp3`;
             audio.load();
         }
 
         reciterSelect.onchange = updateAudio;
-        initPage();
 
-        // منطق أزرار التحكم
-        const lBtn = document.getElementById('loop-btn'), nBtn = document.getElementById('next-btn');
-        lBtn.onclick = () => { isLoop = !isLoop; if(isLoop) isNext = false; updateUI(); };
-        nBtn.onclick = () => { isNext = !isNext; if(isNext) isLoop = false; updateUI(); };
+        // أزرار التحكم الجديدة
+        const loopBtn = document.getElementById('loop-btn');
+        const nextBtn = document.getElementById('next-btn');
 
-        function updateUI() {
-            lBtn.classList.toggle('active', isLoop);
-            nBtn.classList.toggle('active', isNext);
-        }
+        loopBtn.onclick = () => {
+            isLoop = !isLoop;
+            loopBtn.classList.toggle('active', isLoop);
+        };
 
+        nextBtn.onclick = () => {
+            const nextS = parseInt(surahNum) + 1;
+            if (nextS <= 114) {
+                window.location.href = `quran.html?surah=${nextS}`;
+            } else {
+                alert("وصلت إلى نهاية المصحف الشريف.");
+            }
+        };
+
+        // التكرار والتقديم التلقائي
         audio.onended = () => {
             if (isLoop) {
                 audio.currentTime = 0;
                 audio.play();
-            } else if (isNext) { 
-                const next = parseInt(surahNum) + 1;
-                if (next <= 114) {
-                    window.location.href = `quran.html?surah=${next}`;
-                } else {
-                    alert("تم ختم المصحف الشريف بحمد الله.");
-                }
+            } else {
+                nextBtn.click(); // تشغيل السورة التالية تلقائياً عند انتهاء الحالية
             }
         };
+
+        loadContent();
     </script>
 </body>
 </html>
