@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مصحف سند - القراءة والتفسير</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -19,17 +20,17 @@
             font-family: 'Tajawal', sans-serif;
             background-color: #f4f4f2;
             margin: 0;
-            padding-bottom: 250px; /* زيادة المساحة للمشغل الجديد */
+            padding-bottom: 250px;
             color: #222;
         }
 
-        /* حل مشكلة المربعات في الخط */
+        /* تنسيق الخط ليكون مطابقاً للمصحف وبدون مربعات */
         .ayah-text { 
             font-family: 'Amiri', serif; 
-            font-size: 2.3rem; 
+            font-size: 2.4rem; 
+            line-height: 1.8;
             color: #111;
-            text-rendering: optimizeLegibility;
-            font-feature-settings: "kern" 1;
+            display: inline;
         }
 
         header {
@@ -48,12 +49,12 @@
         .header-title { font-family: 'Amiri', serif; font-size: 1.8rem; font-weight: bold; color: var(--gold); }
         .nav-btn { color: white; text-decoration: none; border: 1px solid var(--gold); padding: 5px 15px; border-radius: 5px; font-size: 0.9rem; }
 
-        .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
+        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
 
         .surah-card {
             background: var(--cream);
             border-radius: 15px;
-            padding: 40px 30px;
+            padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             border: 1px solid #e2e2e2;
             text-align: center;
@@ -65,7 +66,7 @@
             padding: 5px 20px;
             border-radius: 20px;
             font-size: 0.9rem;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: inline-block;
             border: 1px solid var(--gold);
         }
@@ -74,46 +75,46 @@
             font-family: 'Amiri', serif;
             font-size: 2.2rem;
             color: var(--mid-green);
-            margin: 20px 0 40px;
+            margin: 10px 0 30px;
             display: block;
         }
 
-        .quran-text { line-height: 2.8; direction: rtl; }
+        .quran-text { text-align: justify; direction: rtl; }
 
-        .ayah-wrapper { display: inline; cursor: pointer; transition: 0.2s; border-radius: 5px; padding: 2px; }
+        .ayah-wrapper { display: inline; cursor: pointer; border-radius: 8px; transition: 0.2s; }
         .ayah-wrapper:hover { background: #fff4d1; }
 
         .ayah-num {
-            font-family: 'Amiri', serif;
-            font-size: 1.2rem;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.1rem;
             color: var(--mid-green);
             border: 1px solid var(--gold);
             border-radius: 50%;
-            width: 35px; height: 35px;
+            width: 34px; height: 34px;
             display: inline-flex;
             align-items: center; justify-content: center;
-            margin: 0 8px;
+            margin: 0 5px;
             background: white;
+            font-weight: bold;
         }
 
         #tafsir-box {
             display: none;
             background: #fffde7;
-            border: 1px solid var(--gold);
             border-right: 6px solid var(--gold);
-            padding: 20px;
-            margin-bottom: 30px;
+            padding: 15px;
+            margin-bottom: 20px;
             border-radius: 8px;
             text-align: right;
         }
 
-        /* المشغل المحدث */
+        /* المشغل السفلي */
         .player-bar {
             position: fixed;
             bottom: 0; left: 0; width: 100%;
             background: white;
             border-top: 3px solid var(--gold);
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 -5px 25px rgba(0,0,0,0.1);
             z-index: 1001;
         }
@@ -121,16 +122,15 @@
         .player-inner { max-width: 700px; margin: 0 auto; }
         
         .reciter-select {
-            width: 100%; padding: 12px; border-radius: 8px;
+            width: 100%; padding: 10px; border-radius: 8px;
             border: 1px solid var(--gold); font-family: 'Tajawal', sans-serif;
-            margin-bottom: 15px; font-weight: bold; background: var(--cream);
-            color: var(--dark-green); cursor: pointer;
+            margin-bottom: 10px; font-weight: bold; background: #fff;
         }
 
-        audio { width: 100%; height: 45px; }
+        audio { width: 100%; height: 40px; }
 
-        .controls { display: flex; justify-content: center; gap: 50px; margin-top: 15px; }
-        .btn { background: none; border: none; font-size: 1.8rem; color: #bbb; cursor: pointer; }
+        .controls { display: flex; justify-content: center; gap: 40px; margin-top: 10px; }
+        .btn { background: none; border: none; font-size: 1.7rem; color: #bbb; cursor: pointer; transition: 0.3s; }
         .btn.active { color: var(--gold); }
     </style>
 </head>
@@ -138,18 +138,18 @@
 
     <header>
         <a href="index.html" class="nav-btn">الفهرس</a>
-        <div id="surah-title" class="header-title">المصحف الشريف</div>
+        <div id="surah-title" class="header-title">سورة...</div>
         <div style="width: 60px;"></div>
     </header>
 
     <div class="container">
         <div id="tafsir-box">
-            <strong style="color: var(--dark-green); font-size: 1.2rem;">تفسير الجلالين:</strong><br>
-            <p id="tafsir-text" style="margin-top: 10px; line-height: 1.7; font-size: 1.15rem;"></p>
+            <strong style="color: var(--dark-green);">تفسير الجلالين:</strong>
+            <p id="tafsir-text" style="margin: 8px 0 0; line-height: 1.6;"></p>
         </div>
 
         <div class="surah-card">
-            <div id="surah-info" class="surah-info-tag">جاري التحميل...</div>
+            <div id="surah-info" class="surah-info-tag">...</div>
             <div id="quran-container" class="quran-text"></div>
         </div>
     </div>
@@ -169,12 +169,10 @@
                 <option value="https://server10.mp3quran.net/ajm/">أحمد العجمي</option>
                 <option value="https://server8.mp3quran.net/frs_a/">فارس عباد</option>
             </select>
-            
             <audio id="main-player" controls><source id="audio-src" src="" type="audio/mpeg"></audio>
-            
             <div class="controls">
-                <button id="next-btn" class="btn" title="السورة التالية"><i class="fas fa-forward-step"></i></button>
-                <button id="loop-btn" class="btn" title="تكرار السورة"><i class="fas fa-rotate"></i></button>
+                <button id="next-btn" class="btn"><i class="fas fa-forward-step"></i></button>
+                <button id="loop-btn" class="btn"><i class="fas fa-rotate"></i></button>
             </div>
         </div>
     </div>
@@ -186,7 +184,8 @@
 
         async function loadSurah() {
             try {
-                const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/editions/quran-simple-enhanced,ar.jalalayn`);
+                // نستخدم quran-uthmani للحصول على أدق رسم، و ar.jalalayn للتفسير
+                const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/editions/quran-uthmani,ar.jalalayn`);
                 const data = await res.json();
                 
                 const quranData = data.data[0];
@@ -196,18 +195,21 @@
                 
                 let typeText = quranData.revelationType === 'Meccan' ? 'مكية' : 'مدنية';
                 if (surahNum == 2) typeText = "مدنية / مكية";
-                
                 document.getElementById('surah-info').textContent = `${typeText} | ${quranData.numberOfAyahs} آية`;
 
                 let html = "";
+                // البسملة العلوية لجميع السور عدا الفاتحة (1) والتوبة (9)
                 if(surahNum != 9 && surahNum != 1) {
                     html += `<div class="basmala">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>`;
                 }
 
                 quranData.ayahs.forEach((ayah, index) => {
                     let text = ayah.text;
-                    if(surahNum != 1 && ayah.numberInSurah === 1) {
-                        text = text.replace(/^بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\s?|بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\s?/g, "");
+                    
+                    // منطق حذف البسملة المكررة من بداية أول آية (باستثناء الفاتحة والتوبة)
+                    if(surahNum != 1 && surahNum != 9 && ayah.numberInSurah === 1) {
+                        // نبحث عن نمط البسملة في بداية النص ونحذفه
+                        text = text.replace(/^بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\s*/, "");
                     }
 
                     html += `
@@ -240,7 +242,10 @@
         }
 
         document.getElementById('reciter-list').onchange = updateAudio;
-        document.getElementById('loop-btn').onclick = function() { isLoop = !isLoop; this.classList.toggle('active', isLoop); };
+        document.getElementById('loop-btn').onclick = function() { 
+            isLoop = !isLoop; 
+            this.classList.toggle('active', isLoop); 
+        };
         document.getElementById('next-btn').onclick = function() {
             const next = parseInt(surahNum) + 1;
             if(next <= 114) window.location.href = `quran.html?surah=${next}`;
