@@ -147,12 +147,9 @@
 
     <div class="player-bar">
         <div class="player-controls">
-            <select id="reciter-select" class="reciter-select">
-                </select>
+            <select id="reciter-select" class="reciter-select"></select>
             
-            <audio id="audio-player" controls controlsList="nodownload">
-                <source id="audio-source" src="" type="audio/mp3">
-            </audio>
+            <audio id="audio-player" controls controlsList="nodownload"></audio>
 
             <div class="action-btns">
                 <button id="loop-btn" class="action-btn" title="تكرار السورة"><i class="fas fa-redo"></i></button>
@@ -162,12 +159,10 @@
     </div>
 
     <script>
-        // === المتغيرات والإعدادات ===
         const urlParams = new URLSearchParams(window.location.search);
         let surahId = parseInt(urlParams.get('surah')) || 1;
         
-                // قائمة القراء المحدثة والمجربة
-                const reciters = [
+        const reciters = [
             { name: "مشاري العفاسي", url: "https://server8.mp3quran.net/afs/" },
             { name: "إسلام صبحي", url: "https://server14.mp3quran.net/islam/Rewayat-Hafs-A-n-Assem/" }, 
             { name: "ماهر المعيقلي", url: "https://server12.mp3quran.net/maher/" },
@@ -179,21 +174,18 @@
             { name: "فارس عباد", url: "https://server8.mp3quran.net/frs_a/" }
         ];
 
-        // عناصر DOM
         const quranText = document.getElementById('quran-text');
         const headerTitle = document.getElementById('header-title');
         const audioPlayer = document.getElementById('audio-player');
         const reciterSelect = document.getElementById('reciter-select');
-        let tafsirData = []; // تخزين بيانات التفسير مؤقتاً
+        let tafsirData = [];
 
-        // === التهيئة والتشغيل ===
-        
         // 1. ملء قائمة القراء
         reciters.forEach((r, index) => {
             let option = document.createElement('option');
             option.value = r.url;
             option.text = r.name;
-            if (index === 0) option.selected = true; // الافتراضي
+            if (index === 0) option.selected = true;
             reciterSelect.appendChild(option);
         });
 
@@ -205,20 +197,20 @@
                 const textData = await textRes.json();
                 const surah = textData.data;
 
-                // جلب التفسير (الجلالين كنموذج سريع)
+                // جلب التفسير
                 const tafsirRes = await fetch(`https://api.alquran.cloud/v1/surah/${surahId}/ar.jalalayn`);
                 const tData = await tafsirRes.json();
                 tafsirData = tData.data.ayahs;
 
-                // تحديث العناوين
-                headerTitle.innerText =  ${surah.name}`;
-                document.title =  ${surah.name} - مصحف سند`;
+                // تحديث العناوين (تم إصلاح علامات الاقتباس هنا)
+                headerTitle.innerText = surah.name;
+                document.title = `${surah.name} - مصحف سند`;
 
                 // حفظ آخر قراءة
                 localStorage.setItem('lastReadId', surahId);
                 localStorage.setItem('lastReadName', surah.name);
 
-                // معالجة البسملة (إخفاؤها في الفاتحة والتوبة، وإزالتها من نص الآية الأولى لباقي السور)
+                // معالجة البسملة
                 const basmalaDiv = document.getElementById('basmala-container');
                 if (surahId === 1 || surahId === 9) {
                     basmalaDiv.style.display = 'none';
@@ -230,11 +222,9 @@
                 let htmlContent = '';
                 surah.ayahs.forEach((ayah, index) => {
                     let cleanText = ayah.text;
-                    // إزالة البسملة من بداية الآية الأولى (لأننا وضعناها في الأعلى كعنوان)
                     if (surahId !== 1 && surahId !== 9 && index === 0) {
                         cleanText = cleanText.replace("بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ", "").trim();
                     }
-
                     htmlContent += `
                         <span class="ayah-text">${cleanText}</span>
                         <span class="ayah-marker" onclick="openTafsir(${index})">${ayah.numberInSurah}</span>
@@ -242,25 +232,19 @@
                 });
                 quranText.innerHTML = htmlContent;
 
-                // تشغيل الصوت
                 setAudioSource();
 
             } catch (error) {
                 console.error(error);
-                quranText.innerHTML = "<p style='text-align:center; color:red'>حدث خطأ أثناء تحميل السورة. يرجى التحقق من الإنترنت.</p>";
+                quranText.innerHTML = "<p style='text-align:center; color:red'>حدث خطأ أثناء تحميل السورة.</p>";
             }
         }
 
         // === وظائف الصوت ===
-                function setAudioSource() {
+        function setAudioSource() {
             const server = reciterSelect.value;
             const paddedId = String(surahId).padStart(3, '0');
-            const fullUrl = `${server}${paddedId}.mp3`;
-            
-            // تحديث المصدر
-            audioPlayer.src = fullUrl;
-            
-            // إجبار المتصفح على تحميل الملف الجديد
+            audioPlayer.src = `${server}${paddedId}.mp3`;
             audioPlayer.load();
         }
         
@@ -279,26 +263,21 @@
             audioPlayer.loop = isLoop;
         };
 
-        // زر التالي وتلقائية الانتقال
-        const nextBtn = document.getElementById('next-btn');
-        function goToNext() {
-            if (surahId < 114) {
-                window.location.href = `quran.html?surah=${surahId + 1}`;
-            }
-        }
-        nextBtn.onclick = goToNext;
+        // زر التالي
+        document.getElementById('next-btn').onclick = () => {
+            if (surahId < 114) window.location.href = `quran.html?surah=${surahId + 1}`;
+        };
 
         audioPlayer.onended = () => {
             if (!isLoop && surahId < 114) {
-                goToNext();
+                window.location.href = `quran.html?surah=${surahId + 1}`;
             }
         };
 
         // === وظائف التفسير ===
         window.openTafsir = (index) => {
-            const ayahTafsir = tafsirData[index];
-            if (ayahTafsir) {
-                document.getElementById('tafsir-body').innerText = ayahTafsir.text;
+            if (tafsirData[index]) {
+                document.getElementById('tafsir-body').innerText = tafsirData[index].text;
                 document.getElementById('tafsir-modal').style.display = 'block';
                 document.getElementById('overlay').style.display = 'block';
             }
@@ -309,9 +288,7 @@
             document.getElementById('overlay').style.display = 'none';
         };
 
-        // بدء التنفيذ
         loadSurah();
-
     </script>
 </body>
 </html>
