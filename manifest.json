@@ -1,16 +1,20 @@
 {
-  "name": "مصحف سند",
+  "name": "مصحف سند الإلكتروني",
   "short_name": "مصحف سند",
-  "start_url": "./quran.html", 
+  "description": "مصحف إلكتروني للقراءة والاستماع بتصميم عصري",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0f5132",
-  "theme_color": "#0f5132",
+  "background_color": "#fdfbf7",
+  "theme_color": "#1a4d2e",
+  "orientation": "portrait",
+  "dir": "rtl",
+  "lang": "ar",
   "icons": [
-    { 
-      "src": "icon.png", 
-      "sizes": "512x512", 
-      "type": "image/png" 
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
- 
