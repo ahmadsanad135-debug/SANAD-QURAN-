@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 3. عرض السور (تم التعديل لإصلاح التكرار والترتيب)
+    // 3. عرض السور
     function displaySurahs(surahs) {
         container.innerHTML = '';
         surahs.forEach(surah => {
@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const typeAr = surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية';
 
-            // لاحظ هنا: نستخدم surah.name فقط لأنها تحتوي على كلمة سورة وتشكيلها
             card.innerHTML = `
                 <div class="surah-number">${surah.number}</div>
                 <div class="card-info">
@@ -66,15 +65,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 5. استعادة آخر قراءة
+    // 5. استعادة آخر قراءة (تم التعديل لإظهار رقم الآية)
     const lastId = localStorage.getItem('lastReadId');
     const lastName = localStorage.getItem('lastReadName');
+    const lastAyah = localStorage.getItem('lastReadAyah'); // جلب رقم الآية المخزن
     const continueBox = document.getElementById('continue-reading');
     
     if (lastId && lastName && continueBox) {
         continueBox.style.display = 'block';
         document.getElementById('last-surah-link').href = `quran.html?surah=${lastId}`;
-        document.getElementById('last-surah-name').textContent = lastName;
+        
+        // إذا كان هناك رقم آية محفوظ، يظهره بجانب اسم السورة
+        if (lastAyah) {
+            document.getElementById('last-surah-name').textContent = `${lastName} - آية (${lastAyah})`;
+        } else {
+            document.getElementById('last-surah-name').textContent = lastName;
+        }
     }
 
     // 6. كود تثبيت التطبيق (PWA)
