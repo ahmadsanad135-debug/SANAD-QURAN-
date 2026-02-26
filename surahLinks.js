@@ -3,47 +3,55 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     let allSurahs = [];
 
+    // دالة لتنظيف النص العربي للبحث (إزالة التشكيل والهمزات)
     function normalizeArabic(text) {
         if (!text) return "";
-        return text.toString().replace(/[\u064B-\u065F\u0670]/g, "").replace(/[أإآ]/g, "ا").replace(/ة/g, "ه").replace(/ى/g, "ي");
+        return text.toString()
+            .replace(/[\u064B-\u065F\u0670]/g, "") // إزالة التشكيل
+            .replace(/[أإآ]/g, "ا")
+            .replace(/ة/g, "ه")
+            .replace(/ى/g, "ي");
     }
 
+    // جلب السور من API
     async function fetchSurahs() {
         try {
             const response = await fetch('https://api.alquran.cloud/v1/surah');
             const data = await response.json();
             if (data.code === 200) {
                 allSurahs = data.data;
-                // هذه الإضافة تسمح لصفحة quran.html بالوصول للبيانات
-                window.allSurahsData = allSurahs; 
                 displaySurahs(allSurahs);
             }
         } catch (error) {
+            container.innerHTML = '<p style="text-align:center; width:100%;">تأكد من اتصالك بالإنترنت</p>';
             console.error('Error:', error);
         }
     }
 
+    // عرض السور في الصفحة
     function displaySurahs(surahs) {
-        if (!container) return; // لضمان عدم حدوث خطأ في صفحة quran.html
         container.innerHTML = '';
         surahs.forEach(surah => {
             const card = document.createElement('a');
             card.className = 'surah-card';
             card.href = `quran.html?surah=${surah.number}`; 
+            
             const typeAr = surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية';
 
             card.innerHTML = `
-                <div class="surah-number">${surah.number}</div>
-                <span class="surah-name">${surah.name}</span>
-                <div class="surah-info">
-                    ${surah.englishName} <br>
-                    <span style="font-size: 0.85em; color: #777;">${typeAr} - آياتها ${surah.numberOfAyahs}</span>
+                <div class="card-info">
+                    <span class="surah-name">سورة ${surah.name}</span>
+                    <div class="surah-details">
+                        ${typeAr} • ${surah.numberOfAyahs} آية
+                    </div>
                 </div>
+                <div class="surah-number">${surah.number}</div>
             `;
             container.appendChild(card);
         });
     }
 
+    // تفعيل البحث
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             const term = normalizeArabic(e.target.value.toLowerCase());
@@ -55,5 +63,23 @@ document.addEventListener('DOMContentLoaded', () => {
             displaySurahs(filtered);
         });
     }
+
+    // التحقق من "آخر قراءة"
+    const lastId = localStorage.getItem('lastReadId');
+    const lastName = localStorage.getItem('lastReadName');
+    const continueBox = document.getElementById('continue-reading');
+    
+    if (lastId && lastName && continueBox) {
+        continueBox.style.display = 'block';
+        document.getElementById('last-surah-link').href = `quran.html?surah=${lastId}`;
+        document.getElementById('last-surah-name').textContent = lastName;
+    }
+
+    // بدء التحميل
     fetchSurahs();
+    
+    // تسجيل Service Worker (لجعل التطبيق يعمل كتطبيق هاتف)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(console.error);
+    }
 });
