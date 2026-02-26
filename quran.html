@@ -166,14 +166,15 @@
         const urlParams = new URLSearchParams(window.location.search);
         let surahId = parseInt(urlParams.get('surah')) || 1;
         
-        // قائمة القراء الموثوقة (روابط مباشرة MP3)
+                // قائمة القراء المحدثة والمجربة
         const reciters = [
             { name: "مشاري العفاسي", url: "https://server8.mp3quran.net/afs/" },
+            { name: "إسلام صبحي", url: "https://server14.mp3quran.net/islam/" }, // إضافة إسلام صبحي
             { name: "ماهر المعيقلي", url: "https://server12.mp3quran.net/maher/" },
             { name: "سعد الغامدي", url: "https://server7.mp3quran.net/s_gmd/" },
             { name: "عبدالرحمن السديس", url: "https://server11.mp3quran.net/sds/" },
             { name: "ياسر الدوسري", url: "https://server11.mp3quran.net/yasser/" },
-            { name: "محمد صديق المنشاوي (مجود)", url: "https://server10.mp3quran.net/minsh/Mujawwad/" },
+            { name: "محمد صديق المنشاوي (مجود)", url: "https://server10.mp3quran.net/minsh/Mujawwad/" }, // الرابط المصحح
             { name: "محمود خليل الحصري", url: "https://server13.mp3quran.net/husr/" },
             { name: "فارس عباد", url: "https://server8.mp3quran.net/frs_a/" }
         ];
