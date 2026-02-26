@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // عرض السور في الصفحة
-    function displaySurahs(surahs) {
+        function displaySurahs(surahs) {
         container.innerHTML = '';
         surahs.forEach(surah => {
             const card = document.createElement('a');
@@ -38,9 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const typeAr = surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية';
 
+            // تعديل هنا: حذفنا كلمة "سورة" اليدوية لأنها تأتي جاهزة من البيانات
+            // واستخدمنا surah.name مباشرة
             card.innerHTML = `
                 <div class="card-info">
-                    <span class="surah-name">سورة ${surah.name}</span>
+                    <span class="surah-name">${surah.name}</span>
                     <div class="surah-details">
                         ${typeAr} • ${surah.numberOfAyahs} آية
                     </div>
