@@ -167,14 +167,14 @@
         let surahId = parseInt(urlParams.get('surah')) || 1;
         
                 // قائمة القراء المحدثة والمجربة
-        const reciters = [
+                const reciters = [
             { name: "مشاري العفاسي", url: "https://server8.mp3quran.net/afs/" },
-            { name: "إسلام صبحي", url: "https://server14.mp3quran.net/islam/" }, // إضافة إسلام صبحي
+            { name: "إسلام صبحي", url: "https://server14.mp3quran.net/islam/Rewayat-Hafs-A-n-Assem/" }, 
             { name: "ماهر المعيقلي", url: "https://server12.mp3quran.net/maher/" },
-            { name: "سعد الغامدي", url: "https://server7.mp3quran.net/s_gmd/" },
             { name: "عبدالرحمن السديس", url: "https://server11.mp3quran.net/sds/" },
             { name: "ياسر الدوسري", url: "https://server11.mp3quran.net/yasser/" },
-            { name: "محمد صديق المنشاوي (مجود)", url: "https://server10.mp3quran.net/minsh/Mujawwad/" }, // الرابط المصحح
+            { name: "محمد صديق المنشاوي (مجود)", url: "https://server10.mp3quran.net/minsh/Mujawwad/" },
+            { name: "سعد الغامدي", url: "https://server7.mp3quran.net/s_gmd/" },
             { name: "محمود خليل الحصري", url: "https://server13.mp3quran.net/husr/" },
             { name: "فارس عباد", url: "https://server8.mp3quran.net/frs_a/" }
         ];
@@ -252,14 +252,18 @@
         }
 
         // === وظائف الصوت ===
-        function setAudioSource() {
+                function setAudioSource() {
             const server = reciterSelect.value;
-            // تنسيق الرقم ليصبح 3 خانات (مثلاً 1 يصبح 001)
             const paddedId = String(surahId).padStart(3, '0');
-            audioPlayer.src = `${server}${paddedId}.mp3`;
-            // لا نجبر التشغيل التلقائي (autoplay) احتراماً للمتصفحات، لكن نجهزه
+            const fullUrl = `${server}${paddedId}.mp3`;
+            
+            // تحديث المصدر
+            audioPlayer.src = fullUrl;
+            
+            // إجبار المتصفح على تحميل الملف الجديد
+            audioPlayer.load();
         }
-
+        
         reciterSelect.addEventListener('change', () => {
             const wasPlaying = !audioPlayer.paused;
             setAudioSource();
