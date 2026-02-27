@@ -3,37 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مصحف سند - القراءة والتلاوة</title>
+    <title>مصحف سند - المطور</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root { --primary: #1a4d2e; --accent: #d4af37; --bg: #fdfbf7; --text: #333; }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--bg); margin: 0; padding-bottom: 200px; color: var(--text); scroll-behavior: smooth; }
+        body { font-family: 'Cairo', sans-serif; background-color: var(--bg); margin: 0; padding-bottom: 220px; color: var(--text); scroll-behavior: smooth; }
         
         header { background: white; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .surah-title { font-family: 'Amiri', serif; font-size: 1.6rem; color: var(--primary); margin: 0; }
         .back-btn { color: var(--primary); text-decoration: none; font-weight: bold; }
 
         .quran-container { max-width: 850px; margin: 20px auto; padding: 0 25px; }
-        .basmala { font-family: 'Amiri', serif; text-align: center; font-size: 2rem; margin-bottom: 35px; color: var(--primary); }
-        .ayah-container { line-height: 2.8; font-size: 1.7rem; text-align: justify; font-family: 'Amiri', serif; }
+        .basmala { font-family: 'Amiri', serif; text-align: center; font-size: 2.2rem; margin-bottom: 35px; color: var(--primary); }
+        .ayah-container { line-height: 2.8; font-size: 1.8rem; text-align: justify; font-family: 'Amiri', serif; direction: rtl; }
         
-        .ayah-wrap { transition: all 0.4s ease; border-radius: 8px; cursor: pointer; padding: 0 4px; }
-        .highlight-ayah { background-color: rgba(212, 175, 55, 0.25); box-shadow: 0 0 10px rgba(212, 175, 55, 0.1); border-radius: 5px; }
-        .ayah-marker { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border: 1.5px solid var(--accent); border-radius: 50%; font-size: 0.95rem; color: var(--primary); margin: 0 8px; font-family: 'Cairo'; font-weight: bold; vertical-align: middle; }
+        .ayah-wrap { transition: all 0.4s ease; border-radius: 8px; cursor: pointer; padding: 2px 5px; display: inline; }
+        .highlight-ayah { background-color: rgba(212, 175, 55, 0.3); border-radius: 8px; box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
+        .ayah-marker { display: inline-flex; align-items: center; justify-content: center; width: 35px; height: 35px; border: 1.5px solid var(--accent); border-radius: 50%; font-size: 0.9rem; color: var(--primary); margin: 0 8px; font-family: 'Cairo'; font-weight: bold; }
 
         .player-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px 0; border-top: 3px solid var(--accent); box-shadow: 0 -5px 25px rgba(0,0,0,0.1); z-index: 200; }
         .player-controls { max-width: 800px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: 12px; }
         
         .mode-tabs { display: flex; background: #f0f0f0; border-radius: 12px; padding: 4px; }
-        .mode-tab { flex: 1; border: none; padding: 10px; border-radius: 10px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; color: #666; }
+        .mode-tab { flex: 1; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; transition: 0.3s; color: #666; }
         .mode-tab.active { background: var(--primary); color: white; }
 
-        .reciter-select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-family: 'Cairo'; background-color: #fafafa; }
+        .reciter-select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-family: 'Cairo'; background: #fafafa; font-size: 1rem; }
         audio { width: 100%; height: 45px; }
 
-        #tafsir-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 500px; background: white; border-radius: 20px; z-index: 1000; padding: 25px; box-shadow: 0 15px 50px rgba(0,0,0,0.4); border: 1px solid var(--accent); }
+        #tafsir-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 500px; background: white; border-radius: 20px; z-index: 1000; padding: 25px; box-shadow: 0 15px 50px rgba(0,0,0,0.4); border: 2px solid var(--accent); }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); z-index: 999; }
     </style>
 </head>
@@ -41,7 +41,7 @@
 
     <header>
         <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> الفهرس</a>
-        <h2 class="surah-title" id="header-title">تحميل...</h2>
+        <h2 class="surah-title" id="header-title">جاري التحميل...</h2>
         <div style="width: 45px;"></div>
     </header>
 
@@ -52,16 +52,16 @@
 
     <div class="overlay" id="overlay" onclick="closeTafsir()"></div>
     <div id="tafsir-modal">
-        <h3 id="tafsir-title" style="color:var(--primary); margin-top:0;"></h3>
-        <div id="tafsir-body" style="line-height:1.8; max-height: 300px; overflow-y: auto;"></div>
+        <h3 id="tafsir-title" style="color:var(--primary); margin-top:0; font-family:'Amiri';"></h3>
+        <div id="tafsir-body" style="line-height:1.8; font-size: 1.1rem; max-height: 300px; overflow-y: auto;"></div>
         <button onclick="closeTafsir()" style="margin-top:20px; width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:10px; cursor:pointer; font-family:'Cairo';">إغلاق</button>
     </div>
 
     <div class="player-bar">
         <div class="player-controls">
             <div class="mode-tabs">
-                <button id="tab-normal" class="mode-tab active" onclick="setMode('normal')">تلاوة كاملة</button>
-                <button id="tab-resume" class="mode-tab" onclick="setMode('resume')">نمط الاستكمال (آية آية)</button>
+                <button id="tab-normal" class="mode-tab active" onclick="setMode('normal')">تلاوة السورة</button>
+                <button id="tab-resume" class="mode-tab" onclick="setMode('resume')">استكمال (آية آية)</button>
             </div>
             <select id="reciter-select" class="reciter-select" onchange="changeReciter()"></select>
             <audio id="audio-player" controls></audio>
@@ -75,16 +75,15 @@
         const fullReciters = [
             { name: "مشاري العفاسي", server: "https://server8.mp3quran.net/afs/" },
             { name: "ماهر المعيقلي", server: "https://server12.mp3quran.net/maher/" },
-            { name: "عبد الرحمن السديس", server: "https://server11.mp3quran.net/sds/" },
             { name: "ياسر الدوسري", server: "https://server11.mp3quran.net/yasser/" },
-            { name: "أحمد العجمي", server: "https://server10.mp3quran.net/ajm/" }
+            { name: "عبد الباسط عبد الصمد", server: "https://server7.mp3quran.net/basit/" }
         ];
 
         const ayahReciters = [
             { name: "العفاسي (آية آية)", server: "https://everyayah.com/data/Alafasy_128kbps/" },
             { name: "الحصري (آية آية)", server: "https://everyayah.com/data/Husary_128kbps/" },
-            { name: "عبد الباسط (آية آية)", server: "https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/" },
-            { name: "المنشاوي (آية آية)", server: "https://everyayah.com/data/Minshawy_Mujawwad_192kbps/" }
+            { name: "المنشاوي (آية آية)", server: "https://everyayah.com/data/Minshawy_Mujawwad_192kbps/" },
+            { name: "عبد الباسط (آية آية)", server: "https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/" }
         ];
 
         let currentMode = 'normal';
@@ -94,7 +93,7 @@
 
         const audioPlayer = document.getElementById('audio-player');
 
-        // --- نظام التشغيل التلقائي للآيات ---
+        // --- تشغيل الآية التالية تلقائياً ---
         audioPlayer.onended = () => {
             if (currentMode === 'resume' && currentPlayingAyah < totalAyahs) {
                 currentPlayingAyah++;
@@ -117,7 +116,7 @@
                 opt.text = r.name;
                 select.appendChild(opt);
             });
-            updateSource();
+            updateAudioUrl();
         }
 
         async function fetchSurah() {
@@ -136,40 +135,47 @@
             let html = '';
             surah.ayahs.forEach((ayah, i) => {
                 let text = ayah.text;
-                // تنظيف البسملة بدقة أكبر لتجنب التكرار
+                
+                // --- حل مشكلة البسملة المكررة الجذري ---
+                // البسملة غالباً تكون في أول 39 حرف في الآية الأولى
                 if (surahId !== 1 && i === 0) {
-                    const bismillah = "بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ";
-                    if (text.includes(bismillah)) {
-                        text = text.replace(bismillah, "").trim();
-                    }
+                    const bismillahPattern = /^بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ/;
+                    text = text.replace(bismillahPattern, '').trim();
                 }
+
                 html += `
                     <span id="ayah-${ayah.numberInSurah}" class="ayah-wrap" onclick="handleAyahClick(${i}, ${ayah.numberInSurah})">
-                        <span class="text-content">${text}</span>
+                        ${text}
                         <span class="ayah-marker">${ayah.numberInSurah}</span>
                     </span> `;
             });
             document.getElementById('quran-text').innerHTML = html;
         }
 
-        function setMode(mode) {
+        async function setMode(mode) {
             currentMode = mode;
             document.getElementById('tab-normal').classList.toggle('active', mode === 'normal');
             document.getElementById('tab-resume').classList.toggle('active', mode === 'resume');
+            
             populateReciters();
             
             if (mode === 'resume') {
-                const saved = localStorage.getItem(`save_surah_${surahId}`) || 1;
+                const saved = localStorage.getItem(`last_ayah_s${surahId}`) || 1;
                 currentPlayingAyah = parseInt(saved);
-                jumpTo(currentPlayingAyah);
+                
+                // ننتظر قليلاً لضمان رسم العناصر في الصفحة قبل القفز
+                setTimeout(() => {
+                    jumpToAyah(currentPlayingAyah);
+                    playAyah(currentPlayingAyah);
+                }, 300);
             }
         }
 
         function handleAyahClick(index, num) {
             currentPlayingAyah = num;
-            localStorage.setItem(`save_surah_${surahId}`, num);
+            localStorage.setItem(`last_ayah_s${surahId}`, num);
             
-            // فتح التفسير
+            // عرض التفسير
             document.getElementById('tafsir-title').innerText = `آية (${num})`;
             document.getElementById('tafsir-body').innerText = tafsirData[index].text;
             document.getElementById('tafsir-modal').style.display = 'block';
@@ -186,15 +192,20 @@
             const a = String(num).padStart(3, '0');
             audioPlayer.src = `${server}${s}${a}.mp3`;
             audioPlayer.play();
-            jumpTo(num);
+            highlightAyah(num);
         }
 
-        function jumpTo(num) {
+        function highlightAyah(num) {
             document.querySelectorAll('.ayah-wrap').forEach(el => el.classList.remove('highlight-ayah'));
-            const active = document.getElementById(`ayah-${num}`);
-            if (active) {
-                active.classList.add('highlight-ayah');
-                active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const target = document.getElementById(`ayah-${num}`);
+            if (target) target.classList.add('highlight-ayah');
+        }
+
+        function jumpToAyah(num) {
+            const target = document.getElementById(`ayah-${num}`);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                highlightAyah(num);
             }
         }
 
@@ -202,12 +213,12 @@
             if (currentMode === 'resume') {
                 playAyah(currentPlayingAyah);
             } else {
-                updateSource();
+                updateAudioUrl();
                 audioPlayer.play();
             }
         }
 
-        function updateSource() {
+        function updateAudioUrl() {
             const server = document.getElementById('reciter-select').value;
             if (currentMode === 'normal') {
                 audioPlayer.src = `${server}${String(surahId).padStart(3, '0')}.mp3`;
