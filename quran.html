@@ -138,10 +138,10 @@
                 
                 // --- حل مشكلة البسملة المكررة الجذري ---
                 // البسملة غالباً تكون في أول 39 حرف في الآية الأولى
-                if (surahId !== 1 && i === 0) {
-                    const bismillahPattern = /^بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ/;
-                    text = text.replace(bismillahPattern, '').trim();
-                }
+                if (surahId !== 1 && surahId !== 9 && i === 0) {
+    const words = text.split(' ');
+    text = words.slice(4).join(' ');
+}
 
                 html += `
                     <span id="ayah-${ayah.numberInSurah}" class="ayah-wrap" onclick="handleAyahClick(${i}, ${ayah.numberInSurah})">
