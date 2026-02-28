@@ -70,11 +70,15 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        // الحصول على رقم السورة الحالية
         const surahId = parseInt(urlParams.get('surah')) || 1;
+        const urlMode = urlParams.get('mode'); // التقاط نمط التشغيل من الرابط
         
+        // قائمة بأسماء السور لتحديث اسم زر الاستكمال
+        const surahNames = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
+
+        // تم تصحيح رابط إسلام صبحي هنا
         const fullReciters = [
-            { name: "إسلام صبحي", server: "https://server14.mp3quran.net/islam/Rewayat-Hafs-A-n-Assem/" },
+            { name: "إسلام صبحي", server: "https://server14.mp3quran.net/islam/" },
             { name: "مشاري العفاسي", server: "https://server8.mp3quran.net/afs/" },
             { name: "ماهر المعيقلي", server: "https://server12.mp3quran.net/maher/" },
             { name: "ياسر الدوسري", server: "https://server11.mp3quran.net/yasser/" },
@@ -98,16 +102,29 @@
         audioPlayer.onended = () => {
             if (currentMode === 'resume' && currentPlayingAyah < totalAyahs) {
                 currentPlayingAyah++;
+                // حفظ الموضع تلقائياً عند الانتقال للآية التالية
+                localStorage.setItem('global_last_surah', surahId);
+                localStorage.setItem(`last_ayah_s${surahId}`, currentPlayingAyah);
                 playAyah(currentPlayingAyah);
             }
         };
 
         async function init() {
             populateReciters();
+            
+            // قراءة آخر سورة تم فتحها وتحديث اسم الزر
+            const globalLast = localStorage.getItem('global_last_surah');
+            if (globalLast) {
+                const surahName = surahNames[parseInt(globalLast) - 1];
+                document.getElementById('tab-resume').innerText = `استكمال (${surahName})`;
+            }
+
             await fetchSurah();
             
-            // تحديث السورة الأخيرة التي تم فتحها في الذاكرة العامة
-            localStorage.setItem('global_last_surah', surahId);
+            // إذا تم توجيه المستخدم من سورة أخرى لاستكمال القراءة
+            if (urlMode === 'resume') {
+                setMode('resume', true); // true لتخطي شرط التوجيه
+            }
         }
 
         function populateReciters() {
@@ -153,7 +170,17 @@
             document.getElementById('quran-text').innerHTML = html;
         }
 
-        async function setMode(mode) {
+        async function setMode(mode, isAutoLoad = false) {
+            // نظام الانتقال الذكي للسورة المحفوظة
+            if (mode === 'resume' && !isAutoLoad) {
+                const globalLast = localStorage.getItem('global_last_surah');
+                // إذا كانت السورة المحفوظة مختلفة عن السورة الحالية، قم بنقله إليها
+                if (globalLast && parseInt(globalLast) !== surahId) {
+                    window.location.href = `?surah=${globalLast}&mode=resume`;
+                    return; // إيقاف تنفيذ الكود هنا لأنه سينتقل لصفحة أخرى
+                }
+            }
+
             currentMode = mode;
             document.getElementById('tab-normal').classList.toggle('active', mode === 'normal');
             document.getElementById('tab-resume').classList.toggle('active', mode === 'resume');
@@ -161,22 +188,26 @@
             populateReciters();
             
             if (mode === 'resume') {
-                // جلب آخر آية لهذه السورة بالتحديد
                 const savedAyah = localStorage.getItem(`last_ayah_s${surahId}`) || 1;
                 currentPlayingAyah = parseInt(savedAyah);
                 
                 setTimeout(() => {
                     jumpToAyah(currentPlayingAyah);
-                    playAyah(currentPlayingAyah);
+                    if (isAutoLoad) playAyah(currentPlayingAyah); // تشغيل تلقائي إذا جاء من توجيه
                 }, 300);
+            } else {
+                audioPlayer.pause(); // إيقاف الصوت عند العودة لنمط السورة الكاملة
             }
         }
 
         function handleAyahClick(index, num) {
             currentPlayingAyah = num;
-            // حفظ السورة والآية معاً لضمان الاستكمال الشامل
+            // حفظ السورة والآية
             localStorage.setItem('global_last_surah', surahId);
             localStorage.setItem(`last_ayah_s${surahId}`, num);
+            
+            // تحديث اسم الزر فوراً
+            document.getElementById('tab-resume').innerText = `استكمال (${surahNames[surahId - 1]})`;
             
             document.getElementById('tafsir-title').innerText = `آية (${num})`;
             document.getElementById('tafsir-body').innerText = tafsirData[index].text;
@@ -236,3 +267,4 @@
     </script>
 </body>
 </html>
+ 
