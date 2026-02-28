@@ -70,9 +70,11 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
+        // الحصول على رقم السورة الحالية
         const surahId = parseInt(urlParams.get('surah')) || 1;
         
         const fullReciters = [
+            { name: "إسلام صبحي", server: "https://server14.mp3quran.net/islam/Rewayat-Hafs-A-n-Assem/" },
             { name: "مشاري العفاسي", server: "https://server8.mp3quran.net/afs/" },
             { name: "ماهر المعيقلي", server: "https://server12.mp3quran.net/maher/" },
             { name: "ياسر الدوسري", server: "https://server11.mp3quran.net/yasser/" },
@@ -93,7 +95,6 @@
 
         const audioPlayer = document.getElementById('audio-player');
 
-        // --- تشغيل الآية التالية تلقائياً ---
         audioPlayer.onended = () => {
             if (currentMode === 'resume' && currentPlayingAyah < totalAyahs) {
                 currentPlayingAyah++;
@@ -104,6 +105,9 @@
         async function init() {
             populateReciters();
             await fetchSurah();
+            
+            // تحديث السورة الأخيرة التي تم فتحها في الذاكرة العامة
+            localStorage.setItem('global_last_surah', surahId);
         }
 
         function populateReciters() {
@@ -135,13 +139,10 @@
             let html = '';
             surah.ayahs.forEach((ayah, i) => {
                 let text = ayah.text;
-                
-                // --- حل مشكلة البسملة المكررة الجذري ---
-                // البسملة غالباً تكون في أول 39 حرف في الآية الأولى
                 if (surahId !== 1 && surahId !== 9 && i === 0) {
-    const words = text.split(' ');
-    text = words.slice(4).join(' ');
-}
+                    const words = text.split(' ');
+                    text = words.slice(4).join(' ');
+                }
 
                 html += `
                     <span id="ayah-${ayah.numberInSurah}" class="ayah-wrap" onclick="handleAyahClick(${i}, ${ayah.numberInSurah})">
@@ -160,10 +161,10 @@
             populateReciters();
             
             if (mode === 'resume') {
-                const saved = localStorage.getItem(`last_ayah_s${surahId}`) || 1;
-                currentPlayingAyah = parseInt(saved);
+                // جلب آخر آية لهذه السورة بالتحديد
+                const savedAyah = localStorage.getItem(`last_ayah_s${surahId}`) || 1;
+                currentPlayingAyah = parseInt(savedAyah);
                 
-                // ننتظر قليلاً لضمان رسم العناصر في الصفحة قبل القفز
                 setTimeout(() => {
                     jumpToAyah(currentPlayingAyah);
                     playAyah(currentPlayingAyah);
@@ -173,9 +174,10 @@
 
         function handleAyahClick(index, num) {
             currentPlayingAyah = num;
+            // حفظ السورة والآية معاً لضمان الاستكمال الشامل
+            localStorage.setItem('global_last_surah', surahId);
             localStorage.setItem(`last_ayah_s${surahId}`, num);
             
-            // عرض التفسير
             document.getElementById('tafsir-title').innerText = `آية (${num})`;
             document.getElementById('tafsir-body').innerText = tafsirData[index].text;
             document.getElementById('tafsir-modal').style.display = 'block';
@@ -234,4 +236,3 @@
     </script>
 </body>
 </html>
- 
