@@ -1,5 +1,5 @@
 /* اسم الملف: sw.js */
-const CACHE_NAME = 'sanad-quran-cache-v7'; // تم تحديث الإصدار
+const CACHE_NAME = 'sanad-quran-cache-v8'; // تم تحديث الإصدار
 
 const ASSETS_TO_CACHE = [
   './',
