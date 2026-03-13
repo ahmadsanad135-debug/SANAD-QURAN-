@@ -77,27 +77,31 @@
         const surahNames = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
 
         // تم تصحيح رابط إسلام صبحي هنا
-        const fullReciters = [
-    { name: "إسلام صبحي",        server: "https://server14.mp3quran.net/islam/Rewayat-Hafs-A-n-Assem/" },
-    { name: "مشاري العفاسي",      server: "https://server8.mp3quran.net/afs/" },
-    { name: "ماهر المعيقلي",      server: "https://server12.mp3quran.net/maher/" },
-    { name: "ياسر الدوسري",      server: "https://server11.mp3quran.net/yasser/" },
-    { name: "عبد الباسط",        server: "https://server7.mp3quran.net/basit/" },
-    { name: "هزاع البلوشي",      server: "https://server11.mp3quran.net/hazza/" },
-    { name: "وديع اليمني",       server: "https://server13.mp3quran.net/wdee3/" },
-    { name: "إدريس أبكر",        server: "https://server6.mp3quran.net/abkr/" },
-    { name: "أحمد النفيس",       server: "https://server12.mp3quran.net/nufais/" },
-    { name: "علي جابر",  server: "https://server11.mp3quran.net/a_jbr/" }
-];
+                const fullReciters = [
+            { name: "إسلام صبحي", server: "https://server14.mp3quran.net/islam/Rewayat-Hafs-A-n-Assem/" },
+            { name: "مشاري العفاسي", server: "https://server8.mp3quran.net/afs/" },
+            { name: "ماهر المعيقلي", server: "https://server12.mp3quran.net/maher/" },
+            { name: "ياسر الدوسري", server: "https://server11.mp3quran.net/yasser/" },
+            { name: "عبد الباسط عبد الصمد", server: "https://server7.mp3quran.net/basit/" },
+            { name: "عبد الرحمن السديس", server: "https://server11.mp3quran.net/sds/" },
+            { name: "سعود الشريم", server: "https://server7.mp3quran.net/shur/" },
+            { name: "سعد الغامدي", server: "https://server10.mp3quran.net/s_gmd/" },
+            { name: "فارس عباد", server: "https://server8.mp3quran.net/frs_a/" },
+            { name: "أبو بكر الشاطري", server: "https://server11.mp3quran.net/shatri/" },
+            { name: "إدريس أبكر", server: "https://server6.mp3quran.net/abkr/" }
+        ];
 
-        const ayahReciters = [
-    { name: "العفاسي (آية آية)",     server: "https://everyayah.com/data/Alafasy_128kbps/" },
-    { name: "ياسر الدوسري (آية آية)", server: "https://everyayah.com/data/Yasser_Ad-Dussary_128kbps/" },
-    { name: "الحصري (آية آية)",      server: "https://everyayah.com/data/Husary_128kbps/" },
-    { name: "المنشاوي (آية آية)",    server: "https://everyayah.com/data/Minshawy_Mujawwad_192kbps/" },
-    { name: "عبد الباسط (آية آية)",   server: "https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/" },
-    { name: "سعود الشريم (آية آية)",  server: "https://everyayah.com/data/Saood_ash-Shuraym_128kbps/" }
-];
+                const ayahReciters = [
+            { name: "العفاسي (آية آية)", server: "https://everyayah.com/data/Alafasy_128kbps/" },
+            { name: "الحصري (آية آية)", server: "https://everyayah.com/data/Husary_128kbps/" },
+            { name: "المنشاوي (آية آية)", server: "https://everyayah.com/data/Minshawy_Mujawwad_192kbps/" },
+            { name: "عبد الباسط (آية آية)", server: "https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/" },
+            { name: "ماهر المعيقلي (آية آية)", server: "https://everyayah.com/data/MaherAlMuaiqly128kbps/" },
+            { name: "أبو بكر الشاطري (آية آية)", server: "https://everyayah.com/data/Abu_Bakr_Ash-Shaatree_128kbps/" },
+            { name: "محمد أيوب (آية آية)", server: "https://everyayah.com/data/Muhammad_Ayyoub_128kbps/" },
+            { name: "علي الحذيفي (آية آية)", server: "https://everyayah.com/data/Hudhaify_128kbps/" },
+            { name: "إبراهيم الأخضر (آية آية)", server: "https://everyayah.com/data/Ibrahim_Akhdar_32kbps/" }
+        ];
 
         let currentMode = 'normal';
         let tafsirData = [];
