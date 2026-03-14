@@ -75,6 +75,9 @@
         
         const surahNames = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
 
+        // قائمة السور المتوفرة للقارئ إسلام صبحي
+        const islamSobhiAvailable = [1, 2, 3, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 25, 26, 27, 28, 29, 30, 31, 32, 34, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 50, 51, 52, 53, 54, 55, 56, 57, 59, 61, 62, 63, 64, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114];
+
         const fullReciters = [
             { name: "مشاري العفاسي", server: "https://server8.mp3quran.net/afs/" },
             { name: "ماهر المعيقلي", server: "https://server12.mp3quran.net/maher/" },
@@ -108,8 +111,11 @@
 
         const audioPlayer = document.getElementById('audio-player');
 
-        // --- رسالة الخطأ اللبقة ---
+        // رسالة الخطأ اللبقة للروابط التالفة لباقي القراء
         audioPlayer.addEventListener('error', function() {
+            // تجاهل رسالة الخطأ إذا كان المشغل فارغاً (يحدث عند تفريغه برمجياً)
+            if(!audioPlayer.getAttribute('src')) return; 
+
             const reciterSelect = document.getElementById('reciter-select');
             const reciterName = reciterSelect.options[reciterSelect.selectedIndex].text;
             const surahName = surahNames[surahId - 1];
@@ -117,7 +123,8 @@
             showProfessionalMsg(`نعتذر منك، تلاوة سورة ${surahName} غير متوفرة حالياً بصوت القارئ ${reciterName}. يرجى اختيار قارئ آخر.`);
             
             audioPlayer.pause();
-            audioPlayer.src = ""; 
+            audioPlayer.removeAttribute('src');
+            audioPlayer.load();
         }, true);
 
         function showProfessionalMsg(text) {
@@ -144,7 +151,6 @@
                 setTimeout(() => msgBox.remove(), 500);
             }, 6000);
         }
-        // --- نهاية التعديل ---
 
         audioPlayer.onended = () => {
             if (currentMode === 'resume' && currentPlayingAyah < totalAyahs) {
@@ -265,8 +271,7 @@
             const a = String(num).padStart(3, '0');
             audioPlayer.src = `${server}${s}${a}.mp3`;
             
-            // إضافة catch لتجنب الأخطاء في المتصفح إذا فشل التشغيل
-            audioPlayer.play().catch(e => console.log("جاري معالجة نقص التلاوة..."));
+            audioPlayer.play().catch(e => console.log("تحقق من اتصالك بالإنترنت"));
             highlightAyah(num);
         }
 
@@ -284,20 +289,37 @@
             }
         }
 
+        function updateAudioUrl() {
+            const select = document.getElementById('reciter-select');
+            const reciterName = select.options[select.selectedIndex].text;
+            const server = select.value;
+
+            if (currentMode === 'normal') {
+                // الفحص الخاص بإسلام صبحي
+                if (reciterName === "إسلام صبحي" && !islamSobhiAvailable.includes(surahId)) {
+                    const surahName = surahNames[surahId - 1];
+                    showProfessionalMsg(`نعتذر منك، سورة ${surahName} لم تسجل بعد بصوت القارئ إسلام صبحي.`);
+                    audioPlayer.pause();
+                    audioPlayer.removeAttribute('src'); // تفريغ المصدر لمنع التشغيل
+                    audioPlayer.load(); // إعادة تعيين المشغل
+                    return false; // يخبر الدالة الأخرى أنه لا يوجد صوت
+                }
+
+                audioPlayer.src = `${server}${String(surahId).padStart(3, '0')}.mp3`;
+                return true; // نجاح تحديث الرابط
+            }
+            return false;
+        }
+
         function changeReciter() {
             if (currentMode === 'resume') {
                 playAyah(currentPlayingAyah);
             } else {
-                updateAudioUrl();
-                // إضافة catch لتجنب الأخطاء في المتصفح إذا فشل التشغيل
-                audioPlayer.play().catch(e => console.log("جاري معالجة نقص التلاوة..."));
-            }
-        }
-
-        function updateAudioUrl() {
-            const server = document.getElementById('reciter-select').value;
-            if (currentMode === 'normal') {
-                audioPlayer.src = `${server}${String(surahId).padStart(3, '0')}.mp3`;
+                const isReadyToPlay = updateAudioUrl();
+                // التشغيل فقط إذا مر من فحص التوفر بنجاح
+                if (isReadyToPlay) {
+                    audioPlayer.play().catch(e => console.log("تم منع التشغيل التلقائي بواسطة المتصفح"));
+                }
             }
         }
 
