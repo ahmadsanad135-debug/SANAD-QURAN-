@@ -5,13 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const installBtn = document.getElementById('install-btn');
     let allSurahs = [];
 
-    // 1. دالة احترافية لتنظيف النص العربي (لجعل البحث مرناً جداً)
+    // 1. دالة احترافية لتنظيف النص العربي (لجعل البحث مرناً جداً ويتجاهل الهمزات والتشكيل)
     function normalizeArabic(text) {
         if (!text) return "";
         return text.toString()
-            // إزالة التشكيل بالكامل
+            // تفكيك الحروف لإزالة أي تشكيل خفي
+            .normalize("NFD")
+            // إزالة التشكيل بالكامل (الفتحة، الضمة، الكسرة، التنوين، الشدة)
             .replace(/[\u064B-\u065F\u0670]/g, "") 
-            // توحيد الألفات (أ إ آ) لتصبح (ا)
+            // توحيد الألفات (أ إ آ) لتصبح (ا) عادية
             .replace(/[أإآ]/g, "ا")
             // توحيد الهاء والتاء المربوطة (ة) لتصبح (ه)
             .replace(/ة/g, "ه")
@@ -34,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 3. عرض السور في الفهرس
+    // 3. عرض السور في الفهرس لأول مرة
     function displaySurahs(surahs) {
         container.innerHTML = '';
         surahs.forEach(surah => {
@@ -42,6 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'surah-card';
             card.href = `quran.html?surah=${surah.number}`; 
             
+            // تخزين الاسم الإنجليزي ورقم السورة كخصائص مخصصة (data attributes) لتسهيل البحث الشامل لاحقاً
+            card.setAttribute('data-english', surah.englishName.toLowerCase());
+            card.setAttribute('data-number', surah.number.toString());
+
             const typeAr = surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية';
 
             card.innerHTML = `
@@ -57,35 +63,41 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. البحث الذكي (يتجاهل أخطاء الإملاء والحركات)
+    // 4. البحث الذكي الفوري (إخفاء وإظهار العناصر مباشرة للحفاظ على الأداء وسرعة الاستجابة)
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             const term = normalizeArabic(e.target.value.toLowerCase());
+            const cards = document.querySelectorAll('.surah-card');
             
-            const filtered = allSurahs.filter(s => {
-                const cleanName = normalizeArabic(s.name);
-                const englishName = s.englishName.toLowerCase();
-                const surahNumber = s.number.toString();
+            cards.forEach(card => {
+                const surahNameElement = card.querySelector('.surah-name');
+                const surahName = surahNameElement ? surahNameElement.textContent : "";
                 
-                return cleanName.includes(term) || 
-                       englishName.includes(term) || 
-                       surahNumber === term;
+                // تنظيف اسم السورة الحالي من الحركات والهمزات لتطبيقه مع المدخلات
+                const cleanName = normalizeArabic(surahName);
+                const englishName = card.getAttribute('data-english') || "";
+                const surahNumber = card.getAttribute('data-number') || "";
+                
+                // التحقق من تطابق نص البحث مع (الاسم العربي، الإنجليزي، أو الرقم)
+                if (cleanName.includes(term) || englishName.includes(term) || surahNumber === term) {
+                    card.style.display = 'flex'; // إظهار البطاقة في حال التطابق
+                } else {
+                    card.style.display = 'none'; // إخفاء البطاقة في حال عدم التطابق
+                }
             });
-            displaySurahs(filtered);
         });
     }
 
     // 5. ميزة استكمال القراءة (تظهر رقم الآية بجانب اسم السورة)
     const lastId = localStorage.getItem('lastReadId');
     const lastName = localStorage.getItem('lastReadName');
-    const lastAyah = localStorage.getItem('lastReadAyah'); // رقم الآية الذي حفظناه في quran.html
+    const lastAyah = localStorage.getItem('lastReadAyah');
     const continueBox = document.getElementById('continue-reading');
     
     if (lastId && lastName && continueBox) {
         continueBox.style.display = 'block';
         document.getElementById('last-surah-link').href = `quran.html?surah=${lastId}`;
         
-        // عرض اسم السورة مع رقم الآية إذا وجد
         const displayText = lastAyah ? `${lastName} - آية (${lastAyah})` : lastName;
         document.getElementById('last-surah-name').textContent = displayText;
     }
