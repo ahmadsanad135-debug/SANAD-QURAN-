@@ -5,20 +5,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const installBtn = document.getElementById('install-btn');
     let allSurahs = [];
 
-    // 1. دالة احترافية لتنظيف النص العربي (لجعل البحث مرناً جداً ويتجاهل الهمزات والتشكيل)
+    // 1. دالة خارقة لتنظيف النص العربي من أي تشكيل أو حركات خفية تماماً
     function normalizeArabic(text) {
         if (!text) return "";
         return text.toString()
-            // تفكيك الحروف لإزالة أي تشكيل خفي
+            // تفكيك الحروف المركبة وتطير علامات التشكيل الدقيقة للقرآن
             .normalize("NFD")
-            // إزالة التشكيل بالكامل (الفتحة، الضمة، الكسرة، التنوين، الشدة)
-            .replace(/[\u064B-\u065F\u0670]/g, "") 
-            // توحيد الألفات (أ إ آ) لتصبح (ا) عادية
+            // إزالة كافة حركات التشكيل والتطريز والرموز الخاصة بالمصحف
+            .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g, "") 
+            // توحيد الألفات
             .replace(/[أإآ]/g, "ا")
-            // توحيد الهاء والتاء المربوطة (ة) لتصبح (ه)
+            // توحيد التاء المربوطة
             .replace(/ة/g, "ه")
-            // توحيد الياء والألف المقصورة (ى) لتصبح (ي)
+            // توحيد الألف المقصورة والياء
             .replace(/ى/g, "ي")
+            // إزالة كلمة "سورة" من المقارنة تماماً لجعل البحث أسهل (لو بحثت عن "الكهف" مباشرة)
+            .replace(/سوره/g, "")
+            .replace(/سورة/g, "")
+            // إزالة الـ ال التعريف اختصاراً لزيادة مرونة البحث (إذا كتب "كهف" يجد "الكهف")
+            .replace(/^ال/g, "") 
+            .replace(/\s+/g, "") // إزالة الفراغات لضمان التطابق اللصيق
             .trim();
     }
 
@@ -36,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 3. عرض السور في الفهرس لأول مرة
+    // 3. عرض السور في الفهرس
     function displaySurahs(surahs) {
         container.innerHTML = '';
         surahs.forEach(surah => {
@@ -44,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'surah-card';
             card.href = `quran.html?surah=${surah.number}`; 
             
-            // تخزين الاسم الإنجليزي ورقم السورة كخصائص مخصصة (data attributes) لتسهيل البحث الشامل لاحقاً
+            // تخزين البيانات الأصلية للبحث بداخل الكرت
             card.setAttribute('data-english', surah.englishName.toLowerCase());
             card.setAttribute('data-number', surah.number.toString());
 
@@ -63,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. البحث الذكي الفوري (إخفاء وإظهار العناصر مباشرة للحفاظ على الأداء وسرعة الاستجابة)
+    // 4. دالة البحث المحدثة والمرنة جداً
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             const term = normalizeArabic(e.target.value.toLowerCase());
@@ -73,22 +79,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 const surahNameElement = card.querySelector('.surah-name');
                 const surahName = surahNameElement ? surahNameElement.textContent : "";
                 
-                // تنظيف اسم السورة الحالي من الحركات والهمزات لتطبيقه مع المدخلات
                 const cleanName = normalizeArabic(surahName);
                 const englishName = card.getAttribute('data-english') || "";
                 const surahNumber = card.getAttribute('data-number') || "";
                 
-                // التحقق من تطابق نص البحث مع (الاسم العربي، الإنجليزي، أو الرقم)
+                // فحص التطابق الشامل
                 if (cleanName.includes(term) || englishName.includes(term) || surahNumber === term) {
-                    card.style.display = 'flex'; // إظهار البطاقة في حال التطابق
+                    card.style.display = 'flex';
                 } else {
-                    card.style.display = 'none'; // إخفاء البطاقة في حال عدم التطابق
+                    card.style.display = 'none';
                 }
             });
         });
     }
 
-    // 5. ميزة استكمال القراءة (تظهر رقم الآية بجانب اسم السورة)
+    // 5. ميزة استكمال القراءة
     const lastId = localStorage.getItem('lastReadId');
     const lastName = localStorage.getItem('lastReadName');
     const lastAyah = localStorage.getItem('lastReadAyah');
