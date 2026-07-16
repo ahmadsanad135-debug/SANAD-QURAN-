@@ -3,32 +3,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('surah-container');
     const searchInput = document.getElementById('search-input');
     const installBtn = document.getElementById('install-btn');
+    const scrollTopBtn = document.getElementById('scrollTop');
     let allSurahs = [];
 
-    // 1. دالة خارقة لتنظيف النص العربي من أي تشكيل أو حركات خفية تماماً
+    // 1. Theme Manager
+    const themeBtn = document.getElementById('theme-btn');
+    if (themeBtn) {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        window.toggleTheme = function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        };
+
+        function updateThemeIcon(theme) {
+            themeBtn.innerHTML = theme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        }
+    }
+
+    // 2. تنظيف النص العربي للبحث
     function normalizeArabic(text) {
         if (!text) return "";
         return text.toString()
-            // تفكيك الحروف المركبة وتطير علامات التشكيل الدقيقة للقرآن
             .normalize("NFD")
-            // إزالة كافة حركات التشكيل والتطريز والرموز الخاصة بالمصحف
             .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g, "") 
-            // توحيد الألفات
             .replace(/[أإآ]/g, "ا")
-            // توحيد التاء المربوطة
             .replace(/ة/g, "ه")
-            // توحيد الألف المقصورة والياء
             .replace(/ى/g, "ي")
-            // إزالة كلمة "سورة" من المقارنة تماماً لجعل البحث أسهل (لو بحثت عن "الكهف" مباشرة)
             .replace(/سوره/g, "")
             .replace(/سورة/g, "")
-            // إزالة الـ ال التعريف اختصاراً لزيادة مرونة البحث (إذا كتب "كهف" يجد "الكهف")
             .replace(/^ال/g, "") 
-            .replace(/\s+/g, "") // إزالة الفراغات لضمان التطابق اللصيق
+            .replace(/\s+/g, "")
             .trim();
     }
 
-    // 2. جلب قائمة السور من الـ API
+    // 3. جلب قائمة السور
     async function fetchSurahs() {
         try {
             const response = await fetch('https://api.alquran.cloud/v1/surah');
@@ -42,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 3. عرض السور في الفهرس
+    // 4. عرض السور
     function displaySurahs(surahs) {
         container.innerHTML = '';
         surahs.forEach(surah => {
@@ -50,18 +64,22 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'surah-card';
             card.href = `quran.html?surah=${surah.number}`; 
             
-            // تخزين البيانات الأصلية للبحث بداخل الكرت
             card.setAttribute('data-english', surah.englishName.toLowerCase());
             card.setAttribute('data-number', surah.number.toString());
 
             const typeAr = surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية';
+            const iconClass = surah.revelationType === 'Meccan' ? 'fa-kaaba' : 'fa-mosque';
 
             card.innerHTML = `
-                <div class="surah-number">${surah.number}</div>
+                <div class="surah-number-wrap">
+                    <i class="fas ${iconClass} surah-number-icon"></i>
+                    <span class="surah-number">${surah.number}</span>
+                </div>
                 <div class="card-info">
                     <span class="surah-name">${surah.name}</span>
                     <div class="surah-details">
-                        ${typeAr} • ${surah.numberOfAyahs} آية
+                        <span><i class="fas fa-map-marker-alt"></i> ${typeAr}</span>
+                        <span><i class="fas fa-list-ol"></i> ${surah.numberOfAyahs} آية</span>
                     </div>
                 </div>
             `;
@@ -69,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. دالة البحث المحدثة والمرنة جداً
+    // 5. البحث
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             const term = normalizeArabic(e.target.value.toLowerCase());
@@ -83,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const englishName = card.getAttribute('data-english') || "";
                 const surahNumber = card.getAttribute('data-number') || "";
                 
-                // فحص التطابق الشامل
                 if (cleanName.includes(term) || englishName.includes(term) || surahNumber === term) {
                     card.style.display = 'flex';
                 } else {
@@ -93,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 5. ميزة استكمال القراءة
+    // 6. استكمال القراءة
     const lastId = localStorage.getItem('lastReadId');
     const lastName = localStorage.getItem('lastReadName');
     const lastAyah = localStorage.getItem('lastReadAyah');
@@ -101,18 +118,30 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (lastId && lastName && continueBox) {
         continueBox.style.display = 'block';
-        document.getElementById('last-surah-link').href = `quran.html?surah=${lastId}`;
-        
-        const displayText = lastAyah ? `${lastName} - آية (${lastAyah})` : lastName;
-        document.getElementById('last-surah-name').textContent = displayText;
+        continueBox.href = `quran.html?surah=${lastId}&mode=resume`;
+        document.getElementById('last-surah-name').textContent = lastName;
+        if(lastAyah) {
+            document.getElementById('last-ayah-num').textContent = `توقفت عند الآية رقم: ${lastAyah}`;
+        }
     }
 
-    // 6. كود تثبيت التطبيق (PWA)
+    // 7. زر العودة للأعلى
+    if(scrollTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.style.display = 'flex';
+            } else {
+                scrollTopBtn.style.display = 'none';
+            }
+        });
+    }
+
+    // 8. PWA Install
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        if(installBtn) installBtn.style.display = 'block';
+        if(installBtn) installBtn.style.display = 'flex';
     });
 
     if(installBtn) {
@@ -126,10 +155,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 7. تشغيل الخدمات
+    // Start
     fetchSurahs();
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').catch(console.error);
     }
 });
- 
