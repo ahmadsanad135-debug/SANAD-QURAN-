@@ -4,22 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مصحف سند - التلاوة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- استيراد خطوط ممتازة ومطابقة للمصحف الشريف -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { 
             --primary: #0f301b; 
             --accent: #cda250; 
-            --bg: #fbf9f4; 
-            --text: #232d27; 
+            --bg: #fbf9f4; /* خلفية مريحة شبيهة بورق المصحف القديم */
+            --text: #1e2521; 
             --sheet-bg: #ffffff; 
             --border: rgba(15, 48, 27, 0.05); 
-            --quran-font-size: 28px;
+            --quran-font-size: 26px;
         }
         [data-theme="dark"] { 
             --primary: #cda250; 
             --accent: #cda250; 
-            --bg: #0a0e0b; 
+            --bg: #090d0a; /* أسود داكن مريح للعين في الليل */
             --text: #e2e8e4; 
             --sheet-bg: #111612; 
             --border: rgba(255, 255, 255, 0.05); 
@@ -30,14 +31,14 @@
             background-color: var(--bg); 
             color: var(--text); 
             margin: 0; 
-            padding-bottom: 250px; 
-            transition: 0.4s; 
+            padding-bottom: 220px; 
+            transition: background-color 0.4s, color 0.4s; 
         }
         
-        /* شريط العنوان العلوي الأنيق (ترتيل) */
+        /* شريط العنوان العلوي الأنيق */
         header { 
             background: var(--bg); 
-            padding: 18px 20px; 
+            padding: 15px 20px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -45,17 +46,17 @@
             top: 0; 
             z-index: 100; 
             border-bottom: 1px solid var(--border); 
-            backdrop-filter: blur(10px);
-            background-color: rgba(251, 249, 244, 0.85);
+            backdrop-filter: blur(12px);
+            background-color: rgba(251, 249, 244, 0.9);
         }
         [data-theme="dark"] header {
-            background-color: rgba(10, 14, 11, 0.85);
+            background-color: rgba(9, 13, 10, 0.9);
         }
         
         .back-btn { 
             color: var(--text); 
             text-decoration: none; 
-            font-size: 1.3rem; 
+            font-size: 1.2rem; 
             width: 40px;
             height: 40px;
             border-radius: 12px;
@@ -64,14 +65,19 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
+            transition: 0.3s;
         }
         .surah-title { 
-            font-family: 'Amiri Quran', serif; 
-            font-size: 1.8rem; 
+            font-family: 'Noto Naskh Arabic', serif; 
+            font-size: 1.6rem; 
             color: var(--primary); 
             margin: 0; 
             font-weight: bold;
         }
+        [data-theme="dark"] .surah-title {
+            color: #ffffff;
+        }
+        
         .font-controls { display: flex; gap: 8px; }
         .font-btn { 
             background: var(--sheet-bg); 
@@ -85,88 +91,73 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
+            transition: 0.3s;
         }
 
-        /* لوح القراءة المطور */
+        /* حاوية الصفحة الكاملة المصممة لتبدو كالمصحف تماماً */
         .quran-container { 
             max-width: 800px; 
-            margin: 20px auto; 
-            padding: 0 15px; 
+            margin: 0 auto; 
+            padding: 0 16px; 
         }
         .surah-meta { 
             text-align: center; 
             color: var(--accent); 
-            font-size: 0.85rem; 
-            margin-bottom: 30px; 
+            font-size: 0.9rem; 
+            margin: 20px 0; 
             font-weight: 700; 
-            letter-spacing: 1px;
-            opacity: 0.8;
+            opacity: 0.9;
         }
         
         .basmala { 
-            font-family: 'Amiri Quran', serif; 
+            font-family: 'Noto Naskh Arabic', serif; 
             text-align: center; 
-            font-size: calc(var(--quran-font-size) + 6px); 
-            margin-bottom: 35px; 
+            font-size: calc(var(--quran-font-size) + 4px); 
+            margin: 25px 0 35px; 
             color: var(--text); 
         }
         
-        /* مظهر النص القرآني المريح */
+        /* النص القرآني الكامل (ضبط الحواف والمدود مثل ترتيل) */
         .ayah-container { 
-            line-height: 2.3; 
+            line-height: 2.3; /* تباعد الأسطر المريح والمثالي للرسم العثماني */
             font-size: var(--quran-font-size); 
-            text-align: justify; 
-            text-align-last: center;
-            font-family: 'Amiri Quran', 'Amiri', serif; 
+            text-align: justify; /* تمديد النص ليملأ الصفحة بالكامل */
+            text-justify: inter-word; /* ضبط الفراغات لتوزيع الكلمات بشكل متناسق */
+            font-family: 'Noto Naskh Arabic', serif; 
             direction: rtl; 
-            padding: 25px; 
-            background: var(--sheet-bg); 
-            border-radius: 24px; 
-            box-shadow: 0 10px 40px rgba(15, 48, 27, 0.02); 
-            border: 1px solid var(--border); 
+            padding: 20px 8px; 
+            background: transparent; 
+            word-spacing: 2px; /* تباعد بسيط يزيد من وضوح الحروف المشكولة */
         }
         
+        /* الكلمة والآية */
         .ayah-wrap { 
             transition: all 0.3s ease; 
-            border-radius: 10px; 
+            border-radius: 8px; 
             cursor: pointer; 
-            padding: 4px 8px; 
+            padding: 2px 4px; 
             display: inline; 
             color: var(--text); 
         }
-        .ayah-wrap:hover {
-            background-color: rgba(15, 48, 27, 0.03);
-        }
-        [data-theme="dark"] .ayah-wrap:hover {
-            background-color: rgba(255, 255, 255, 0.03);
-        }
         
-        /* تظليل الآية الهادئ - مثل ترتيل */
-        .highlight-ayah { 
-            background-color: rgba(205, 162, 80, 0.15) !important; 
-            border-radius: 10px; 
-            box-shadow: 0 2px 10px rgba(205, 162, 80, 0.1);
-        }
-        
-        /* تصميم دائرة ترتيل الأنيقة لأرقام الآيات */
+        /* علامة الآية مع الأرقام المشرقية داخل الأقواس العثمانية */
         .ayah-marker { 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center; 
-            width: 32px; 
-            height: 32px; 
-            border: 1px solid var(--border); 
-            border-radius: 50%; 
-            font-family: 'Cairo', sans-serif; 
-            font-size: 0.6em; 
-            font-weight: bold; 
+            font-family: 'Noto Naskh Arabic', 'Cairo', sans-serif; 
+            font-size: 0.9em; 
+            font-weight: normal; 
             color: var(--accent);
-            background: rgba(15, 48, 27, 0.02);
-            margin: 0 6px;
-            vertical-align: middle;
+            margin: 0 4px;
+            display: inline-block;
+            user-select: none;
+        }
+        
+        /* التظليل الهادئ والناعم جداً عند تحديد آية للتفسير */
+        .highlight-ayah { 
+            background-color: rgba(205, 162, 80, 0.14) !important; 
+            border-radius: 6px; 
         }
 
-        /* Bottom Sheet (نافذة التفسير العائمة لترتيل) */
+        /* النوافذ المنبثقة والتفسير (Bottom Sheet) */
         .overlay { 
             display: none; 
             position: fixed; 
@@ -174,7 +165,7 @@
             left: 0; 
             width: 100%; 
             height: 100%; 
-            background: rgba(10, 14, 11, 0.4); 
+            background: rgba(0, 0, 0, 0.4); 
             backdrop-filter: blur(4px); 
             z-index: 999; 
             opacity: 0; 
@@ -195,6 +186,7 @@
             max-height: 60vh; 
             display: flex; 
             flex-direction: column; 
+            box-sizing: border-box;
         }
         .sheet-handle { 
             width: 42px; 
@@ -216,7 +208,7 @@
             margin: 0; 
             font-family: 'Cairo', sans-serif; 
             color: var(--text-main); 
-            font-size: 1.2rem; 
+            font-size: 1.1rem; 
             font-weight: 700;
         }
         .sheet-actions { display: flex; gap: 8px; }
@@ -234,7 +226,6 @@
             justify-content: center;
             transition: 0.3s; 
         }
-        .sheet-actions button:hover { background: var(--border); }
         .sheet-body { 
             overflow-y: auto; 
             font-size: 1.1rem; 
@@ -244,7 +235,7 @@
             text-align: justify;
         }
 
-        /* مشغل الصوت الأنيق والسلس */
+        /* شريط مشغل الصوت السفلي الصغير والذكي */
         .player-bar { 
             position: fixed; 
             bottom: 0; 
@@ -255,6 +246,7 @@
             border-top: 1px solid var(--border); 
             box-shadow: 0 -8px 30px rgba(0,0,0,0.03); 
             z-index: 200; 
+            box-sizing: border-box;
         }
         .player-controls { 
             max-width: 760px; 
@@ -287,11 +279,11 @@
         }
         .mode-tab.active { 
             background: var(--primary); 
-            color: var(--bg); 
+            color: #ffffff; 
             opacity: 1; 
         }
         [data-theme="dark"] .mode-tab.active {
-            color: #000;
+            color: #000000;
         }
         .reciter-select { 
             width: 100%; 
@@ -357,6 +349,7 @@
 </div>
 
 <script>
+    // الحفاظ على السمة الفاتحة/الداكنة المفضلة
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
 
@@ -386,7 +379,7 @@
     let totalAyahs = 0;
     let currentPlayingAyah = 1;
     let currentTafsirText = "";
-    let currentFontSize = parseInt(localStorage.getItem('quranFontSize')) || 28;
+    let currentFontSize = parseInt(localStorage.getItem('quranFontSize')) || 26;
 
     document.documentElement.style.setProperty('--quran-font-size', currentFontSize + 'px');
 
@@ -398,6 +391,11 @@
         if(currentFontSize > 45) currentFontSize = 45;
         document.documentElement.style.setProperty('--quran-font-size', currentFontSize + 'px');
         localStorage.setItem('quranFontSize', currentFontSize);
+    }
+
+    // دالة لتحويل الأرقام إلى أرقام عربية مشرقية (رسم عثماني)
+    function toArabicNumeral(en) {
+        return String(en).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
     }
 
     audioPlayer.onended = () => {
@@ -456,7 +454,7 @@
 
             const juz = surah.ayahs[0].juz;
             const page = surah.ayahs[0].page;
-            const metaText = `الجزء ${juz} • الصفحة ${page}`;
+            const metaText = `الجزء ${toArabicNumeral(juz)} • الصفحة ${toArabicNumeral(page)}`;
 
             localStorage.setItem(textKey, JSON.stringify(surah));
             localStorage.setItem(tafsirKey, JSON.stringify(tafsirData));
@@ -467,7 +465,7 @@
             document.getElementById('quran-text').innerHTML = `
                 <div style="text-align:center; padding: 20px; color: var(--accent);">
                     <i class="fas fa-wifi-slash fa-2x"></i>
-                    <p>يرجى الاتصال بالإنترنت لمرة واحدة فقط لتحميل هذه السورة أوفلاين.</p>
+                    <p>يرجى الاتصال بالإنترنت لمرة واحدة فقط لتحميل هذه السورة للعمل دون إنترنت.</p>
                 </div>`;
         }
     }
@@ -484,7 +482,10 @@
                 text = text.replace('بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ', '').trim();
             }
 
-            html += `<span id="ayah-${ayah.numberInSurah}" class="ayah-wrap" onclick="handleAyahClick(${i}, ${ayah.numberInSurah})">${text}<span class="ayah-marker">${ayah.numberInSurah}</span></span> `;
+            const arabicNumber = toArabicNumeral(ayah.numberInSurah);
+
+            // نصوص المصحف الشريف تنتهي بالرمز المصحفي الأنيق المدمج
+            html += `<span id="ayah-${ayah.numberInSurah}" class="ayah-wrap" onclick="handleAyahClick(${i}, ${ayah.numberInSurah})">${text} <span class="ayah-marker">﴿${arabicNumber}﴾</span></span> `;
         });
         document.getElementById('quran-text').innerHTML = html;
     }
@@ -520,7 +521,7 @@
         saveReadingProgress(num);
         
         currentTafsirText = tafsirData[index].text;
-        document.getElementById('tafsir-title').innerText = `تفسير الآية (${num})`;
+        document.getElementById('tafsir-title').innerText = `تفسير الآية (${toArabicNumeral(num)})`;
         document.getElementById('tafsir-body').innerText = currentTafsirText;
         
         const bm = localStorage.getItem('bookmarkedAyah') === `${surahId}-${num}`;
@@ -605,4 +606,3 @@
 
 </body>
 </html>
- 
