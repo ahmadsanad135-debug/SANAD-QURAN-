@@ -9,26 +9,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { 
-            --primary: #1a4d2e; 
-            --primary-dark: #0f301b;
-            --accent: #d4af37; 
-            --bg-body: #fdfbf7; 
-            --text-main: #2c3e50;
-            --text-muted: #7f8c8d;
+            --primary: #0f301b; 
+            --primary-light: #164327;
+            --accent: #cda250; 
+            --bg-body: #fbf9f4; 
+            --text-main: #232d27;
+            --text-muted: #626d66;
             --white: #ffffff;
-            --card-shadow: 0 8px 24px rgba(0,0,0,0.05);
-            --border-color: #eee;
+            --card-shadow: 0 10px 30px rgba(15, 48, 27, 0.04);
+            --border-color: rgba(15, 48, 27, 0.06);
+            --card-bg: #ffffff;
         }
 
         [data-theme="dark"] {
-            --bg-body: #121212;
-            --white: #1e1e1e;
-            --text-main: #e0e0e0;
-            --text-muted: #aaaaaa;
-            --primary: #27ae60;
-            --primary-dark: #1e1e1e;
-            --card-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            --border-color: #333;
+            --bg-body: #0a0e0b;
+            --white: #111612;
+            --text-main: #e2e8e4;
+            --text-muted: #808e84;
+            --primary: #1e462d;
+            --primary-light: #2c5e3f;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            --border-color: rgba(255,255,255,0.06);
+            --card-bg: #111612;
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -38,65 +40,230 @@
             background-color: var(--bg-body); 
             margin: 0; 
             color: var(--text-main); 
-            transition: background-color 0.3s, color 0.3s;
-            padding-bottom: 30px;
+            transition: background-color 0.4s, color 0.4s;
+            padding-bottom: 50px;
         }
 
-        /* Header */
+        /* تصميم الهيدر العصري لترتيل */
         header { 
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
-            color: #fff; 
-            padding: 3rem 1.5rem 4rem; 
+            background: var(--bg-body);
+            padding: 3.5rem 1.5rem 2rem; 
             text-align: center; 
-            border-bottom-left-radius: 40px; 
-            border-bottom-right-radius: 40px;
-            box-shadow: 0 4px 20px rgba(26, 77, 46, 0.4);
             position: relative;
         }
 
-        .header-top { display: flex; justify-content: space-between; align-items: center; position: absolute; top: 20px; width: calc(100% - 40px); left: 20px; }
+        .header-top { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: absolute; 
+            top: 25px; 
+            width: calc(100% - 40px); 
+            left: 20px; 
+        }
         
-        .theme-toggle { background: rgba(255,255,255,0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;}
+        .theme-toggle { 
+            background: var(--white); 
+            border: 1px solid var(--border-color); 
+            color: var(--text-main); 
+            width: 42px; 
+            height: 42px; 
+            border-radius: 14px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.1rem;
+            box-shadow: var(--card-shadow);
+            transition: 0.3s;
+        }
         
-        h1 { font-family: 'Amiri', serif; margin: 0; font-size: 3rem; font-weight: bold; color: var(--accent); text-shadow: 0 2px 4px rgba(0,0,0,0.3);}
-        p.subtitle { font-size: 1.1rem; margin-top: 8px; font-weight: 600; opacity: 0.9; }
+        h1 { 
+            font-family: 'Amiri', serif; 
+            margin: 0; 
+            font-size: 2.5rem; 
+            font-weight: 700; 
+            color: var(--primary);
+        }
+        [data-theme="dark"] h1 { color: var(--accent); }
 
-        /* Search */
-        .search-container { position: relative; max-width: 90%; margin: -25px auto 20px; z-index: 10; width: 500px;}
-        #search-input { width: 100%; padding: 18px 55px 18px 20px; border-radius: 30px; border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.08); font-family: 'Cairo', sans-serif; font-size: 1.1rem; background: var(--white); color: var(--text-main); outline: none; transition: 0.3s; }
-        #search-input:focus { border-color: var(--accent); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2); }
-        .search-icon { position: absolute; right: 25px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 1.2rem; }
+        p.subtitle { 
+            font-size: 0.95rem; 
+            margin-top: 5px; 
+            font-weight: 600; 
+            color: var(--text-muted); 
+        }
 
-        /* Continue Reading */
-        .continue-card { max-width: 90%; width: 500px; margin: 0 auto 2rem; background: linear-gradient(to right, var(--primary), var(--primary-dark)); border-radius: 20px; padding: 1.5rem; color: white; display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.1); text-decoration: none; position: relative; overflow: hidden; }
-        .continue-card::before { content: '\f518'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; left: -10px; top: -10px; font-size: 6rem; opacity: 0.1; }
-        .continue-title { font-size: 0.9rem; opacity: 0.8; margin-bottom: 5px; display: block; }
-        .continue-surah { font-family: 'Amiri', serif; font-size: 1.8rem; font-weight: bold; color: var(--accent); }
-        .continue-ayah { font-size: 1rem; margin-top: 5px; display: block; }
+        /* شريط البحث المطور */
+        .search-container { 
+            position: relative; 
+            max-width: 90%; 
+            margin: 10px auto 25px; 
+            z-index: 10; 
+            width: 480px;
+        }
+        #search-input { 
+            width: 100%; 
+            padding: 16px 50px 16px 20px; 
+            border-radius: 18px; 
+            border: 1px solid var(--border-color); 
+            box-shadow: var(--card-shadow); 
+            font-family: 'Cairo', sans-serif; 
+            font-size: 1rem; 
+            background: var(--white); 
+            color: var(--text-main); 
+            outline: none; 
+            transition: all 0.3s ease; 
+        }
+        #search-input:focus { 
+            border-color: var(--accent); 
+            box-shadow: 0 10px 25px rgba(205, 162, 80, 0.15); 
+        }
+        .search-icon { 
+            position: absolute; 
+            right: 20px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            color: var(--text-muted); 
+            font-size: 1.1rem; 
+        }
 
-        /* Surah Grid */
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
-        .surah-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        /* بطاقة متابعة القراءة الأنيقة على طريقة ترتيل */
+        .continue-card { 
+            max-width: 90%; 
+            width: 480px; 
+            margin: 0 auto 2.5rem; 
+            background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
+            border-radius: 20px; 
+            padding: 1.25rem 1.5rem; 
+            color: #ffffff; 
+            display: none; 
+            box-shadow: 0 12px 30px rgba(15, 48, 27, 0.2); 
+            text-decoration: none; 
+            transition: transform 0.3s;
+        }
+        .continue-card:active { transform: scale(0.98); }
+        .continue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .continue-title { 
+            font-size: 0.8rem; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            opacity: 0.8; 
+            color: var(--accent);
+        }
+        .continue-surah { 
+            font-family: 'Amiri', serif; 
+            font-size: 1.6rem; 
+            font-weight: bold; 
+        }
+        .continue-ayah { 
+            font-size: 0.9rem; 
+            opacity: 0.9; 
+            margin-top: 4px;
+            display: block;
+        }
 
-        .surah-card { background: var(--white); border-radius: 20px; padding: 1.2rem; display: flex; align-items: center; text-decoration: none; color: var(--text-main); box-shadow: var(--card-shadow); border: 1px solid var(--border-color); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; overflow: hidden; }
-        .surah-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
-        .surah-card::after { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: var(--accent); opacity: 0; transition: 0.3s; }
-        .surah-card:hover::after { opacity: 1; }
+        /* شبكة السور بنظام ترتيل */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+        .surah-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); 
+            gap: 1.2rem; 
+        }
 
-        .surah-number-wrap { width: 50px; height: 50px; position: relative; display: flex; align-items: center; justify-content: center; }
-        .surah-number-icon { position: absolute; font-size: 3.5rem; color: rgba(212, 175, 55, 0.2); }
-        .surah-number { font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--primary); z-index: 2; }
+        .surah-card { 
+            background: var(--card-bg); 
+            border-radius: 20px; 
+            padding: 1.25rem; 
+            display: flex; 
+            align-items: center; 
+            text-decoration: none; 
+            color: var(--text-main); 
+            box-shadow: var(--card-shadow); 
+            border: 1px solid var(--border-color); 
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); 
+        }
+        .surah-card:hover { 
+            transform: translateY(-4px); 
+            border-color: var(--accent); 
+        }
+
+        .surah-number-wrap { 
+            width: 48px; 
+            height: 48px; 
+            background: rgba(15, 48, 27, 0.04);
+            border-radius: 14px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: 0.3s;
+        }
+        [data-theme="dark"] .surah-number-wrap {
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .surah-number { 
+            font-family: 'Cairo', sans-serif; 
+            font-weight: 700; 
+            font-size: 1rem; 
+            color: var(--primary); 
+        }
         [data-theme="dark"] .surah-number { color: var(--accent); }
 
-        .card-info { flex-grow: 1; text-align: right; margin-right: 15px; }
-        .surah-name { font-family: 'Amiri Quran', 'Amiri', serif; font-size: 1.8rem; font-weight: bold; color: var(--primary); margin-bottom: 2px; }
-        [data-theme="dark"] .surah-name { color: #fff; }
-        .surah-details { font-size: 0.85rem; color: var(--text-muted); display: flex; gap: 10px; align-items: center; }
-        .surah-details span { display: inline-flex; align-items: center; gap: 4px; }
+        .card-info { 
+            flex-grow: 1; 
+            text-align: right; 
+            margin-right: 16px; 
+        }
+        .surah-name { 
+            font-family: 'Amiri Quran', 'Amiri', serif; 
+            font-size: 1.6rem; 
+            font-weight: bold; 
+            color: var(--text-main); 
+            margin-bottom: 3px; 
+        }
+        .surah-details { 
+            font-size: 0.8rem; 
+            color: var(--text-muted); 
+            display: flex; 
+            gap: 12px; 
+            align-items: center; 
+        }
+        .surah-details span { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 4px; 
+        }
 
-        /* Scroll to top */
-        #scrollTop { position: fixed; bottom: 20px; right: 20px; background: var(--accent); color: #fff; width: 45px; height: 45px; border-radius: 50%; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); display: none; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; z-index: 100; transition: 0.3s; }
-        #scrollTop:hover { transform: scale(1.1); }
+        /* زر العودة لأعلى */
+        #scrollTop { 
+            position: fixed; 
+            bottom: 25px; 
+            right: 25px; 
+            background: var(--primary); 
+            color: #fff; 
+            width: 46px; 
+            height: 46px; 
+            border-radius: 16px; 
+            border: none; 
+            box-shadow: 0 8px 20px rgba(15, 48, 27, 0.2); 
+            display: none; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.1rem; 
+            cursor: pointer; 
+            z-index: 100; 
+            transition: 0.3s; 
+        }
+        [data-theme="dark"] #scrollTop {
+            background: var(--accent);
+            color: #000;
+        }
     </style>
 </head>
 <body>
@@ -109,16 +276,18 @@
         <button id="install-btn" class="theme-toggle" style="display:none;"><i class="fas fa-download"></i></button>
     </div>
     <h1>مصحف سند</h1>
-    <p class="subtitle">قرآن يتلى آناء الليل وأطراف النهار</p>
+    <p class="subtitle">تلاوة وتفسير بأسلوب هادئ وعصري</p>
 </header>
 
 <div class="search-container">
     <i class="fas fa-search search-icon"></i>
-    <input type="text" id="search-input" placeholder="ابحث عن سورة...">
+    <input type="text" id="search-input" placeholder="البحث عن السور...">
 </div>
 
 <a href="#" id="continue-reading" class="continue-card">
-    <span class="continue-title"><i class="far fa-bookmark"></i> متابعة القراءة</span>
+    <div class="continue-header">
+        <span class="continue-title"><i class="fas fa-play-circle"></i> متابعة التلاوة</span>
+    </div>
     <div id="last-surah-name" class="continue-surah"></div>
     <span id="last-ayah-num" class="continue-ayah"></span>
 </a>
@@ -136,3 +305,4 @@
 <script src="surahLinks.js"></script>
 </body>
 </html>
+ 
