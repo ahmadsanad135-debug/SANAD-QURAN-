@@ -235,6 +235,53 @@
             text-align: justify;
         }
 
+        /* نافذة تهنئة بختم السورة هادئة وجميلة */
+        .completion-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 90%;
+            max-width: 400px;
+            background: var(--sheet-bg);
+            border: 1px solid var(--accent);
+            border-radius: 24px;
+            padding: 30px 24px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            z-index: 1001;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        .completion-modal.show {
+            display: block;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        .completion-icon {
+            color: var(--accent);
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .completion-btn {
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-family: 'Cairo';
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+            width: 100%;
+        }
+        [data-theme="dark"] .completion-btn {
+            color: #000000;
+        }
+
         /* شريط مشغل الصوت السفلي الصغير والذكي */
         .player-bar { 
             position: fixed; 
@@ -321,7 +368,7 @@
     <div id="quran-text" class="ayah-container"></div>
 </div>
 
-<!-- Bottom Sheet -->
+<!-- Bottom Sheet التفسير -->
 <div class="overlay" id="overlay" onclick="closeTafsir()"></div>
 <div class="bottom-sheet" id="tafsir-sheet">
     <div class="sheet-handle"></div>
@@ -334,6 +381,15 @@
         </div>
     </div>
     <div class="sheet-body" id="tafsir-body"></div>
+</div>
+
+<!-- نافذة ختم السورة الجديدة -->
+<div class="overlay" id="completion-overlay" onclick="closeCompletionModal()"></div>
+<div class="completion-modal" id="completion-modal">
+    <div class="completion-icon"><i class="fas fa-star-and-crescent"></i></div>
+    <h3 style="margin: 0 0 10px; font-weight: 700;">تقبل الله طاعتكم</h3>
+    <p id="completion-text" style="margin: 0; opacity: 0.8; font-size: 1.05rem; line-height: 1.5;"></p>
+    <button class="completion-btn" onclick="goToIndex()">العودة لقائمة السور</button>
 </div>
 
 <!-- Player Bar -->
@@ -398,11 +454,20 @@
         return String(en).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
     }
 
+    // التحكم عند انتهاء الصوت
     audioPlayer.onended = () => {
-        if (currentMode === 'resume' && currentPlayingAyah < totalAyahs) {
-            currentPlayingAyah++;
-            saveReadingProgress(currentPlayingAyah);
-            playAyah(currentPlayingAyah);
+        if (currentMode === 'resume') {
+            if (currentPlayingAyah < totalAyahs) {
+                currentPlayingAyah++;
+                saveReadingProgress(currentPlayingAyah);
+                playAyah(currentPlayingAyah);
+            } else {
+                // عند الانتهاء من السورة تماماً، نقوم بإظهار نافذة النهاية دون الانتقال لغيرها
+                showCompletionModal();
+            }
+        } else if (currentMode === 'normal') {
+            // في التلاوة الكاملة، عند انتهاء الملف الصوتي للسورة كاملة
+            showCompletionModal();
         }
     };
 
@@ -601,8 +666,33 @@
         saveReadingProgress(currentPlayingAyah);
     }
 
+    // وظائف نافذة انتهاء السورة الجديدة
+    function showCompletionModal() {
+        const surahName = surahNames[surahId - 1];
+        document.getElementById('completion-text').innerText = `لقد أتممت قراءة واستماع سورة ${surahName} كاملة بفضل الله وتوفيقه.`;
+        
+        document.getElementById('completion-overlay').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('completion-overlay').style.opacity = '1';
+            document.getElementById('completion-modal').classList.add('show');
+        }, 10);
+    }
+
+    function closeCompletionModal() {
+        document.getElementById('completion-modal').classList.remove('show');
+        document.getElementById('completion-overlay').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('completion-overlay').style.display = 'none';
+        }, 300);
+    }
+
+    function goToIndex() {
+        window.location.href = 'index.html';
+    }
+
     init();
 </script>
 
 </body>
 </html>
+ 
