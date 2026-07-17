@@ -107,6 +107,65 @@ async function loadPage(page){
 function updatePageInfo(page){
 
 
+const info =
+getMushafData(page);
+
+
+
+const surah =
+document.getElementById(
+"surah-name"
+);
+
+
+
+const juz =
+document.getElementById(
+"juz-info"
+);
+
+
+
+const hizb =
+document.getElementById(
+"hizb-info"
+);
+
+
+
+if(surah){
+
+surah.textContent =
+info.surah;
+
+}
+
+
+
+if(juz){
+
+juz.textContent =
+"الجزء "
++
+toArabicNumber(info.juz);
+
+}
+
+
+
+if(hizb){
+
+hizb.textContent =
+"الحزب "
++
+info.hizb;
+
+}
+
+
+}
+
+
     const info = getMushafPageInfo(page);
 
 
