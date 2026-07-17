@@ -3,192 +3,420 @@
    app.js
 ========================================== */
 
+
 let currentPage = 1;
-let isLoading = false;
+let isAnimating = false;
 
-const pageElement = document.getElementById("quran-page");
 
-/*==============================
-تحميل صفحة
-==============================*/
+/* ===============================
+   تشغيل التطبيق
+================================ */
 
-async function goToPage(page){
 
-    if(isLoading) return;
+document.addEventListener("DOMContentLoaded",()=>{
+
+    currentPage = getLastPage();
+
+    openPage(currentPage);
+
+    setupSwipe();
+
+    setupButtons();
+
+});
+
+
+
+/* ===============================
+   فتح صفحة
+================================ */
+
+
+async function openPage(page){
+
 
     if(page < 1 || page > 604) return;
 
-    isLoading = true;
 
-    pageElement.classList.add("page-fade");
+    if(isAnimating) return;
+
+
+    isAnimating=true;
+
+
+    const container=document.getElementById("quran-page-text");
+
+
+    if(container){
+
+        container.style.opacity="0";
+
+    }
+
+
 
     setTimeout(async()=>{
 
-        currentPage = page;
 
-        await openPage(page);
+        await loadPage(page);
 
-        pageElement.classList.remove("page-fade");
 
-        isLoading = false;
+        currentPage=page;
+
+
+        saveLastPage(page);
+
+
+
+        const number=document.getElementById(
+            "page-number"
+        );
+
+
+        if(number){
+
+            number.textContent=
+            "الصفحة "+toArabicNumber(page);
+
+        }
+
+
+
+        if(container){
+
+            container.style.opacity="1";
+
+        }
+
+
+        isAnimating=false;
+
+
 
     },200);
 
-}
 
-/*==============================
-التالي
-==============================*/
-
-function next(){
-
-    goToPage(currentPage + 1);
 
 }
 
-/*==============================
-السابق
-==============================*/
 
-function previous(){
 
-    goToPage(currentPage - 1);
+/* ===============================
+   الصفحة التالية
+================================ */
 
-}
 
-/*==============================
-السحب الأفقي
-==============================*/
+function nextPage(){
 
-let touchStart = 0;
 
-pageElement.addEventListener("touchstart",e=>{
+    if(currentPage<604){
 
-    touchStart = e.touches[0].clientX;
-
-});
-
-pageElement.addEventListener("touchend",e=>{
-
-    let touchEnd = e.changedTouches[0].clientX;
-
-    let distance = touchStart - touchEnd;
-
-    if(Math.abs(distance) < 60) return;
-
-    if(distance > 0){
-
-        next();
-
-    }else{
-
-        previous();
-
-    }
-
-});
-
-/*==============================
-لوحة المفاتيح
-==============================*/
-
-document.addEventListener("keydown",e=>{
-
-    if(e.key==="ArrowLeft"){
-
-        next();
-
-    }
-
-    if(e.key==="ArrowRight"){
-
-        previous();
-
-    }
-
-});
-
-/*==============================
-أزرار التنقل
-==============================*/
-
-const nextBtn=document.getElementById("next-page");
-const prevBtn=document.getElementById("prev-page");
-
-if(nextBtn){
-
-    nextBtn.onclick=next;
-
-}
-
-if(prevBtn){
-
-    prevBtn.onclick=previous;
-
-}
-
-/*==============================
-آخر صفحة
-==============================*/
-
-window.addEventListener("load",()=>{
-
-    currentPage=getLastPage();
-
-    goToPage(currentPage);
-
-});
-
-/*==============================
-الانتقال إلى صفحة معينة
-==============================*/
-
-function jumpToPage(){
-
-    let number=prompt("رقم الصفحة");
-
-    if(!number) return;
-
-    number=parseInt(number);
-
-    if(number>=1 && number<=604){
-
-        goToPage(number);
+        openPage(currentPage+1);
 
     }
 
 }
 
-/*==============================
-تغيير الوضع الليلي
-==============================*/
+
+
+/* ===============================
+   الصفحة السابقة
+================================ */
+
+
+function previousPage(){
+
+
+    if(currentPage>1){
+
+        openPage(currentPage-1);
+
+    }
+
+}
+
+
+
+/* ===============================
+   السحب الأفقي
+================================ */
+
+
+function setupSwipe(){
+
+
+    let startX=0;
+
+
+    const reader=document.getElementById(
+        "reader"
+    );
+
+
+    if(!reader)return;
+
+
+
+    reader.addEventListener(
+        "touchstart",
+        e=>{
+
+            startX=e.touches[0].clientX;
+
+        }
+    );
+
+
+
+    reader.addEventListener(
+        "touchend",
+        e=>{
+
+
+            let endX=e.changedTouches[0].clientX;
+
+
+            let distance=startX-endX;
+
+
+
+            if(Math.abs(distance)<70)
+                return;
+
+
+
+            /*
+             السحب لليسار = الصفحة التالية
+            */
+
+            if(distance>0){
+
+                nextPage();
+
+            }
+
+
+            /*
+             السحب لليمين = الصفحة السابقة
+            */
+
+            else{
+
+                previousPage();
+
+            }
+
+
+
+        }
+    );
+
+
+}
+
+
+
+/* ===============================
+   الأزرار
+================================ */
+
+
+function setupButtons(){
+
+
+    const nextBtn=
+    document.getElementById(
+        "next-page"
+    );
+
+
+    const prevBtn=
+    document.getElementById(
+        "prev-page"
+    );
+
+
+    if(nextBtn){
+
+        nextBtn.onclick=nextPage;
+
+    }
+
+
+    if(prevBtn){
+
+        prevBtn.onclick=previousPage;
+
+    }
+
+
+
+    const theme=
+    document.getElementById(
+        "themeButton"
+    );
+
+
+    if(theme){
+
+        theme.onclick=toggleTheme;
+
+    }
+
+
+}
+
+
+
+/* ===============================
+   الوضع الليلي
+================================ */
+
 
 function toggleTheme(){
 
-    const root=document.documentElement;
 
-    const current=root.getAttribute("data-theme");
+    const html=
+    document.documentElement;
 
-    if(current==="dark"){
 
-        root.setAttribute("data-theme","light");
+    let theme=
+    html.getAttribute(
+        "data-theme"
+    );
 
-        localStorage.setItem("theme","light");
+
+
+    if(theme==="dark"){
+
+
+        html.setAttribute(
+            "data-theme",
+            "light"
+        );
+
+
+        localStorage.setItem(
+            "theme",
+            "light"
+        );
+
 
     }else{
 
-        root.setAttribute("data-theme","dark");
 
-        localStorage.setItem("theme","dark");
+        html.setAttribute(
+            "data-theme",
+            "dark"
+        );
+
+
+        localStorage.setItem(
+            "theme",
+            "dark"
+        );
+
 
     }
 
 }
 
-const savedTheme=localStorage.getItem("theme");
 
-if(savedTheme){
 
-    document.documentElement.setAttribute("data-theme",savedTheme);
 
-    }
+/* ===============================
+   تغيير حجم الخط
+================================ */
+
+
+let fontSize=
+parseInt(
+localStorage.getItem("fontSize")
+)||28;
+
+
+
+function changeFont(value){
+
+
+    fontSize+=value;
+
+
+    if(fontSize<20)
+        fontSize=20;
+
+
+    if(fontSize>45)
+        fontSize=45;
+
+
+
+    document.documentElement.style
+    .setProperty(
+        "--quran-size",
+        fontSize+"px"
+    );
+
+
+
+    localStorage.setItem(
+        "fontSize",
+        fontSize
+    );
+
+
+}
+
+
+
+/* ===============================
+   حفظ الصفحة
+================================ */
+
+
+function saveLastPage(page){
+
+
+    localStorage.setItem(
+        "lastPage",
+        page
+    );
+
+
+}
+
+
+
+function getLastPage(){
+
+
+    return parseInt(
+
+        localStorage.getItem(
+            "lastPage"
+        )
+
+    ) || 1;
+
+
+}
+
+
+
+/* ===============================
+   تحويل الأرقام
+================================ */
+
+
+function toArabicNumber(number){
+
+
+    return String(number)
+    .replace(/[0-9]/g,
+
+    d=>"٠١٢٣٤٥٦٧٨٩"[d]
+
+    );
+
+
+}
