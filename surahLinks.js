@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. جلب قائمة السور
     async function fetchSurahs() {
+        if(!container) return;
         try {
             const response = await fetch('https://api.alquran.cloud/v1/surah');
             const data = await response.json();
@@ -62,7 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
         surahs.forEach(surah => {
             const card = document.createElement('a');
             card.className = 'surah-card';
-            card.href = `quran.html?surah=${surah.number}`; 
+            // نقوم بالتحويل لصفحة القرآن
+            card.href = `quran.html`; 
             
             card.setAttribute('data-english', surah.englishName.toLowerCase());
             card.setAttribute('data-number', surah.number.toString());
@@ -111,18 +113,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 6. استكمال القراءة
-    const lastId = localStorage.getItem('lastReadId');
-    const lastName = localStorage.getItem('lastReadName');
-    const lastAyah = localStorage.getItem('lastReadAyah');
+    const lastPageId = localStorage.getItem('lastPage');
     const continueBox = document.getElementById('continue-reading');
     
-    if (lastId && lastName && continueBox) {
+    if (lastPageId && continueBox) {
         continueBox.style.display = 'block';
-        continueBox.href = `quran.html?surah=${lastId}&mode=resume`;
-        document.getElementById('last-surah-name').textContent = lastName;
-        if(lastAyah) {
-            document.getElementById('last-ayah-num').textContent = `توقفت عند الآية رقم: ${lastAyah}`;
-        }
+        continueBox.href = `quran.html`;
+        document.getElementById('last-surah-name').textContent = 'استكمال القراءة';
+        document.getElementById('last-ayah-num').textContent = `توقفت عند الصفحة رقم: ${lastPageId}`;
     }
 
     // 7. زر العودة للأعلى
@@ -161,3 +159,4 @@ document.addEventListener('DOMContentLoaded', () => {
         navigator.serviceWorker.register('sw.js').catch(console.error);
     }
 });
+ 
