@@ -1,434 +1,90 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>مصحف سند</title>
-
-<meta name="theme-color" content="#0f301b">
-
-<link rel="manifest" href="manifest.json">
-
-<link rel="icon" href="icon.png">
-
-<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-<link rel="stylesheet" href="quran.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مصحف سند</title>
+    <meta name="theme-color" content="#0f301b">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="quran.css">
 </head>
-
 <body>
 
 <header class="top-bar">
-
-<button id="backButton" class="icon-button">
-
-<i class="fas fa-arrow-right"></i>
-
-</button>
-
-<div class="header-center">
-
-<div id="surah-name" class="surah-name">
-
-جاري التحميل...
-
-</div>
-
-<div id="page-number" class="page-number">
-
-الصفحة ١
-
-</div>
-
-</div>
-
-<button id="themeButton" class="icon-button">
-
-<i class="fas fa-moon"></i>
-
-</button>
-
+    <button id="backButton" class="icon-button" onclick="window.location.href='index.html'">
+        <i class="fas fa-arrow-right"></i>
+    </button>
+    <div class="header-center">
+        <div id="surah-name" class="surah-name">جاري التحميل...</div>
+        <div id="page-number" class="page-number">الصفحة ١</div>
+    </div>
+    <button id="themeButton" class="icon-button">
+        <i class="fas fa-moon"></i>
+    </button>
 </header>
 
 <main id="reader">
+    <div id="page-container">
+        <!-- ===============================
+             Quran Page Structure
+        ================================ -->
+        <section class="mushaf-wrapper">
+            <div class="page-shadow">
+                <div id="page-header">
+                    <div id="juz-info">الجزء ١</div>
+                    <div id="hizb-info">الحزب</div>
+                </div>
 
-<div id="page-container">
+                <div id="quran-page-text">
+                    <!-- الآيات يتم إدخالها من app.js -->
+                </div>
 
-<div id="quran-page">
-
-<!-- سيتم رسم الصفحة هنا -->
-
-</div>
-
-</div>
-
+                <div id="page-footer">
+                    <span id="footer-page-number">١</span>
+                </div>
+            </div>
+        </section>
+    </div>
 </main>
 
-<div id="overlay"
+<div id="overlay" class="overlay" onclick="closeTafsir()"></div>
 
-class="overlay"
-
-onclick="closeTafsir()">
-
-</div>
-
-<div id="tafsir-sheet"
-
-class="bottom-sheet">
-
-<div class="sheet-handle"></div>
-
-<div class="sheet-header">
-
-<h3 id="tafsir-title">
-
-التفسير
-
-</h3>
-
-<button
-
-class="close-sheet"
-
-onclick="closeTafsir()">
-
-<i class="fas fa-times"></i>
-
-</button>
-
-</div>
-
-<div
-
-id="tafsir-body"
-
-class="sheet-body">
-
-</div>
-
+<div id="tafsir-sheet" class="bottom-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+        <h3 id="tafsir-title">التفسير</h3>
+        <button class="close-sheet" onclick="closeTafsir()"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="tafsir-body" class="sheet-body"></div>
 </div>
 
 <footer class="player-bar">
-
-<div class="player-top">
-
-<select id="reciter-select">
-
-</select>
-
-<button id="bookmarkButton">
-
-<i class="far fa-bookmark"></i>
-
-</button>
-
-</div>
-
-<audio
-
-id="audio-player"
-
-controls>
-
-</audio>
-
-<div class="player-bottom">
-
-<button id="prev-page">
-
-<i class="fas fa-chevron-right"></i>
-
-</button>
-
-<button id="next-page">
-
-<i class="fas fa-chevron-left"></i>
-
-</button>
-
-</div>
-
-</footer>
-<!-- ===============================
-     Quran Page Structure
-================================ -->
-
-<section class="mushaf-wrapper">
-
-    <div class="page-shadow">
-
-        <div id="page-header">
-
-            <div id="juz-info">
-                الجزء ١
-            </div>
-
-            <div id="hizb-info">
-                الحزب
-            </div>
-
-        </div>
-
-
-        <!-- عنوان السورة -->
-
-        <div id="surah-title-box">
-
-            <div class="ornament right"></div>
-
-            <h2 id="surah-title">
-                سورة الفاتحة
-            </h2>
-
-            <div class="ornament left"></div>
-
-        </div>
-
-
-        <!-- البسملة -->
-
-        <div id="basmala">
-
-            ﷽
-
-        </div>
-
-
-        <!-- محتوى الآيات -->
-
-        <div id="quran-page-text">
-
-            <!-- الآيات يتم إدخالها من app.js -->
-
-        </div>
-
-
-        <!-- نهاية الصفحة -->
-
-        <div id="page-footer">
-
-            <span id="footer-page-number">
-                ١
-            </span>
-
-        </div>
-
-
+    <div class="player-top">
+        <select id="reciter-select">
+            <option value="">اختر القارئ</option>
+        </select>
+        <button id="bookmarkButton" class="icon-button">
+            <i class="far fa-bookmark"></i>
+        </button>
     </div>
-
-</section>
-
-
+    <audio id="audio-player" controls preload="none"></audio>
+</footer>
 
 <!-- أزرار التحكم العائمة -->
-
 <div class="floating-controls">
-
-
-<button onclick="previousPage()">
-
-<i class="fas fa-chevron-right"></i>
-
-</button>
-
-
-
-<button onclick="jumpToPage()">
-
-<i class="fas fa-book-open"></i>
-
-</button>
-
-
-
-<button onclick="nextPage()">
-
-<i class="fas fa-chevron-left"></i>
-
-</button>
-
-
+    <button onclick="previousPage()"><i class="fas fa-chevron-right"></i></button>
+    <button onclick="jumpToPage()"><i class="fas fa-book-open"></i></button>
+    <button onclick="nextPage()"><i class="fas fa-chevron-left"></i></button>
 </div>
-<!-- ==================================
-     Audio Player Section
-================================== -->
-
-<div class="audio-panel">
-
-    <div class="audio-header">
-
-        <span>
-            <i class="fas fa-headphones"></i>
-            التلاوة
-        </span>
-
-
-        <button id="repeat-button">
-
-            <i class="fas fa-repeat"></i>
-
-        </button>
-
-    </div>
-
-
-
-    <select id="reciter-select">
-
-        <option value="">
-            اختر القارئ
-        </option>
-
-    </select>
-
-
-
-    <audio id="audio-player"
-           controls
-           preload="none">
-
-    </audio>
-
-
-
-    <div class="audio-controls">
-
-
-        <button id="previous-ayah">
-
-            <i class="fas fa-backward"></i>
-
-        </button>
-
-
-
-        <button id="play-button">
-
-            <i class="fas fa-play"></i>
-
-        </button>
-
-
-
-        <button id="next-ayah">
-
-            <i class="fas fa-forward"></i>
-
-        </button>
-
-
-    </div>
-
-
-</div>
-
-
-
-<!-- ==================================
-     Bookmark Popup
-================================== -->
-
-<div id="bookmark-message">
-
-    تم حفظ العلامة المرجعية
-
-</div>
-
-
-
-<!-- ==================================
-     Settings Panel
-================================== -->
-
-<div id="settings-panel">
-
-
-    <div class="settings-header">
-
-        <h3>
-            الإعدادات
-        </h3>
-
-
-        <button onclick="closeSettings()">
-
-            <i class="fas fa-times"></i>
-
-        </button>
-
-
-    </div>
-
-
-
-    <div class="setting-item">
-
-
-        <label>
-            حجم الخط
-        </label>
-
-
-        <div>
-
-
-            <button onclick="changeFont(-1)">
-                -
-            </button>
-
-
-            <button onclick="changeFont(1)">
-                +
-            </button>
-
-
-        </div>
-
-
-    </div>
-
-
-
-    <div class="setting-item">
-
-
-        <label>
-            الوضع الليلي
-        </label>
-
-
-        <button id="dark-toggle">
-
-            <i class="fas fa-moon"></i>
-
-        </button>
-
-
-    </div>
-
-
-</div>
-
-
 
 <!-- ==================================
      Scripts
 ================================== -->
-
 <script src="api.js"></script>
-
 <script src="app.js"></script>
-
-<script src="surahLinks.js"></script>
-
-
 </body>
-
 </html>
+ 
