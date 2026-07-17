@@ -1,13 +1,16 @@
 /* اسم الملف: sw.js */
-const CACHE_NAME = 'sanad-quran-cache-v12'; // تم تحديث الإصدار
+const CACHE_NAME = 'sanad-quran-cache-v12';
 
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './quran.html',
+  './quran.css',
+  './app.js',
+  './api.js',
   './surahLinks.js',
   './manifest.json',
-  './icon.png' // تأكد من وجود صورة بهذا الاسم في مجلدك
+  './icon.png'
 ];
 
 // مرحلة التثبيت
@@ -47,7 +50,7 @@ self.addEventListener('fetch', (event) => {
       }
 
       return fetch(event.request).then((networkResponse) => {
-        // تخزين الملفات الجديدة تلقائياً (مثل أصوات القراء إذا سمحت المساحة)
+        // تخزين الملفات الجديدة تلقائياً
         if (networkResponse && networkResponse.status === 200) {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
