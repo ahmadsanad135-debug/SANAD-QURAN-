@@ -1,7 +1,7 @@
 /* ==========================================
    Mushaf Sanad
    quran.css
-   Main Quran Reader Design
+   Quran Reader Design
 ========================================== */
 
 
@@ -11,15 +11,13 @@
 --gold:#cda250;
 
 --paper:#fffdf7;
-
---background:#f4efe3;
-
+--background:#f5f1e8;
 --text:#222;
 
 --shadow:
-0 15px 40px rgba(0,0,0,.15);
+0 10px 35px rgba(0,0,0,.12);
 
---quran-size:28px;
+--quran-size:clamp(23px,6vw,34px);
 
 }
 
@@ -28,56 +26,65 @@
 [data-theme="dark"]{
 
 --paper:#151815;
-
---background:#080a08;
-
+--background:#090b09;
 --text:#eeeeee;
 
---primary:#d4ad5a;
-
 }
 
 
 
-/* ===============================
-   عام
-================================ */
-
+/* =========================
+General
+========================= */
 
 *{
-
 box-sizing:border-box;
-
 -webkit-tap-highlight-color:transparent;
-
 }
-
 
 
 body{
 
 margin:0;
 
-background:var(--background);
+background:
+var(--background);
 
-color:var(--text);
+color:
+var(--text);
 
-font-family:"Cairo",sans-serif;
+font-family:
+"Cairo",sans-serif;
+
+overflow-x:hidden;
 
 }
 
 
 
 
-
-/* ===============================
-   الشريط العلوي
-================================ */
+/* =========================
+Top Bar
+========================= */
 
 
 .top-bar{
 
-height:70px;
+height:65px;
+
+background:
+rgba(255,255,255,.85);
+
+backdrop-filter:
+blur(15px);
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+padding:0 15px;
 
 position:fixed;
 
@@ -87,19 +94,8 @@ width:100%;
 
 z-index:100;
 
-display:flex;
-
-align-items:center;
-
-justify-content:space-between;
-
-padding:0 18px;
-
-background:rgba(255,255,255,.85);
-
-backdrop-filter:blur(15px);
-
-border-bottom:1px solid rgba(0,0,0,.08);
+border-bottom:
+1px solid rgba(0,0,0,.08);
 
 }
 
@@ -107,10 +103,10 @@ border-bottom:1px solid rgba(0,0,0,.08);
 
 [data-theme="dark"] .top-bar{
 
-background:rgba(10,10,10,.85);
+background:
+rgba(10,10,10,.85);
 
 }
-
 
 
 
@@ -124,16 +120,21 @@ border-radius:14px;
 
 border:none;
 
-background:var(--paper);
+background:
+var(--paper);
 
-color:var(--primary);
+color:
+var(--primary);
 
 font-size:18px;
 
-box-shadow:0 5px 15px rgba(0,0,0,.1);
+display:flex;
+
+align-items:center;
+
+justify-content:center;
 
 }
-
 
 
 
@@ -148,9 +149,10 @@ text-align:center;
 
 .surah-name{
 
-font-family:"Noto Naskh Arabic";
+font-family:
+"Noto Naskh Arabic";
 
-font-size:23px;
+font-size:22px;
 
 font-weight:bold;
 
@@ -170,16 +172,18 @@ opacity:.7;
 
 
 
-/* ===============================
-   منطقة القراءة
-================================ */
+/* =========================
+Reader
+========================= */
 
 
 #reader{
 
-padding-top:95px;
+padding-top:85px;
 
-padding-bottom:120px;
+padding-bottom:140px;
+
+width:100%;
 
 }
 
@@ -187,35 +191,55 @@ padding-bottom:120px;
 
 .mushaf-wrapper{
 
-width:95%;
+width:100%;
 
-max-width:850px;
+display:flex;
 
-margin:auto;
+justify-content:center;
 
 }
-
 
 
 
 .page-shadow{
 
-background:var(--paper);
 
-min-height:850px;
+width:
+min(96%,850px);
 
-border-radius:10px;
 
-padding:35px 45px;
+min-height:
+calc(100vh - 130px);
 
-box-shadow:var(--shadow);
+
+background:
+var(--paper);
+
+
+border-radius:12px;
+
+
+padding:
+
+25px clamp(15px,5vw,50px);
+
+
+box-shadow:
+var(--shadow);
+
 
 transition:.3s;
+
 
 }
 
 
 
+
+
+/* =========================
+Page Header
+========================= */
 
 
 #page-header{
@@ -224,9 +248,9 @@ display:flex;
 
 justify-content:space-between;
 
-font-size:14px;
+font-size:13px;
 
-opacity:.7;
+color:#777;
 
 margin-bottom:20px;
 
@@ -234,85 +258,47 @@ margin-bottom:20px;
 
 
 
-#page-footer{
-
-text-align:center;
-
-margin-top:30px;
-
-font-family:"Noto Naskh Arabic";
-
-font-size:20px;
-
-}
 
 
-
-
-
-/* ===============================
-   عنوان السورة
-================================ */
-
-
-#surah-title-box{
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-gap:15px;
-
-margin:25px 0;
-
-}
-
-
-
-#surah-title{
-
-font-family:"Noto Naskh Arabic";
-
-color:var(--primary);
-
-font-size:32px;
-
-}
-
-
-
-.ornament{
-
-width:60px;
-
-height:2px;
-
-background:var(--gold);
-
-}
-
-
-
-
-
-/* ===============================
-   القرآن
-================================ */
+/* =========================
+Quran Text
+========================= */
 
 
 #quran-page-text{
 
-font-family:"Noto Naskh Arabic";
 
-font-size:var(--quran-size);
+font-family:
+"Noto Naskh Arabic",
+serif;
 
-line-height:2.3;
 
-text-align:justify;
+font-size:
+var(--quran-size);
 
-direction:rtl;
+
+line-height:
+2.25;
+
+
+text-align:
+justify;
+
+
+direction:
+rtl;
+
+
+word-spacing:
+3px;
+
+
+overflow-wrap:
+break-word;
+
+
+transition:.25s;
+
 
 }
 
@@ -326,30 +312,148 @@ cursor:pointer;
 
 
 
-.ayah-number{
+.ayah:hover{
 
-color:var(--gold);
+background:
+rgba(205,162,80,.15);
 
-font-size:.75em;
+border-radius:8px;
 
 }
 
 
 
-/* البسملة */
+
+.ayah-number{
+
+
+color:
+var(--gold);
+
+
+font-size:
+.75em;
+
+
+white-space:
+nowrap;
+
+
+}
+
+
+
+
+
+/* =========================
+Surah Title
+========================= */
+
+
+#surah-title-box{
+
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+gap:12px;
+
+margin:25px 0;
+
+
+}
+
+
+
+#surah-title{
+
+
+font-family:
+"Noto Naskh Arabic";
+
+color:
+var(--primary);
+
+font-size:
+30px;
+
+}
+
+
+
+.ornament{
+
+
+height:2px;
+
+width:55px;
+
+background:
+var(--gold);
+
+
+}
+
+
+
+
+
+/* =========================
+Basmala
+========================= */
 
 
 #basmala{
 
+
 text-align:center;
 
-font-family:"Noto Naskh Arabic";
 
-font-size:38px;
+font-family:
+"Noto Naskh Arabic";
 
-margin:35px 0;
 
-color:var(--primary);
+font-size:
+clamp(30px,8vw,42px);
+
+
+margin:
+25px 0;
+
+
+color:
+var(--primary);
+
+
+}
+
+
+
+
+/* =========================
+Footer
+========================= */
+
+
+#page-footer{
+
+
+text-align:center;
+
+
+margin-top:30px;
+
+
+font-family:
+"Noto Naskh Arabic";
+
+
+color:
+var(--gold);
+
 
 }
 
@@ -357,113 +461,106 @@ color:var(--primary);
 
 
 
-/* ===============================
-   نافذة التفسير
-================================ */
+/* =========================
+Bottom Audio
+========================= */
 
 
-.overlay{
+.audio-player{
 
-display:none;
 
 position:fixed;
 
-inset:0;
 
-background:rgba(0,0,0,.5);
+bottom:0;
 
-z-index:300;
-
-}
-
-
-
-.bottom-sheet{
-
-position:fixed;
-
-bottom:-100%;
-
-left:0;
 
 width:100%;
 
-background:var(--paper);
 
-border-radius:25px 25px 0 0;
+background:
+var(--paper);
 
-padding:20px;
 
-z-index:400;
+padding:10px;
 
-transition:.4s;
+
+box-shadow:
+0 -5px 20px rgba(0,0,0,.15);
+
+
+z-index:200;
+
 
 }
 
 
 
-.sheet-handle{
+#reciter-select{
 
-width:45px;
 
-height:5px;
+width:100%;
 
-background:#aaa;
 
-border-radius:20px;
+padding:10px;
 
-margin:auto;
+
+border-radius:12px;
+
+
+border:1px solid #ddd;
+
+
+font-family:Cairo;
+
 
 }
 
 
 
-.sheet-header{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-}
+#audio-player{
 
 
+width:100%;
 
-.sheet-body{
 
-max-height:350px;
+margin-top:8px;
 
-overflow:auto;
-
-line-height:2;
 
 }
 
 
 
 
-
-/* ===============================
-   أزرار الصفحات
-================================ */
+/* =========================
+Floating Controls
+========================= */
 
 
 .floating-controls{
 
+
 position:fixed;
 
-bottom:35px;
+
+bottom:125px;
+
 
 left:50%;
 
-transform:translateX(-50%);
+
+transform:
+translateX(-50%);
+
 
 display:flex;
 
+
 gap:15px;
 
-z-index:200;
+
+z-index:150;
+
 
 }
 
@@ -471,19 +568,28 @@ z-index:200;
 
 .floating-controls button{
 
-width:55px;
 
-height:55px;
+width:50px;
+
+
+height:50px;
+
 
 border-radius:50%;
 
+
 border:none;
 
-background:var(--primary);
+
+background:
+var(--primary);
+
 
 color:white;
 
-font-size:20px;
+
+font-size:18px;
+
 
 }
 
@@ -491,42 +597,47 @@ font-size:20px;
 
 
 
-/* ===============================
-   أدوات الخط
-================================ */
+/* =========================
+Bookmark
+========================= */
 
 
-.reader-tools{
+.bookmark-button{
+
 
 position:fixed;
 
-right:20px;
 
-bottom:40px;
-
-display:flex;
-
-flex-direction:column;
-
-gap:10px;
-
-}
+left:20px;
 
 
+bottom:125px;
 
-.reader-tools button{
 
-width:45px;
+width:48px;
 
-height:45px;
+
+height:48px;
+
 
 border-radius:50%;
 
+
 border:none;
 
-background:var(--gold);
 
-font-size:22px;
+background:
+var(--gold);
+
+
+color:white;
+
+
+font-size:20px;
+
+
+z-index:150;
+
 
 }
 
@@ -534,9 +645,90 @@ font-size:22px;
 
 
 
-/* ===============================
-   الهاتف
-================================ */
+/* =========================
+Tafsir
+========================= */
+
+
+.overlay{
+
+
+display:none;
+
+
+position:fixed;
+
+
+inset:0;
+
+
+background:
+rgba(0,0,0,.45);
+
+
+z-index:300;
+
+
+}
+
+
+
+.bottom-sheet{
+
+
+position:fixed;
+
+
+bottom:-100%;
+
+
+left:0;
+
+
+width:100%;
+
+
+background:
+var(--paper);
+
+
+border-radius:25px 25px 0 0;
+
+
+padding:20px;
+
+
+z-index:400;
+
+
+transition:.4s;
+
+
+}
+
+
+
+.sheet-body{
+
+
+max-height:350px;
+
+
+overflow:auto;
+
+
+line-height:2;
+
+
+}
+
+
+
+
+
+/* =========================
+Mobile Fine Tuning
+========================= */
 
 
 @media(max-width:600px){
@@ -544,9 +736,18 @@ font-size:22px;
 
 .page-shadow{
 
-padding:25px 18px;
 
-min-height:700px;
+padding:
+
+20px 15px;
+
+
+border-radius:0;
+
+
+min-height:
+calc(100vh - 120px);
+
 
 }
 
@@ -554,20 +755,25 @@ min-height:700px;
 
 #quran-page-text{
 
-font-size:24px;
 
-line-height:2.1;
+font-size:
+clamp(22px,7vw,30px);
+
+
+line-height:
+2.35;
+
+
+}
+
+
+
+.floating-controls{
+
+bottom:135px;
 
 }
 
 
 
-#basmala{
-
-font-size:32px;
-
-}
-
-
-
-}
+   }
