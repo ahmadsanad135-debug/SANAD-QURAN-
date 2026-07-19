@@ -1,19 +1,21 @@
 /* ==========================================
    Mushaf Sanad
    reader.js
-   Quran Reader Engine
+   Quran Page Reader Engine
 ========================================== */
 
 
-/* ===============================
-   إعدادات القارئ
-================================ */
-
 const Reader = {
 
-    currentPage: 1,
-    totalPages: 604,
-    loading: false,
+
+    currentPage:
+    parseInt(
+        localStorage.getItem("lastPage")
+    ) || 1,
+
+
+
+    loading:false,
 
 
 
@@ -21,24 +23,17 @@ const Reader = {
        تشغيل القارئ
     ================================ */
 
-    init(){
-
-        const saved =
-            getReadingPosition();
-
-        if(saved && saved.page){
-
-            this.currentPage =
-                saved.page;
-
-        }
+    async init(){
 
 
-        this.openPage(
+        await this.openPage(
             this.currentPage
         );
 
+
     },
+
+
 
 
 
@@ -51,46 +46,46 @@ const Reader = {
 
         if(
             page < 1 ||
-            page > this.totalPages
+            page > 604 ||
+            this.loading
         ){
+
             return;
-        }
-
-
-        if(this.loading){
-            return;
-        }
-
-
-        this.loading = true;
-
-
-
-        const container =
-            document.getElementById(
-                "quran-page-text"
-            );
-
-
-        if(container){
-
-            container.style.opacity = "0";
 
         }
 
 
 
-        try{
-
-
-            const verses =
-                await getPage(page);
+        this.loading=true;
 
 
 
-            currentVerses =
-                verses;
+        const box =
+        document.getElementById(
+            "quran-page-text"
+        );
 
+
+
+        if(box){
+
+            box.style.opacity="0.3";
+
+        }
+
+
+
+
+
+        const verses =
+        await getPage(page);
+
+
+
+
+        if(
+            verses.length
+        ){
 
 
             renderQuranPage(
@@ -100,41 +95,37 @@ const Reader = {
 
 
             this.currentPage =
-                page;
+            page;
 
 
 
-            saveReadingPosition({
-
-                page:page,
-                ayah:null
-
-            });
-
-
-
-            this.updateHeader();
-
-
-
-            await delay(200);
-
-
-
-            if(container){
-
-                container.style.opacity="1";
-
-            }
-
-
-
-        }catch(error){
-
-            console.error(
-                "Reader error",
-                error
+            localStorage.setItem(
+                "lastPage",
+                page
             );
+
+
+
+            this.updateHeader(
+                page,
+                verses
+            );
+
+
+
+            preloadPage(
+                page+1
+            );
+
+
+        }
+
+
+
+
+        if(box){
+
+            box.style.opacity="1";
 
         }
 
@@ -142,7 +133,10 @@ const Reader = {
 
         this.loading=false;
 
+
     },
+
+
 
 
 
@@ -153,18 +147,14 @@ const Reader = {
 
     next(){
 
-        if(
-            this.currentPage <
-            this.totalPages
-        ){
 
-            this.openPage(
-                this.currentPage + 1
-            );
+        this.openPage(
+            this.currentPage + 1
+        );
 
-        }
 
     },
+
 
 
 
@@ -176,48 +166,52 @@ const Reader = {
     previous(){
 
 
-        if(
-            this.currentPage > 1
-        ){
+        this.openPage(
+            this.currentPage - 1
+        );
 
-            this.openPage(
-                this.currentPage - 1
-            );
-
-        }
 
     },
 
 
 
 
+
+
     /* ===============================
-       تحديث المعلومات
+       تحديث البيانات
     ================================ */
 
-    updateHeader(){
+    updateHeader(page,verses){
 
 
-        const page =
-            document.getElementById(
-                "page-number"
-            );
+        const pageNumber =
+        document.getElementById(
+            "page-number"
+        );
+
 
 
         const footer =
-            document.getElementById(
-                "footer-page-number"
-            );
+        document.getElementById(
+            "footer-page-number"
+        );
 
 
 
-        if(page){
+        const surah =
+        document.getElementById(
+            "surah-name"
+        );
 
-            page.textContent =
+
+
+
+        if(pageNumber){
+
+            pageNumber.textContent =
             "الصفحة " +
-            toArabicNumber(
-                this.currentPage
-            );
+            toArabicNumber(page);
 
         }
 
@@ -226,88 +220,20 @@ const Reader = {
         if(footer){
 
             footer.textContent =
-            toArabicNumber(
-                this.currentPage
-            );
+            toArabicNumber(page);
 
         }
 
 
-    },
 
+        if(surah){
 
-
-
-    /* ===============================
-       تغيير الصفحة بالسحب
-    ================================ */
-
-    swipe(){
-
-
-        const reader =
-            document.getElementById(
-                "reader"
+            surah.textContent =
+            getSurahName(
+                verses[0].chapter_id
             );
 
-
-        if(!reader)return;
-
-
-
-        let startX=0;
-
-
-
-        reader.addEventListener(
-            "touchstart",
-            e=>{
-
-                startX =
-                e.touches[0].clientX;
-
-            }
-        );
-
-
-
-        reader.addEventListener(
-            "touchend",
-            e=>{
-
-
-                let endX =
-                e.changedTouches[0]
-                .clientX;
-
-
-
-                let distance =
-                startX-endX;
-
-
-
-                if(
-                    Math.abs(distance)<80
-                ){
-                    return;
-                }
-
-
-
-                if(distance>0){
-
-                    this.next();
-
-                }else{
-
-                    this.previous();
-
-                }
-
-
-            }
-        );
+        }
 
 
     }
@@ -320,15 +246,16 @@ const Reader = {
 
 
 /* ===============================
-   تشغيل بعد تحميل الصفحة
+   تشغيل تلقائي
 ================================ */
+
 
 document.addEventListener(
 "DOMContentLoaded",
 ()=>{
 
+
     Reader.init();
 
-    Reader.swipe();
 
-});
+}); 
