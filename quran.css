@@ -789,3 +789,93 @@ bottom:135px;
     transition:.3s;
 
 }
+
+.custom-player{
+
+    position:fixed;
+
+    bottom:0;
+
+    width:100%;
+
+    background:var(--paper);
+
+    padding:12px;
+
+    box-shadow:0 -5px 20px rgba(0,0,0,.15);
+
+    z-index:200;
+
+}
+
+
+.player-info{
+
+    text-align:center;
+
+    font-family:Cairo;
+
+    margin-bottom:8px;
+
+}
+
+
+#playing-reciter{
+
+    display:block;
+
+    font-weight:bold;
+
+    color:var(--primary);
+
+}
+
+
+#playing-status{
+
+    font-size:13px;
+
+    opacity:.7;
+
+}
+
+
+
+.player-buttons{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:20px;
+
+}
+
+
+.player-buttons button{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    border:none;
+
+    background:var(--primary);
+
+    color:white;
+
+    font-size:18px;
+
+}
+
+
+
+#audio-progress{
+
+    width:100%;
+
+    margin-top:10px;
+
+}
