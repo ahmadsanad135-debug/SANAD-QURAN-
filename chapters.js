@@ -131,3 +131,27 @@ function getSurahName(id){
     return chapters[id] || "سورة";
 
 }
+
+function getSurahInfo(id){
+
+
+    const surah =
+    CHAPTERS.find(
+        s => s.id == id
+    );
+
+
+    if(!surah)
+    return null;
+
+
+    return {
+
+        name: surah.name,
+
+        ayahs: surah.ayahs
+
+    };
+
+
+}
