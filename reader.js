@@ -414,9 +414,7 @@ const Bookmark = {
 
 };
 
-
-
-
+alert("تم حفظ العلامة"); 
 
 document.addEventListener(
 "DOMContentLoaded",
@@ -460,5 +458,7 @@ document.addEventListener(
 
     Reader.init();
 
+    setupReaderSwipe();
 
-}); 
+
+});
