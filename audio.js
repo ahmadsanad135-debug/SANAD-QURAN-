@@ -7,7 +7,38 @@
 
 const QuranAudio = {
 
-    player: null,
+   updatePlayerInfo(){
+
+
+    const surah =
+    getSurahInfo(
+        this.currentSurah
+    );
+
+
+    const title =
+    document.getElementById(
+        "playing-status"
+    );
+
+
+    if(title && surah){
+
+        title.textContent =
+        "سورة "
+        + surah.name
+        +
+        " - الآية "
+        +
+        toArabicNumber(
+            this.currentAyah
+        );
+
+    }
+
+
+   }
+   player: null,
 
     currentSurah: 1,
 
@@ -247,7 +278,7 @@ updatePlayButton(state){
         this.currentAyah =
         ayah;
 
-
+       this.updatePlayerInfo();
 
         this.player.src =
         url;
