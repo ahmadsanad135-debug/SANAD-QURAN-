@@ -1,7 +1,7 @@
 /* ==========================================
    Mushaf Sanad
    audio.js
-   Quran Audio Engine
+   Quran Audio Controller
 ========================================== */
 
 
@@ -9,12 +9,19 @@ const QuranAudio = {
 
     player: null,
 
-    currentAyah: 0,
-
     currentSurah: 1,
 
-    reciter: null,
+    currentAyah: 1,
 
+    reciterId: null,
+
+    isPlaying: false,
+
+
+
+    /* ===============================
+       تشغيل النظام
+    ================================ */
 
     init(){
 
@@ -24,24 +31,32 @@ const QuranAudio = {
         );
 
 
-        this.reciter =
-        getSavedReciter();
+        if(!this.player){
+            console.log("Audio player not found");
+            return;
+        }
 
 
-        this.loadReciters();
+        this.reciterId =
+        localStorage.getItem("reciter")
+        || RECITERS[0].id;
 
 
-        this.events();
+        this.createReciterList();
+
+
+        this.setupEvents();
+
 
     },
 
 
 
     /* ===============================
-       قائمة القراء
+       إنشاء قائمة القراء
     ================================ */
 
-    loadReciters(){
+    createReciterList(){
 
         const select =
         document.getElementById(
@@ -73,7 +88,7 @@ const QuranAudio = {
 
 
             if(
-                reciter.id === this.reciter
+                reciter.id === this.reciterId
             ){
 
                 option.selected = true;
@@ -89,15 +104,17 @@ const QuranAudio = {
         });
 
 
+
         select.onchange = ()=>{
 
 
-            this.reciter =
+            this.reciterId =
             select.value;
 
 
-            saveReciter(
-                this.reciter
+            localStorage.setItem(
+                "reciter",
+                this.reciterId
             );
 
 
@@ -109,23 +126,42 @@ const QuranAudio = {
 
 
     /* ===============================
-       تشغيل سورة
+       الحصول على رابط الصوت
     ================================ */
 
-
-    playSurah(surah){
-
-
-        this.currentSurah =
-        surah;
+    getAudioUrl(
+        surah,
+        ayah
+    ){
 
 
-        this.currentAyah = 1;
+        const reciter =
+        RECITERS.find(
+            r =>
+            r.id === this.reciterId
+        );
 
 
-        this.playAyah(
-            surah,
-            1
+        if(!reciter)
+        return null;
+
+
+
+        const file =
+        String(surah)
+        .padStart(3,"0")
+        +
+        String(ayah)
+        .padStart(3,"0");
+
+
+
+        return (
+            reciter.server
+            +
+            file
+            +
+            ".mp3"
         );
 
 
@@ -133,37 +169,35 @@ const QuranAudio = {
 
 
 
-
     /* ===============================
        تشغيل آية
     ================================ */
 
-    playAyah(surah,ayah){
-
-
-        const reciter =
-        RECITERS.find(
-            r=>r.id===this.reciter
-        );
-
-
-        if(!reciter)return;
-
-
-
-        const number =
-        String(surah).padStart(3,"0")
-        +
-        String(ayah).padStart(3,"0");
-
+    playAyah(
+        surah,
+        ayah
+    ){
 
 
         const url =
-        reciter.server
-        +
-        number
-        +
-        ".mp3";
+        this.getAudioUrl(
+            surah,
+            ayah
+        );
+
+
+
+        if(!url)
+        return;
+
+
+
+        this.currentSurah =
+        surah;
+
+
+        this.currentAyah =
+        ayah;
 
 
 
@@ -175,41 +209,205 @@ const QuranAudio = {
 
 
 
+        this.highlightAyah(
+            surah,
+            ayah
+        );
+
+
+        this.savePosition();
+
+
     },
 
 
 
+    /* ===============================
+       الآية التالية
+    ================================ */
+
+    nextAyah(){
+
+
+        this.currentAyah++;
+
+
+        this.playAyah(
+            this.currentSurah,
+            this.currentAyah
+        );
+
+
+    },
+
 
 
     /* ===============================
-       أحداث المشغل
+       الآية السابقة
     ================================ */
 
-    events(){
+    previousAyah(){
 
 
-        if(!this.player)return;
+        if(
+            this.currentAyah > 1
+        ){
 
-
-
-        this.player.onended =
-        ()=>{
-
-
-            this.currentAyah++;
-
+            this.currentAyah--;
 
             this.playAyah(
                 this.currentSurah,
                 this.currentAyah
             );
 
+        }
+
+
+    },
+
+
+
+    /* ===============================
+       تظليل الآية
+    ================================ */
+
+    highlightAyah(
+        surah,
+        ayah
+    ){
+
+
+        document
+        .querySelectorAll(".ayah")
+        .forEach(
+            item=>{
+                item.classList.remove(
+                    "playing"
+                );
+            }
+        );
+
+
+
+        const ayahElement =
+        document.querySelector(
+        `.ayah[data-surah="${surah}"][data-ayah="${ayah}"]`
+        );
+
+
+
+        if(ayahElement){
+
+
+            ayahElement.classList.add(
+                "playing"
+            );
+
+
+            ayahElement.scrollIntoView({
+
+                behavior:"smooth",
+
+                block:"center"
+
+            });
+
+
+        }
+
+
+    },
+
+
+
+    /* ===============================
+       حفظ مكان التوقف
+    ================================ */
+
+    savePosition(){
+
+
+        localStorage.setItem(
+            "audioPosition",
+            JSON.stringify({
+
+                surah:this.currentSurah,
+
+                ayah:this.currentAyah
+
+            })
+        );
+
+
+    },
+
+
+
+    /* ===============================
+       تحميل آخر مكان
+    ================================ */
+
+    loadPosition(){
+
+
+        const data =
+        JSON.parse(
+            localStorage.getItem(
+                "audioPosition"
+            )
+        );
+
+
+        if(data){
+
+            this.currentSurah =
+            data.surah;
+
+
+            this.currentAyah =
+            data.ayah;
+
+        }
+
+
+    },
+
+
+
+    /* ===============================
+       أحداث الصوت
+    ================================ */
+
+    setupEvents(){
+
+
+        this.player.onplay =
+        ()=>{
+
+            this.isPlaying = true;
+
+        };
+
+
+
+        this.player.onpause =
+        ()=>{
+
+            this.isPlaying = false;
+
+        };
+
+
+
+        this.player.onended =
+        ()=>{
+
+            this.nextAyah();
 
         };
 
 
     }
-
 
 
 };
@@ -224,4 +422,4 @@ document.addEventListener(
 
     QuranAudio.init();
 
-});
+}); 
