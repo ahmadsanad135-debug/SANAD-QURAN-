@@ -317,6 +317,136 @@ function setupReaderSwipe(){
     );
 
        }
+/* ===============================
+   Bookmark System
+================================ */
+
+
+const Bookmark = {
+
+
+    save(){
+
+
+        localStorage.setItem(
+            "bookmarkPage",
+            Reader.currentPage
+        );
+
+
+        this.updateIcon();
+
+
+    },
+
+
+
+    get(){
+
+
+        return parseInt(
+            localStorage.getItem(
+                "bookmarkPage"
+            )
+        ) || null;
+
+
+    },
+
+
+
+    open(){
+
+
+        const page =
+        this.get();
+
+
+
+        if(page){
+
+            Reader.openPage(page);
+
+        }
+
+
+    },
+
+
+
+    updateIcon(){
+
+
+        const button =
+        document.getElementById(
+            "bookmarkButton"
+        );
+
+
+        if(!button)return;
+
+
+
+        const saved =
+        this.get();
+
+
+
+        if(
+            saved === Reader.currentPage
+        ){
+
+            button.innerHTML =
+            '<i class="fas fa-bookmark"></i>';
+
+        }
+
+        else{
+
+            button.innerHTML =
+            '<i class="far fa-bookmark"></i>';
+
+        }
+
+
+    }
+
+
+};
+
+
+
+
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+
+    const button =
+    document.getElementById(
+        "bookmarkButton"
+    );
+
+
+
+    if(button){
+
+
+        button.onclick =
+        ()=>{
+
+
+            Bookmark.save();
+
+
+        };
+
+
+    }
+
+
+});
 
 /* ===============================
    تشغيل تلقائي
