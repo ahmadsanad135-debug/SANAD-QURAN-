@@ -31,6 +31,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 <body>
 
 
+
 <header class="top-bar">
 
 
@@ -64,6 +65,7 @@ class="page-number">
 
 
 
+
 <button id="themeButton"
 class="icon-button">
 
@@ -73,6 +75,7 @@ class="icon-button">
 
 
 </header>
+
 
 
 
@@ -91,17 +94,13 @@ class="icon-button">
 
 
 <span id="juz-info">
-
 الجزء ١
-
 </span>
 
 
 
 <span id="hizb-info">
-
 الحزب
-
 </span>
 
 
@@ -113,7 +112,6 @@ class="icon-button">
 
 <div id="quran-page-text">
 
-
 </div>
 
 
@@ -122,13 +120,9 @@ class="icon-button">
 
 <div id="page-footer">
 
-
 <span id="footer-page-number">
-
 ١
-
 </span>
-
 
 </div>
 
@@ -145,7 +139,10 @@ class="icon-button">
 
 
 
-<!-- التفسير -->
+
+
+
+<!-- نافذة التفسير -->
 
 
 <div id="overlay"
@@ -161,18 +158,14 @@ onclick="closeTafsir()">
 class="bottom-sheet">
 
 
-<div class="sheet-handle">
-
-</div>
+<div class="sheet-handle"></div>
 
 
 <div class="sheet-header">
 
 
 <h3 id="tafsir-title">
-
 التفسير
-
 </h3>
 
 
@@ -186,7 +179,6 @@ class="close-sheet">
 
 
 </div>
-
 
 
 
@@ -204,7 +196,7 @@ class="sheet-body">
 
 
 
-<!-- أزرار التحكم -->
+<!-- أزرار الصفحات -->
 
 
 <div class="floating-controls">
@@ -220,11 +212,13 @@ onclick="Reader.previous()">
 
 
 
+
 <button onclick="jumpToPage()">
 
 <i class="fas fa-book-open"></i>
 
 </button>
+
 
 
 
@@ -245,6 +239,7 @@ onclick="Reader.next()">
 
 
 
+
 <!-- أدوات القراءة -->
 
 
@@ -252,29 +247,95 @@ onclick="Reader.next()">
 
 
 <button onclick="changeFont(2)">
-
 +
-
 </button>
 
 
+
 <button onclick="changeFont(-2)">
-
 -
-
 </button>
 
 
 </div>
 
 
-<!-- الملفات -->
+
+
+
+
+
+<!-- مشغل الصوت -->
+
+
+<div class="audio-player">
+
+
+<select id="reciter-select">
+
+<option value="">
+اختر القارئ
+</option>
+
+
+<option value="ar.alafasy">
+مشاري العفاسي
+</option>
+
+
+<option value="ar.abdulbasitmurattal">
+عبدالباسط عبدالصمد
+</option>
+
+
+</select>
+
+
+
+
+<audio id="audio-player"
+controls>
+
+</audio>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- العلامة المرجعية -->
+
+
+<button id="bookmarkButton"
+class="bookmark-button">
+
+<i class="far fa-bookmark"></i>
+
+</button>
+
+
+
+
+
+
+
+
+<!-- ملفات المشروع -->
 
 
 <script src="utils.js"></script>
+
 <script src="chapters.js"></script>
+
 <script src="api.js"></script>
+
 <script src="reader.js"></script>
+
 <script src="app.js"></script>
 
 
