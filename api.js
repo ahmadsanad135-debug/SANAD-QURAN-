@@ -236,7 +236,7 @@ function createSurahTitle(id){
     <div class="ornament"></div>
 
     <h2 id="surah-title">
-    سورة ${toArabicNumber(id)}
+    سورة ${getSurahName(id)}
     </h2>
 
     <div class="ornament"></div>
