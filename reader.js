@@ -111,7 +111,7 @@ const Reader = {
                 verses
             );
 
-
+Bookmark.updateIcon();
 
             preloadPage(
                 page+1
