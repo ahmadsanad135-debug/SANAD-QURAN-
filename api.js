@@ -1,31 +1,35 @@
 /* ==========================================
    Mushaf Sanad
    api.js
-   Quran Pages Engine
+   Quran Data API
 ========================================== */
 
 
-const QURAN_API = "https://api.quran.com/api/v4";
+const QURAN_API =
+"https://api.quran.com/api/v4";
 
 
 let currentVerses = [];
 
 
 
-/* ==========================================
-   جلب آيات صفحة من المصحف
-========================================== */
+/* ===============================
+   جلب آيات صفحة
+================================ */
 
 async function getPage(pageNumber){
 
     try{
 
-        const response = await fetch(
-            `${QURAN_API}/quran/verses/uthmani?page_number=${pageNumber}`
+
+        const response =
+        await fetch(
+        `${QURAN_API}/quran/verses/uthmani?page_number=${pageNumber}`
         );
 
 
-        const data = await response.json();
+        const data =
+        await response.json();
 
 
         return data.verses || [];
@@ -33,10 +37,12 @@ async function getPage(pageNumber){
 
     }catch(error){
 
+
         console.error(
-            "Quran page error:",
+            "Page loading error",
             error
         );
+
 
         return [];
 
@@ -47,163 +53,38 @@ async function getPage(pageNumber){
 
 
 
-/* ==========================================
-   معلومات الصفحة
-========================================== */
+/* ===============================
+   تحميل صفحة
+================================ */
 
-function getMushafPageInfo(page){
-
-    const info = MUSHAF_PAGES[page];
+async function loadPage(pageNumber){
 
 
-    if(!info){
-
-        return {
-
-            juz:1,
-
-            hizb:1,
-
-            surahs:[]
-
-        };
-
-    }
+    const verses =
+    await getPage(pageNumber);
 
 
-    return info;
+    currentVerses =
+    verses;
+
+
+
+    renderQuranPage(
+        verses
+    );
+
+
+    return verses;
 
 }
 
 
 
 
-/* ==========================================
-   تحميل الصفحة كاملة
-========================================== */
 
-async function loadPage(page){
-
-    const verses = await getPage(page);
-
-
-    currentVerses = verses;
-
-
-    updatePageInfo(page);
-
-
-    renderQuranPage(verses);
-
-}
-
-
-
-
-/* ==========================================
-   تحديث معلومات الهيدر
-========================================== */
-
-function updatePageInfo(page){
-
-
-const info =
-getMushafData(page);
-
-
-
-const surah =
-document.getElementById(
-"surah-name"
-);
-
-
-
-const juz =
-document.getElementById(
-"juz-info"
-);
-
-
-
-const hizb =
-document.getElementById(
-"hizb-info"
-);
-
-
-
-if(surah){
-
-surah.textContent =
-info.surah;
-
-}
-
-
-
-if(juz){
-
-juz.textContent =
-"الجزء "
-+
-toArabicNumber(info.juz);
-
-}
-
-
-
-if(hizb){
-
-hizb.textContent =
-"الحزب "
-+
-info.hizb;
-
-}
-
-
-}
-
-
-    const info = getMushafPageInfo(page);
-
-
-    const juz =
-        document.getElementById("juz-info");
-
-
-    const hizb =
-        document.getElementById("hizb-info");
-
-
-
-    if(juz){
-
-        juz.textContent =
-        "الجزء " + toArabicNumber(info.juz);
-
-    }
-
-
-
-    if(hizb){
-
-        hizb.textContent =
-        "الحزب " + toArabicNumber(info.hizb);
-
-    }
-
-}
-
-
-
-
-
-/* ==========================================
-   رسم الآيات
-========================================== */
-
+/* ===============================
+   رسم صفحة القرآن
+================================ */
 
 function renderQuranPage(verses){
 
@@ -214,7 +95,7 @@ function renderQuranPage(verses){
     );
 
 
-    if(!box) return;
+    if(!box)return;
 
 
 
@@ -222,20 +103,19 @@ function renderQuranPage(verses){
 
 
 
-    let lastChapter = null;
+    let lastSurah=0;
 
 
 
     verses.forEach(verse=>{
 
 
-        // بداية سورة جديدة
-
         if(
-            verse.chapter_id !== lastChapter
+            verse.chapter_id !== lastSurah
         ){
 
-            lastChapter =
+
+            lastSurah =
             verse.chapter_id;
 
 
@@ -243,6 +123,33 @@ function renderQuranPage(verses){
             createSurahTitle(
                 verse.chapter_id
             );
+
+
+
+            if(
+                verse.chapter_id !== 1 &&
+                verse.chapter_id !== 9
+            ){
+
+                const basmala =
+                document.createElement(
+                    "div"
+                );
+
+
+                basmala.id =
+                "basmala";
+
+
+                basmala.textContent =
+                "﷽";
+
+
+                box.appendChild(
+                    basmala
+                );
+
+            }
 
 
         }
@@ -256,38 +163,40 @@ function renderQuranPage(verses){
         );
 
 
-
         span.className =
         "ayah";
 
 
 
         span.innerHTML =
-        `
-        ${verse.text_uthmani}
+        `${verse.text_uthmani}
         <span class="ayah-number">
-        ﴿${toArabicNumber(
-            verse.verse_number
-        )}﴾
-        </span>
-        `;
+        ﴿${toArabicNumber(verse.verse_number)}﴾
+        </span>`;
 
 
 
-        span.onclick=()=>{
 
-            openTafsir(verse);
+        span.onclick =
+        ()=>{
+
+            openTafsir(
+                verse
+            );
 
         };
 
 
 
-        box.appendChild(span);
+        box.appendChild(
+            span
+        );
 
 
         box.appendChild(
             document.createTextNode(" ")
         );
+
 
 
     });
@@ -298,13 +207,9 @@ function renderQuranPage(verses){
 
 
 
-
-
-
-/* ==========================================
+/* ===============================
    عنوان السورة
-========================================== */
-
+================================ */
 
 function createSurahTitle(id){
 
@@ -316,7 +221,9 @@ function createSurahTitle(id){
 
 
     const title =
-    document.createElement("div");
+    document.createElement(
+        "div"
+    );
 
 
     title.id =
@@ -326,42 +233,19 @@ function createSurahTitle(id){
 
     title.innerHTML =
     `
-
     <div class="ornament"></div>
 
     <h2 id="surah-title">
-
-    ${getChapterName(id)}
-
+    سورة ${toArabicNumber(id)}
     </h2>
 
     <div class="ornament"></div>
-
     `;
 
 
 
-    box.appendChild(title);
-
-
-}
-
-
-
-
-
-
-/* ==========================================
-   تحويل الأرقام
-========================================== */
-
-
-function toArabicNumber(number){
-
-    return String(number)
-    .replace(
-        /[0-9]/g,
-        d=>"٠١٢٣٤٥٦٧٨٩"[d]
+    box.appendChild(
+        title
     );
 
 }
@@ -369,28 +253,133 @@ function toArabicNumber(number){
 
 
 
-/* ==========================================
-   آخر قراءة
-========================================== */
+/* ===============================
+   التفسير
+================================ */
+
+async function openTafsir(verse){
 
 
-function saveLastPage(page){
-
-    localStorage.setItem(
-        "lastPage",
-        page
+    const overlay =
+    document.getElementById(
+        "overlay"
     );
+
+
+    const sheet =
+    document.getElementById(
+        "tafsir-sheet"
+    );
+
+
+    const title =
+    document.getElementById(
+        "tafsir-title"
+    );
+
+
+    const body =
+    document.getElementById(
+        "tafsir-body"
+    );
+
+
+
+    if(!sheet)return;
+
+
+
+    title.textContent =
+    "الآية " +
+    toArabicNumber(
+        verse.verse_number
+    );
+
+
+
+    body.textContent =
+    "جاري تحميل التفسير...";
+
+
+
+    overlay.style.display =
+    "block";
+
+
+
+    sheet.style.bottom =
+    "0";
+
+
+
+    try{
+
+
+        const response =
+        await fetch(
+        `${QURAN_API}/tafsirs/169/by_ayah/${verse.verse_key}`
+        );
+
+
+        const data =
+        await response.json();
+
+
+
+        body.innerHTML =
+        data.tafsir.text;
+
+
+
+    }catch(error){
+
+
+        body.textContent =
+        "تعذر تحميل التفسير";
+
+
+    }
+
 
 }
 
 
 
-function getLastPage(){
 
-    return parseInt(
-        localStorage.getItem(
-            "lastPage"
-        )
-    ) || 1;
+/* ===============================
+   إغلاق التفسير
+================================ */
 
-} 
+function closeTafsir(){
+
+
+    const sheet =
+    document.getElementById(
+        "tafsir-sheet"
+    );
+
+
+    const overlay =
+    document.getElementById(
+        "overlay"
+    );
+
+
+
+    if(sheet){
+
+        sheet.style.bottom =
+        "-100%";
+
+    }
+
+
+
+    if(overlay){
+
+        overlay.style.display =
+        "none";
+
+    }
+
+}
