@@ -2,15 +2,16 @@
 const CACHE_NAME = 'sanad-quran-cache-v12';
 
 const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './quran.html',
-  './quran.css',
-  './app.js',
-  './api.js',
-  './surahLinks.js',
-  './manifest.json',
-  './icon.png'
+'./',
+'./index.html',
+'./quran.html',
+'./quran.css',
+'./api.js',
+'./app.js',
+'./reader.js',
+'./surahLinks.js',
+'./manifest.json',
+'./icon.png'
 ];
 
 // مرحلة التثبيت
