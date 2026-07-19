@@ -7,38 +7,8 @@
 
 const QuranAudio = {
 
-   updatePlayerInfo(){
 
-
-    const surah =
-    getSurahInfo(
-        this.currentSurah
-    );
-
-
-    const title =
-    document.getElementById(
-        "playing-status"
-    );
-
-
-    if(title && surah){
-
-        title.textContent =
-        "سورة "
-        + surah.name
-        +
-        " - الآية "
-        +
-        toArabicNumber(
-            this.currentAyah
-        );
-
-    }
-
-
-   }
-   player: null,
+    player: null,
 
     currentSurah: 1,
 
@@ -48,55 +18,7 @@ const QuranAudio = {
 
     isPlaying: false,
 
-togglePlay(){
 
-    if(!this.player)
-    return;
-
-
-    if(this.player.paused){
-
-        this.player.play();
-
-        this.updatePlayButton(true);
-
-    }
-    else{
-
-        this.player.pause();
-
-        this.updatePlayButton(false);
-
-    }
-
-},
-
-
-
-updatePlayButton(state){
-
-    const button =
-    document.getElementById(
-        "playButton"
-    );
-
-
-    if(!button)
-    return;
-
-
-    button.innerHTML =
-    state
-
-    ?
-
-    '<i class="fas fa-pause"></i>'
-
-    :
-
-    '<i class="fas fa-play"></i>';
-
-},
 
     /* ===============================
        تشغيل النظام
@@ -104,42 +26,52 @@ updatePlayButton(state){
 
     init(){
 
-    this.player =
-    document.getElementById(
-        "audio-player"
-    );
+
+        this.player =
+        document.getElementById(
+            "audio-player"
+        );
 
 
-    console.log(
-        "Audio System Loaded"
-    );
+        console.log(
+            "Audio System Loaded"
+        );
 
 
-    if(!this.player){
-        console.log("No audio player");
-        return;
-    }
+        if(!this.player){
+
+            console.log(
+                "Audio player not found"
+            );
+
+            return;
+
+        }
 
 
-    this.reciterId =
-    localStorage.getItem("reciter")
-    || RECITERS[0].id;
+
+        this.reciterId =
+        getSavedReciter();
 
 
-    this.createReciterList();
+
+        this.createReciterList();
 
 
-    this.setupEvents();
 
-},
+        this.setupEvents();
+
+
+    },
 
 
 
     /* ===============================
-       إنشاء قائمة القراء
+       قائمة القراء
     ================================ */
 
     createReciterList(){
+
 
         const select =
         document.getElementById(
@@ -147,10 +79,13 @@ updatePlayButton(state){
         );
 
 
-        if(!select) return;
+        if(!select)
+        return;
+
 
 
         select.innerHTML = "";
+
 
 
         RECITERS.forEach(reciter=>{
@@ -170,6 +105,7 @@ updatePlayButton(state){
             reciter.name;
 
 
+
             if(
                 reciter.id === this.reciterId
             ){
@@ -177,6 +113,7 @@ updatePlayButton(state){
                 option.selected = true;
 
             }
+
 
 
             select.appendChild(
@@ -195,8 +132,8 @@ updatePlayButton(state){
             select.value;
 
 
-            localStorage.setItem(
-                "reciter",
+
+            saveReciter(
                 this.reciterId
             );
 
@@ -209,7 +146,7 @@ updatePlayButton(state){
 
 
     /* ===============================
-       الحصول على رابط الصوت
+       رابط الصوت
     ================================ */
 
     getAudioUrl(
@@ -225,26 +162,36 @@ updatePlayButton(state){
         );
 
 
+
         if(!reciter)
         return null;
 
 
 
         const file =
+
         String(surah)
         .padStart(3,"0")
+
         +
+
         String(ayah)
         .padStart(3,"0");
 
 
 
         return (
+
             reciter.server
+
             +
+
             file
+
             +
+
             ".mp3"
+
         );
 
 
@@ -279,13 +226,15 @@ updatePlayButton(state){
         surah;
 
 
+
         this.currentAyah =
         ayah;
 
-       this.updatePlayerInfo();
+
 
         this.player.src =
         url;
+
 
 
         this.player.play();
@@ -298,6 +247,11 @@ updatePlayButton(state){
         );
 
 
+
+        this.updatePlayerInfo();
+
+
+
         this.savePosition();
 
 
@@ -306,58 +260,22 @@ updatePlayButton(state){
 
 
     /* ===============================
-       الآية التالية
+       تشغيل / إيقاف
     ================================ */
 
-    nextAyah(){
+    togglePlay(){
 
 
-    const surahInfo =
-    getSurahInfo(
-        this.currentSurah
-    );
+        if(!this.player)
+        return;
 
-
-    if(!surahInfo)
-    return;
-
-
-
-    // إذا لم نصل لنهاية السورة
-    if(
-        this.currentAyah <
-        surahInfo.ayahs
-    ){
-
-        this.currentAyah++;
-
-
-        this.playAyah(
-            this.currentSurah,
-            this.currentAyah
-        );
-
-
-    }
-
-    // نهاية السورة
-    else{
 
 
         if(
-            this.currentSurah < 114
+            this.player.paused
         ){
 
-            this.currentSurah++;
-
-            this.currentAyah = 1;
-
-
-            this.playAyah(
-                this.currentSurah,
-                1
-            );
-
+            this.player.play();
 
         }
 
@@ -365,21 +283,77 @@ updatePlayButton(state){
 
             this.player.pause();
 
-            console.log(
-                "انتهى القرآن"
-            );
-
         }
 
-    }
 
-
-},
+    },
 
 
 
     /* ===============================
-       الآية السابقة
+       زر التشغيل
+    ================================ */
+
+    updatePlayButton(
+        playing
+    ){
+
+
+        const button =
+        document.getElementById(
+            "playButton"
+        );
+
+
+        if(!button)
+        return;
+
+
+
+        button.innerHTML =
+
+        playing
+
+        ?
+
+        '<i class="fas fa-pause"></i>'
+
+        :
+
+        '<i class="fas fa-play"></i>';
+
+
+
+    },
+
+
+
+    /* ===============================
+       التالي
+    ================================ */
+
+    nextAyah(){
+
+
+        this.currentAyah++;
+
+
+
+        this.playAyah(
+
+            this.currentSurah,
+
+            this.currentAyah
+
+        );
+
+
+    },
+
+
+
+    /* ===============================
+       السابق
     ================================ */
 
     previousAyah(){
@@ -389,12 +363,19 @@ updatePlayButton(state){
             this.currentAyah > 1
         ){
 
+
             this.currentAyah--;
 
+
+
             this.playAyah(
+
                 this.currentSurah,
+
                 this.currentAyah
+
             );
+
 
         }
 
@@ -417,36 +398,32 @@ updatePlayButton(state){
         .querySelectorAll(".ayah")
         .forEach(
             item=>{
+
                 item.classList.remove(
                     "playing"
                 );
+
             }
         );
 
 
 
-        const ayahElement =
+        const element =
+
         document.querySelector(
+
         `.ayah[data-surah="${surah}"][data-ayah="${ayah}"]`
+
         );
 
 
 
-        if(ayahElement){
+        if(element){
 
 
-            ayahElement.classList.add(
+            element.classList.add(
                 "playing"
             );
-
-
-            ayahElement.scrollIntoView({
-
-                behavior:"smooth",
-
-                block:"center"
-
-            });
 
 
         }
@@ -457,53 +434,84 @@ updatePlayButton(state){
 
 
     /* ===============================
-       حفظ مكان التوقف
+       معلومات المشغل
+    ================================ */
+
+    updatePlayerInfo(){
+
+
+        const reciter =
+        RECITERS.find(
+            r =>
+            r.id === this.reciterId
+        );
+
+
+
+        const name =
+        document.getElementById(
+            "playing-reciter"
+        );
+
+
+        const status =
+        document.getElementById(
+            "playing-status"
+        );
+
+
+
+        if(name && reciter){
+
+            name.textContent =
+            reciter.name;
+
+        }
+
+
+
+        if(status){
+
+            status.textContent =
+
+            "السورة "
+            +
+            this.currentSurah
+            +
+            " - الآية "
+            +
+            this.currentAyah;
+
+        }
+
+
+    },
+
+
+
+    /* ===============================
+       حفظ المكان
     ================================ */
 
     savePosition(){
 
 
         localStorage.setItem(
+
             "audioPosition",
+
             JSON.stringify({
 
-                surah:this.currentSurah,
+                surah:
+                this.currentSurah,
 
-                ayah:this.currentAyah
+
+                ayah:
+                this.currentAyah
 
             })
+
         );
-
-
-    },
-
-
-
-    /* ===============================
-       تحميل آخر مكان
-    ================================ */
-
-    loadPosition(){
-
-
-        const data =
-        JSON.parse(
-            localStorage.getItem(
-                "audioPosition"
-            )
-        );
-
-
-        if(data){
-
-            this.currentSurah =
-            data.surah;
-
-
-            this.currentAyah =
-            data.ayah;
-
-        }
 
 
     },
@@ -517,63 +525,61 @@ updatePlayButton(state){
     setupEvents(){
 
 
-    this.player.onplay = ()=>{
-
-        this.isPlaying = true;
-
-        this.updatePlayButton(true);
-
-    };
+        this.player.onplay =
+        ()=>{
 
 
+            this.isPlaying = true;
 
-    this.player.onpause = ()=>{
 
-        this.isPlaying = false;
+            this.updatePlayButton(
+                true
+            );
 
-        this.updatePlayButton(false);
 
-    };
+        };
 
 
 
-    this.player.onended = ()=>{
-
-        this.nextAyah();
-
-    };
+        this.player.onpause =
+        ()=>{
 
 
-
-    this.player.ontimeupdate = ()=>{
-
-
-        const progress =
-        document.getElementById(
-            "audio-progress"
-        );
+            this.isPlaying = false;
 
 
-        if(progress && this.player.duration){
+            this.updatePlayButton(
+                false
+            );
 
-            progress.value =
-            (
-            this.player.currentTime /
-            this.player.duration
-            ) * 100;
 
-        }
+        };
 
-    };
+
+
+        this.player.onended =
+        ()=>{
+
+
+            this.nextAyah();
+
+
+        };
 
 
     }
+
+
+};
+
 
 
 document.addEventListener(
 "DOMContentLoaded",
 ()=>{
 
+
     QuranAudio.init();
 
-}); 
+
+});
