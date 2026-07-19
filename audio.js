@@ -277,6 +277,23 @@ updatePlayButton(state){
     nextAyah(){
 
 
+    const surahInfo =
+    getSurahInfo(
+        this.currentSurah
+    );
+
+
+    if(!surahInfo)
+    return;
+
+
+
+    // إذا لم نصل لنهاية السورة
+    if(
+        this.currentAyah <
+        surahInfo.ayahs
+    ){
+
         this.currentAyah++;
 
 
@@ -286,7 +303,43 @@ updatePlayButton(state){
         );
 
 
-    },
+    }
+
+    // نهاية السورة
+    else{
+
+
+        if(
+            this.currentSurah < 114
+        ){
+
+            this.currentSurah++;
+
+            this.currentAyah = 1;
+
+
+            this.playAyah(
+                this.currentSurah,
+                1
+            );
+
+
+        }
+
+        else{
+
+            this.player.pause();
+
+            console.log(
+                "انتهى القرآن"
+            );
+
+        }
+
+    }
+
+
+},
 
 
 
