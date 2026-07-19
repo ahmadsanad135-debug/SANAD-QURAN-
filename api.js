@@ -383,3 +383,92 @@ function closeTafsir(){
     }
 
 }
+/* ===============================
+   معلومات الصفحة
+================================ */
+
+async function getPageInfo(page){
+
+    try{
+
+        const response =
+        await fetch(
+        `${QURAN_API}/quran/verses/uthmani?page_number=${page}`
+        );
+
+
+        const data =
+        await response.json();
+
+
+        const verses =
+        data.verses || [];
+
+
+
+        if(!verses.length){
+
+            return null;
+
+        }
+
+
+
+        return {
+
+            page:page,
+
+            surah:
+            verses[0].chapter_id,
+
+
+            firstAyah:
+            verses[0].verse_number,
+
+
+            lastAyah:
+            verses[verses.length-1].verse_number,
+
+
+            verses:verses
+
+        };
+
+
+
+    }catch(e){
+
+        console.error(e);
+
+        return null;
+
+    }
+
+}
+
+
+
+/* ===============================
+   تحميل الصفحة القادمة مسبقا
+================================ */
+
+async function preloadPage(page){
+
+    if(
+        page < 1 ||
+        page > 604
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        await getPage(page);
+
+    }catch(e){}
+
+
+}
