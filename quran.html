@@ -136,12 +136,6 @@ class="icon-button">
 </main>
 
 
-
-
-
-
-
-
 <!-- نافذة التفسير -->
 
 
@@ -192,10 +186,6 @@ class="sheet-body">
 
 
 
-
-
-
-
 <!-- أزرار الصفحات -->
 
 
@@ -232,12 +222,6 @@ onclick="Reader.next()">
 
 
 </div>
-
-
-
-
-
-
 
 
 <!-- أدوات القراءة -->
@@ -293,18 +277,48 @@ onclick="Reader.next()">
 
 
 
-<audio id="audio-player"
-controls>
+<div class="custom-player">
 
-</audio>
+    <div class="player-info">
+        <span id="playing-reciter">مشاري راشد العفاسي</span>
+        <span id="playing-status">جاهز للتشغيل</span>
+    </div>
+
+
+    <div class="player-buttons">
+
+        <button onclick="QuranAudio.previousAyah()">
+            <i class="fas fa-backward-step"></i>
+        </button>
+
+
+        <button id="playButton" onclick="QuranAudio.togglePlay()">
+            <i class="fas fa-play"></i>
+        </button>
+
+
+        <button onclick="QuranAudio.nextAyah()">
+            <i class="fas fa-forward-step"></i>
+        </button>
+
+    </div>
+
+
+    <input 
+    id="audio-progress"
+    type="range"
+    min="0"
+    max="100"
+    value="0">
 
 
 </div>
 
 
+<audio id="audio-player" preload="none"></audio>
 
 
-
+</div>
 
 
 
