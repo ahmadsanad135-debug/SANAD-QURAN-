@@ -158,13 +158,20 @@ function renderQuranPage(verses){
 
 
         const span =
-        document.createElement(
-            "span"
-        );
+document.createElement(
+    "span"
+);
 
+span.className = "ayah";
 
-        span.className =
-        "ayah";
+span.dataset.surah =
+verse.chapter_id;
+
+span.dataset.ayah =
+verse.verse_number;
+
+span.dataset.key =
+verse.verse_key;
 
 
 
@@ -177,14 +184,16 @@ function renderQuranPage(verses){
 
 
 
-        span.onclick =
-        ()=>{
+        span.onclick = ()=>{
 
-            openTafsir(
-                verse
-            );
+    openTafsir(verse);
 
-        };
+    QuranAudio.playAyah(
+        verse.chapter_id,
+        verse.verse_number
+    );
+
+};
 
 
 
