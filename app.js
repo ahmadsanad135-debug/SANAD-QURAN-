@@ -1,420 +1,80 @@
 /* ==========================================
-   Mushaf Sanad v2.0
+   Mushaf Sanad
    app.js
-   Page Reader Engine
+   Main Controller
 ========================================== */
 
 
-let currentPage = 1;
-
-let isAnimating = false;
-
-
+/* ===============================
+   تشغيل التطبيق
+================================ */
 
 document.addEventListener(
 "DOMContentLoaded",
 ()=>{
 
 
-    currentPage =
-    getLastPage();
-
-
-
-    openPage(currentPage);
-
+    setupTheme();
 
 
     setupButtons();
 
 
-    setupSwipe();
-
-
 });
 
 
 
 
-
-/* ==========================================
-   فتح صفحة
-========================================== */
-
-
-async function openPage(page){
-
-
-    if(
-        page < 1 ||
-        page > 604 ||
-        isAnimating
-    )
-    return;
-
-
-
-    isAnimating = true;
-
-
-
-    const container =
-    document.getElementById(
-        "quran-page-text"
-    );
-
-
-
-    if(container){
-
-        container.style.opacity="0";
-
-    }
-
-
-
-    setTimeout(
-    async()=>{
-
-
-        await loadPage(page);
-
-
-
-        currentPage =
-        page;
-
-
-
-        saveLastPage(page);
-
-
-
-        updatePageNumber(page);
-
-
-
-        preloadPages(page);
-
-
-
-        if(container){
-
-            container.style.opacity="1";
-
-        }
-
-
-
-        isAnimating=false;
-
-
-
-    },250);
-
-
-
-}
-
-
-
-
-
-/* ==========================================
-   رقم الصفحة
-========================================== */
-
-
-function updatePageNumber(page){
-
-
-    const top =
-    document.getElementById(
-        "page-number"
-    );
-
-
-    const bottom =
-    document.getElementById(
-        "footer-page-number"
-    );
-
-
-
-    if(top){
-
-        top.textContent =
-        "الصفحة "
-        +
-        toArabicNumber(page);
-
-    }
-
-
-
-    if(bottom){
-
-        bottom.textContent =
-        toArabicNumber(page);
-
-    }
-
-
-}
-
-
-
-
-
-/* ==========================================
-   التالي والسابق
-========================================== */
-
-
-function nextPage(){
-
-
-    if(currentPage < 604){
-
-        openPage(
-            currentPage+1
-        );
-
-    }
-
-}
-
-
-
-function previousPage(){
-
-
-    if(currentPage > 1){
-
-        openPage(
-            currentPage-1
-        );
-
-    }
-
-}
-
-
-
-
-
-/* ==========================================
-   السحب مثل تطبيقات المصحف
-========================================== */
-
-
-function setupSwipe(){
-
-
-const reader =
-document.getElementById(
-"reader"
-);
-
-
-
-if(!reader)
-return;
-
-
-
-let startX=0;
-
-
-
-reader.addEventListener(
-"touchstart",
-e=>{
-
-    startX =
-    e.touches[0].clientX;
-
-});
-
-
-
-
-
-reader.addEventListener(
-"touchend",
-e=>{
-
-
-    let endX =
-    e.changedTouches[0].clientX;
-
-
-
-    let distance =
-    startX-endX;
-
-
-
-    if(
-    Math.abs(distance)<80
-    )
-    return;
-
-
-
-
-    // السحب لليسار
-
-    if(distance>0){
-
-        nextPage();
-
-    }
-
-
-    // السحب لليمين
-
-    else{
-
-        previousPage();
-
-    }
-
-
-
-});
-
-
-}
-
-
-
-
-
-/* ==========================================
-   تحميل مسبق للصفحات
-========================================== */
-
-
-function preloadPages(page){
-
-
-    const pages=[
-
-        page+1,
-
-        page-1
-
-    ];
-
-
-
-    pages.forEach(p=>{
-
-
-        if(
-        p>=1 &&
-        p<=604
-        ){
-
-            getPage(p);
-
-        }
-
-
-    });
-
-
-}
-
-
-
-
-
-/* ==========================================
+/* ===============================
    الأزرار
-========================================== */
-
+================================ */
 
 function setupButtons(){
 
 
-const theme =
-document.getElementById(
-"themeButton"
-);
+    const next =
+    document.querySelector(
+        ".next-page"
+    );
+
+
+    const previous =
+    document.querySelector(
+        ".previous-page"
+    );
 
 
 
-if(theme){
+    if(next){
 
+        next.onclick =
+        ()=>Reader.next();
 
-theme.onclick=()=>{
-
-
-let mode =
-document.documentElement
-.getAttribute(
-"data-theme"
-);
+    }
 
 
 
-if(mode==="dark"){
+    if(previous){
 
+        previous.onclick =
+        ()=>Reader.previous();
 
-document.documentElement
-.setAttribute(
-"data-theme",
-"light"
-);
-
-
-localStorage
-.setItem(
-"theme",
-"light"
-);
+    }
 
 
 
-theme.innerHTML=
-'<i class="fas fa-moon"></i>';
+    const themeButton =
+    document.getElementById(
+        "themeButton"
+    );
 
 
+    if(themeButton){
 
-}
+        themeButton.onclick =
+        toggleTheme;
 
-else{
-
-
-document.documentElement
-.setAttribute(
-"data-theme",
-"dark"
-);
-
-
-
-localStorage
-.setItem(
-"theme",
-"dark"
-);
-
-
-
-theme.innerHTML=
-'<i class="fas fa-sun"></i>';
-
-
-
-}
-
-
-
-};
-
+    }
 
 
 }
@@ -422,58 +82,188 @@ theme.innerHTML=
 
 
 
+/* ===============================
+   الوضع الليلي
+================================ */
 
-let savedTheme =
-localStorage.getItem(
-"theme"
-);
+function setupTheme(){
+
+
+    const theme =
+    getTheme();
 
 
 
-if(savedTheme){
+    document.documentElement
+    .setAttribute(
+        "data-theme",
+        theme
+    );
 
-document.documentElement
-.setAttribute(
-"data-theme",
-savedTheme
-);
+
+
+    updateThemeIcon(
+        theme
+    );
 
 }
 
 
 
+
+function toggleTheme(){
+
+
+    const current =
+    document.documentElement
+    .getAttribute(
+        "data-theme"
+    );
+
+
+
+    const newTheme =
+    current === "dark"
+    ?
+    "light"
+    :
+    "dark";
+
+
+
+    document.documentElement
+    .setAttribute(
+        "data-theme",
+        newTheme
+    );
+
+
+
+    saveTheme(
+        newTheme
+    );
+
+
+
+    updateThemeIcon(
+        newTheme
+    );
+
+
 }
 
 
 
 
+function updateThemeIcon(theme){
 
-/* ==========================================
+
+    const button =
+    document.getElementById(
+        "themeButton"
+    );
+
+
+    if(!button)return;
+
+
+
+    button.innerHTML =
+    theme==="dark"
+    ?
+    '<i class="fas fa-sun"></i>'
+    :
+    '<i class="fas fa-moon"></i>';
+
+}
+
+
+
+
+/* ===============================
+   تغيير حجم الخط
+================================ */
+
+let fontSize =
+Storage.get(
+    "font_size",
+    28
+);
+
+
+
+function changeFont(value){
+
+
+    fontSize += value;
+
+
+
+    if(fontSize < 20){
+
+        fontSize=20;
+
+    }
+
+
+
+    if(fontSize > 45){
+
+        fontSize=45;
+
+    }
+
+
+
+    document.documentElement
+    .style
+    .setProperty(
+        "--quran-size",
+        fontSize+"px"
+    );
+
+
+
+    Storage.set(
+        "font_size",
+        fontSize
+    );
+
+
+}
+
+
+
+
+/* ===============================
    الذهاب لصفحة
-========================================== */
-
+================================ */
 
 function jumpToPage(){
 
 
-let page =
-prompt(
-"رقم الصفحة من 1 إلى 604"
-);
+    const page =
+    prompt(
+    "أدخل رقم الصفحة من 1 إلى 604"
+    );
 
 
 
-page=parseInt(page);
+    const number =
+    parseInt(page);
 
 
 
-if(
-page>=1 &&
-page<=604
-){
+    if(
+        !isNaN(number) &&
+        number>=1 &&
+        number<=604
+    ){
 
-openPage(page);
+        Reader.openPage(
+            number
+        );
 
-}
+    }
 
-}
+       }
