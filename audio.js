@@ -17,7 +17,55 @@ const QuranAudio = {
 
     isPlaying: false,
 
+togglePlay(){
 
+    if(!this.player)
+    return;
+
+
+    if(this.player.paused){
+
+        this.player.play();
+
+        this.updatePlayButton(true);
+
+    }
+    else{
+
+        this.player.pause();
+
+        this.updatePlayButton(false);
+
+    }
+
+},
+
+
+
+updatePlayButton(state){
+
+    const button =
+    document.getElementById(
+        "playButton"
+    );
+
+
+    if(!button)
+    return;
+
+
+    button.innerHTML =
+    state
+
+    ?
+
+    '<i class="fas fa-pause"></i>'
+
+    :
+
+    '<i class="fas fa-play"></i>';
+
+},
 
     /* ===============================
        تشغيل النظام
@@ -381,39 +429,57 @@ const QuranAudio = {
     setupEvents(){
 
 
-        this.player.onplay =
-        ()=>{
+    this.player.onplay = ()=>{
 
-            this.isPlaying = true;
+        this.isPlaying = true;
 
-        };
+        this.updatePlayButton(true);
 
-
-
-        this.player.onpause =
-        ()=>{
-
-            this.isPlaying = false;
-
-        };
+    };
 
 
 
-        this.player.onended =
-        ()=>{
+    this.player.onpause = ()=>{
 
-            this.nextAyah();
+        this.isPlaying = false;
 
-        };
+        this.updatePlayButton(false);
+
+    };
+
+
+
+    this.player.onended = ()=>{
+
+        this.nextAyah();
+
+    };
+
+
+
+    this.player.ontimeupdate = ()=>{
+
+
+        const progress =
+        document.getElementById(
+            "audio-progress"
+        );
+
+
+        if(progress && this.player.duration){
+
+            progress.value =
+            (
+            this.player.currentTime /
+            this.player.duration
+            ) * 100;
+
+        }
+
+    };
 
 
     }
-
-
-};
-
-
-
 
 
 document.addEventListener(
