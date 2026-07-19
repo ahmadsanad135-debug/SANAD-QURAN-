@@ -242,8 +242,81 @@ const Reader = {
 };
 
 
+/* ===============================
+   Swipe Page Navigation
+================================ */
+
+let touchStartX = 0;
+let touchEndX = 0;
 
 
+function setupReaderSwipe(){
+
+
+    const reader =
+    document.getElementById("reader");
+
+
+    if(!reader) return;
+
+
+
+    reader.addEventListener(
+        "touchstart",
+        (e)=>{
+
+
+            touchStartX =
+            e.changedTouches[0].screenX;
+
+
+        },
+        {passive:true}
+    );
+
+
+
+    reader.addEventListener(
+        "touchend",
+        (e)=>{
+
+
+            touchEndX =
+            e.changedTouches[0].screenX;
+
+
+
+            const distance =
+            touchStartX - touchEndX;
+
+
+
+            if(Math.abs(distance)<80)
+            return;
+
+
+
+            // السحب لليسار = الصفحة التالية
+            if(distance > 0){
+
+                Reader.next();
+
+            }
+
+
+            // السحب لليمين = الصفحة السابقة
+            else{
+
+                Reader.previous();
+
+            }
+
+
+        },
+        {passive:true}
+    );
+
+       }
 
 /* ===============================
    تشغيل تلقائي
