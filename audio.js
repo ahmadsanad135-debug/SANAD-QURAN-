@@ -104,30 +104,34 @@ updatePlayButton(state){
 
     init(){
 
-        this.player =
-        document.getElementById(
-            "audio-player"
-        );
+    this.player =
+    document.getElementById(
+        "audio-player"
+    );
 
 
-        if(!this.player){
-            console.log("Audio player not found");
-            return;
-        }
+    console.log(
+        "Audio System Loaded"
+    );
 
 
-        this.reciterId =
-        localStorage.getItem("reciter")
-        || RECITERS[0].id;
+    if(!this.player){
+        console.log("No audio player");
+        return;
+    }
 
 
-        this.createReciterList();
+    this.reciterId =
+    localStorage.getItem("reciter")
+    || RECITERS[0].id;
 
 
-        this.setupEvents();
+    this.createReciterList();
 
 
-    },
+    this.setupEvents();
+
+},
 
 
 
